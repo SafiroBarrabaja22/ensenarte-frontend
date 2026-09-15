@@ -133,3 +133,72 @@
 .panelSeccion { margin-bottom: 36px; }
 .panelSeccion h2 { font-size: 1.1rem; margin-bottom: 12px; }
 .panelAcciones { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Tratamiento compartido con las vistas de usuario. */
+.panelBody {
+    min-height: 100vh;
+    background: #f5f8f5;
+    color: #173039;
+    font-family: 'DM Sans', 'Montserrat', sans-serif;
+}
+
+.panelHeader {
+    min-height: 72px;
+    box-sizing: border-box;
+    padding: 0 max(24px, calc((100% - 1120px) / 2));
+    background: #fff;
+    border-bottom: 1px solid #dbe8e3;
+    box-shadow: 0 2px 14px rgba(23, 44, 53, .08);
+    color: #173039;
+}
+
+.panelHeader h1 { color: #173039; font-size: 1.15rem; letter-spacing: -.02em; }
+.panelHeader nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.panelHeader nav a { margin: 0; padding: 8px 12px; border-radius: 6px; color: #086f6d; font-size: .88rem; }
+.panelHeader nav a:hover { background: #e2f2ed; text-decoration: none; }
+
+.panelMain { width: min(1120px, calc(100% - 48px)); box-sizing: border-box; margin: 0 auto; padding: 44px 0 72px; }
+.panelMain > h2, .panelSeccion > h2 { color: #173039; letter-spacing: -.02em; }
+.panelMain > h2 { margin-bottom: 24px; font-size: 2rem; }
+.panelSeccion { margin-bottom: 42px; }
+.panelSeccion > h2 { margin-bottom: 16px; font-size: 1.35rem; }
+
+.panelCards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-bottom: 0; }
+.panelCard { min-height: 110px; box-sizing: border-box; padding: 20px; border: 1px solid #dbe8e3; border-radius: 10px; box-shadow: 0 8px 22px rgba(23, 44, 53, .06); }
+.panelCard strong { color: #087f7b; font-size: 2rem; }
+.panelCard span { color: #63777a; font-size: .85rem; }
+
+.panelForm { margin-bottom: 0; padding: 24px; border: 1px solid #dbe8e3; border-radius: 10px; box-shadow: 0 8px 22px rgba(23, 44, 53, .06); }
+.panelForm label { color: #173039; font-weight: 700; }
+.panelForm input[type="text"], .panelForm input[type="number"], .panelForm textarea, .panelForm select {
+    padding: 11px 12px;
+    border: 1px solid #cbdcd7;
+    border-radius: 7px;
+    background: #f7fbf9;
+    color: #173039;
+}
+.panelForm input:focus, .panelForm textarea:focus, .panelForm select:focus { border-color: #087f7b; outline: 3px solid rgba(8, 127, 123, .12); }
+
+.panelTabla { border: 1px solid #dbe8e3; box-shadow: 0 8px 22px rgba(23, 44, 53, .06); }
+.panelTabla th, .panelTabla td { border-bottom-color: #e3ece9; color: #173039; }
+.panelTabla th { background: #e2f2ed; color: #155e5c; }
+.panelTabla tr:hover td { background: #f7fbf9; }
+
+.panelBtn { min-height: 38px; padding: 8px 13px; border-radius: 6px; background: #087f7b; font-weight: 700; }
+.panelBtn:hover { background: #075e5c; }
+.panelBtn.secundario { background: #728589; }
+.panelBtn.peligro { background: #d85b50; }
+.panelBtn.peligro:hover { background: #b9473d; }
+
+@media (max-width: 800px) {
+    .panelHeader { padding: 16px; }
+    .panelHeader nav { width: 100%; }
+    .panelMain { width: min(100% - 32px, 620px); padding-top: 30px; }
+    .panelCards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .panelTabla { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+@media (max-width: 440px) {
+    .panelCards { grid-template-columns: 1fr; }
+    .panelHeader h1 { font-size: 1rem; }
+}

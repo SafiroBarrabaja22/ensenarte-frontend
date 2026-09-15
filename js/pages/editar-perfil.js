@@ -29,8 +29,8 @@ function pintarAvatares() {
   const contenedor = document.getElementById("selectorAvatar");
   contenedor.innerHTML = AVATARES.map(
     (archivo) => `
-      <img src="${rutaImagen(archivo)}" alt="Avatar" data-avatar="${archivo}"
-           style="cursor:pointer; outline:${archivo === avatarElegido ? "3px solid #2b7a78" : "none"};">`
+      <img class="avatarPerfil ${archivo === avatarElegido ? "avatarSeleccionado" : ""}"
+           src="${rutaImagen(archivo)}" alt="Avatar" data-avatar="${archivo}" style="cursor:pointer;">`
   ).join("");
 
   contenedor.querySelectorAll("img").forEach((img) =>

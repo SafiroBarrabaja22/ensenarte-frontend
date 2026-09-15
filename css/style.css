@@ -1457,3 +1457,184 @@
     }
     body.bodyBase #layout { position: relative; z-index: 40; }
 
+    /* Vistas de aprendizaje: una superficie clara y controles con contraste consistente. */
+    body.bodyBase {
+        min-height: 100vh;
+        background: #f5f8f5;
+        color: var(--ink);
+    }
+
+    .bodyCursos {
+        width: min(1120px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 132px 0 78px;
+    }
+
+    .headerCursos {
+        align-items: end;
+        padding: 0 0 30px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .headerCursos h1,
+    #tituloCurso,
+    .titlePerfil,
+    .bodyEditUser h2 {
+        color: var(--ink);
+        font-family: 'DM Sans', sans-serif;
+        letter-spacing: -.02em;
+    }
+
+    .headerCursos h1 { font-size: clamp(34px, 5vw, 52px); }
+    .containerIcon { color: var(--teal); }
+    .iconCursos { width: 42px; height: 42px; }
+
+    .containerItemsCursos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        padding-top: 28px;
+    }
+
+    .itemCursos {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(23, 44, 53, .06);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .itemCursos:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(23, 44, 53, .12);
+    }
+
+    .itemCursos figure { height: 220px; margin: 0; background: #e2f2ed; }
+    .itemCursos img { height: 100%; border-radius: 0; }
+    .infoCurso { min-height: 210px; padding: 24px 26px 26px; gap: 12px; line-height: 1.45; }
+    .itemCursos h2 { font-size: 24px; }
+    .itemCursos p { color: var(--muted); font-size: 16px; font-weight: 500; line-height: 1.55; }
+    .infoCurso a,
+    .buttonSelector,
+    .buttonBack,
+    .botonActualizarDatos {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        box-sizing: border-box;
+        border: 0;
+        border-radius: 7px;
+        background: var(--teal);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: background .2s ease, transform .2s ease;
+    }
+    .infoCurso a:hover,
+    .buttonSelector:hover,
+    .buttonBack:hover,
+    .botonActualizarDatos:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+    .bodySelectorCursos {
+        width: min(900px, calc(100% - 48px));
+        min-height: 0;
+        margin: 0 auto;
+        padding: 142px 0 88px;
+        color: var(--ink);
+    }
+    .bodySelectorCursos > h1 { margin-bottom: 8px; font-size: clamp(32px, 5vw, 50px); }
+    .containerSelectorItems { width: 100%; gap: 22px; }
+    .itemSelectorCursos {
+        flex: 1 1 0;
+        width: auto;
+        padding: 26px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        color: var(--ink);
+        text-align: left;
+        box-shadow: 0 8px 24px rgba(23, 44, 53, .06);
+    }
+    .itemSelectorCursos h2 { color: var(--ink); font-size: 24px; }
+    .selectorNumber { width: 54px; height: 54px; margin: 0 0 18px; border: 0; background: #d9eee7; color: var(--teal-dark); font-size: 24px; }
+    .infoSelectorCurso { margin-top: 0; }
+    .descripcionSelectorCurso { color: var(--muted); font-size: 16px; }
+    .itemSelectorCursos .buttonSelector { width: 100%; margin-top: 18px; }
+    .salidaSelectorCursos { width: 100%; margin-top: 12px; color: var(--muted); }
+    .salidaSelectorCursos h2 { color: var(--ink); font-size: 20px; }
+    .salidaSelectorCursos .buttonSelector { padding: 0 22px; }
+
+    .bodyPerfil,
+    .bodyeditarPerfil {
+        width: min(760px, calc(100% - 48px));
+        box-sizing: border-box;
+        margin: 0 auto;
+        padding: 136px 0 80px;
+    }
+    .perfilPage {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        padding: 36px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 10px 28px rgba(23, 44, 53, .07);
+    }
+    .titlePerfil { margin-bottom: 28px; text-align: left; font-size: 36px; }
+    .infoUsuarioPerfil { padding: 8px 0 26px; border-bottom: 1px solid var(--line); }
+    .fotoUsuarioPerfil { width: 112px; height: 112px; border: 5px solid #d9eee7; object-fit: cover; }
+    .nombreUsuarioPerfil { margin-top: 14px; color: var(--ink); }
+    .emailUsuarioPerfil { color: var(--muted); }
+    .perfilPage > h2 { margin: 28px 0 14px; color: var(--ink); font-size: 21px; }
+    #progresoUsuario ul { display: grid; gap: 10px; padding: 0; list-style: none; }
+    #progresoUsuario li { padding: 15px 17px; border-left: 4px solid var(--coral); background: #f7fbf9; color: var(--ink); }
+    .buttonContainer { margin-top: 26px; }
+    .buttonSelector { padding: 0 22px; }
+
+    .bodyeditarPerfil .perfilPage { max-width: 620px; }
+    .bodyEditUser h2 { margin: 0 0 24px; font-size: 30px; }
+    .profilePicture { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+    .profilePicture img { width: 72px; height: 72px; margin: 0; padding: 4px; border: 2px solid transparent; box-sizing: border-box; object-fit: cover; }
+    .profilePicture img.avatarSeleccionado { border-color: var(--teal); box-shadow: 0 0 0 3px #d9eee7; }
+    .formActualizarPerfil { margin-bottom: 18px; color: var(--ink); }
+    .formActualizarPerfil label { margin-bottom: 7px; color: var(--ink); font-size: 14px; font-weight: 700; }
+    .formActualizarPerfil input[type="text"],
+    .formActualizarPerfil input[type="email"],
+    .formActualizarPerfil input[type="password"] { width: 100%; box-sizing: border-box; padding: 12px 13px; border: 1px solid var(--line); border-radius: 7px; background: #f7fbf9; color: var(--ink); }
+    .formActualizarPerfil input:focus { border-color: var(--teal); outline: 3px solid rgba(8, 127, 123, .12); }
+    .botonActualizarDatos { padding: 0 20px; margin: 2px 0 28px; }
+
+    body.bodyEvaluationView,
+    body.bodyFeedbackView { min-height: 100vh; background: #f5f8f5; color: var(--ink); }
+    .bodyEvaluaciones { min-height: 100vh; box-sizing: border-box; margin: 0; padding: 132px 24px 70px; background: transparent; }
+    .containerEvaluacion { width: min(720px, 100%); margin: 0 auto; }
+    .cuadroEvaluador { max-width: none; padding: 34px; border: 1px solid var(--line); border-radius: 12px; background: #fff; box-shadow: var(--shadow); color: var(--ink); }
+    .cuadroEvaluador h1 { margin-bottom: 8px; color: var(--ink); font-size: 32px; }
+    .cuadroEvaluador h2 { margin: 18px 0; color: var(--ink); font-size: 22px; line-height: 1.35; }
+    .cuadroEvaluador p, .feedback { color: var(--muted); }
+    .videoContainer { margin: 24px auto; }
+    .cuadroEvaluador img { width: min(270px, 100%); height: 340px; object-fit: cover; }
+    .optionsContainer { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .optionBtn { min-height: 48px; border: 1px solid var(--line); background: #f7fbf9; color: var(--ink); font-weight: 700; }
+    .optionBtn:hover { border-color: var(--teal); background: #dff2eb; }
+    .feedback { margin-top: 20px; }
+    .bodyRetroalimentacion { min-height: 100vh; height: auto; box-sizing: border-box; padding: 150px 24px 80px; background: transparent; color: var(--ink); }
+    .cardClient { width: min(700px, 100%); box-sizing: border-box; padding: 38px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); box-shadow: var(--shadow); }
+    .cardClient h2 { color: var(--ink); font-size: 30px; }
+    .cardClient p { color: var(--muted); line-height: 1.7; }
+    .buttonBack { padding: 0 26px; }
+
+    @media (max-width: 720px) {
+        .bodyCursos, .bodySelectorCursos, .bodyPerfil, .bodyeditarPerfil { width: min(100% - 32px, 620px); padding-top: 104px; }
+        .containerItemsCursos, .containerSelectorItems { grid-template-columns: 1fr; flex-direction: column; }
+        .itemCursos figure { height: 180px; }
+        .perfilPage, .cuadroEvaluador, .cardClient { padding: 24px; }
+        .titlePerfil { font-size: 30px; }
+        .bodyEvaluaciones { padding: 104px 16px 48px; }
+        .bodyRetroalimentacion { padding: 120px 16px 56px; }
+        .optionsContainer { grid-template-columns: 1fr; }
+    }
+
