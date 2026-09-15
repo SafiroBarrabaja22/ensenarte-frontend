@@ -40,11 +40,10 @@ function montarLayout(tipo) {
     <header class="header">
       <div class="container">
         <div class="btnMenu"><label for="btnMenu">&#9776;</label></div>
-        <div class="logo"><h1>enSENArte</h1></div>
+        <div class="logo"><a href="${raiz}index.html" aria-label="enSEÑArte, inicio"><span>en</span>SEÑArte</a></div>
         ${bloqueDerecho}
       </div>
     </header>
-    <div class="capa"></div>
     <input type="checkbox" id="btnMenu">
     <div class="containerMenu">
       <div class="contMenu">
@@ -72,7 +71,7 @@ function avatarDe(usuario) {
 /** Pie de pagina opcional. */
 function montarFooter() {
   const pie = document.getElementById("footer");
-  if (pie) pie.innerHTML = `<footer><p>&copy; enSENArte - ${new Date().getFullYear()}</p></footer>`;
+  if (pie) pie.innerHTML = `<footer><p>&copy; enSEÑArte - ${new Date().getFullYear()}</p></footer>`;
 }
 
 /** Mensaje de error o exito reutilizable. */
