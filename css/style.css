@@ -6,7 +6,7 @@
 	}
     footer {
         background-color: #4b4b4b;
-        color: white;
+        color: var(--ink);
         text-align: center;
         padding: 20px 0;
         margin-top: 40px;
@@ -487,6 +487,8 @@
         .servicesContainer { grid-template-columns: 1fr; }
         .serviceImage { height: 190px; }
         .heroText .btnHome { width: 100%; }
+        .nombreHeader { max-width: 100px; font-size: 14px; }
+        .perfilHeader { padding: 0 10px; font-size: 12px; }
     }
 
     /* Light homepage treatment and compact header controls. */
@@ -501,7 +503,10 @@
     .container .menu a:first-child { border-color: var(--teal); background: var(--teal); color: #fff; }
     .container .menu a:first-child:hover { background: var(--teal-dark); color: #fff; }
     .container .menu a:not(:first-child):hover { color: var(--teal); border-color: var(--coral); }
-    .menuUsuario { margin-left: auto; color: var(--ink); }
+    .menuUsuario { display: flex; align-items: center; gap: 12px; margin-left: auto; color: var(--ink); line-height: normal; }
+    .nombreHeader { max-width: 180px; overflow: hidden; color: var(--ink); font-size: 16px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .perfilHeader { display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px; border: 1px solid var(--teal); border-radius: 999px; background: #e2f2ed; color: var(--teal-dark); font-size: 13px; font-weight: 800; line-height: 1; text-decoration: none; transition: background .2s ease, color .2s ease; }
+    .perfilHeader:hover { background: var(--teal); color: #fff; }
     .heroSection { min-height: 620px; height: 78vh; background: #eaf4ef; }
     .heroSection::before, .heroSection::after { content: ""; position: absolute; pointer-events: none; z-index: 1; }
     .heroSection::before { width: 230px; height: 230px; top: 16%; right: 9%; border: 30px solid rgba(8, 127, 123, .1); border-radius: 50%; }
@@ -518,6 +523,7 @@
     .service { background: #f7fbf9; }
     .serviceNumber { display: grid; place-items: center; width: 72px; height: 72px; margin: 25px 22px 4px; border-radius: 50%; background: #d9eee7; color: var(--teal-dark); font-size: 34px; font-weight: 800; }
     .service h3 { margin-top: 15px; }
+    .selectorNumber { display: grid; place-items: center; width: 82px; height: 82px; margin: 24px auto 8px; border: 12px solid #d9eee7; border-radius: 50%; color: var(--teal-dark); font-size: 34px; font-weight: 800; }
     .aboutSection { background: #eaf4ef; }
     .contactSection { background: #fff; color: var(--ink); border-top: 1px solid var(--line); }
     .contactSection h2 { color: var(--ink); }
@@ -707,7 +713,7 @@
         font-family: 'arial';
         /*color: rgba(0, 0, 0, 0.74);*/
         margin-top: 120px;
-        color: white;
+        color: var(--ink);
         margin-bottom: 100px;
     }
     
@@ -734,6 +740,8 @@
         justify-content: space-between;
         padding: 30px 0 40px 0;
     }
+
+    .headerCursos h1 { color: var(--ink); }
     
     /* Cuadricula */
     .containerItemsCursos{
@@ -745,8 +753,10 @@
     .itemCursos{
         border-radius: 10px;
         background-color: white;
-        color: #000;
+        color: var(--ink);
     }
+
+    .itemCursos h2, .itemCursos p { color: var(--ink); }
     
     /* Sombra */
     .itemCursos:hover{

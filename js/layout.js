@@ -10,6 +10,9 @@ function montarLayout(tipo) {
 
   const raiz = prefijoRaiz();
   const usuario = Sesion.usuario();
+  const enlaceInicio = tipo === "usuario"
+    ? `${raiz}pages/inicio-usuario.html`
+    : `${raiz}index.html`;
 
   const enlacesPublicos = `
     <a href="${raiz}index.html">Inicio</a>
@@ -28,8 +31,8 @@ function montarLayout(tipo) {
   const bloqueDerecho =
     tipo === "usuario"
       ? `<div class="menuUsuario">
-           <p>${usuario ? usuario.nombre : ""}</p>
-           <img src="${avatarDe(usuario)}" alt="foto de perfil">
+         <span class="nombreHeader">${usuario ? usuario.nombre : ""}</span>
+         <a class="perfilHeader" href="${raiz}pages/perfil.html">Perfil</a>
          </div>`
       : `<nav class="menu">
            <a href="${raiz}pages/login.html">Iniciar sesion</a>
@@ -40,7 +43,7 @@ function montarLayout(tipo) {
     <header class="header">
       <div class="container">
         <div class="btnMenu"><label for="btnMenu">&#9776;</label></div>
-        <div class="logo"><a href="${raiz}index.html" aria-label="enSEÑArte, inicio"><span>en</span>SEÑArte</a></div>
+        <div class="logo"><a href="${enlaceInicio}" aria-label="enSEÑArte, inicio"><span>en</span>SEÑArte</a></div>
         ${bloqueDerecho}
       </div>
     </header>

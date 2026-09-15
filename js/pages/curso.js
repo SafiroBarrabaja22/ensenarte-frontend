@@ -16,7 +16,7 @@
     document.getElementById("tituloCurso").textContent = curso.titulo;
     document.getElementById("opcionesCurso").innerHTML = `
       <div class="itemSelectorCursos">
-        <figure><img src="${rutaImagen(curso.imagen_diccionario)}" alt="Diccionario"></figure>
+        <div class="selectorNumber" aria-hidden="true">1</div>
         <div class="infoSelectorCurso">
           <h2>Diccionario</h2>
           <p class="descripcionSelectorCurso">${curso.total_palabras} palabras disponibles</p>
@@ -27,7 +27,7 @@
       </div>
 
       <div class="itemSelectorCursos">
-        <figure><img src="${rutaImagen(curso.imagen_evaluacion)}" alt="Evaluación"></figure>
+        <div class="selectorNumber" aria-hidden="true">2</div>
         <div class="infoSelectorCurso">
           <h2>Evaluación</h2>
           <p class="descripcionSelectorCurso">${curso.total_preguntas} preguntas</p>
