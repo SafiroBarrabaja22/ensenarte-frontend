@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/extra.css">
+</head>
+<body class="bodyBase">
+    <div id="layout"></div>
+
+    <main class="bodyCont">
+        <!-- Cambia el destinatario de formsubmit.co por el correo del equipo -->
+        <form action="https://formsubmit.co/tu-correo@ejemplo.com" method="POST" class="formContac">
+            <h2 class="h2Cont">¡Contáctanos!</h2>
+            <div class="input-group-contact">
+                <label for="name" class="labelCont">Nombre</label>
+                <input type="text" name="name" id="name" placeholder="Nombre" class="inputCont" required>
+                <label for="phone" class="labelCont">Número</label>
+                <input type="tel" name="phone" id="phone" placeholder="Número telefónico" class="inputCont">
+                <label for="email" class="labelCont">Correo</label>
+                <input type="email" name="email" id="email" placeholder="Correo electrónico" class="inputCont" required>
+                <label for="message" class="labelCont">Mensaje</label>
+                <textarea name="message" id="message" cols="30" rows="5" placeholder="Mensaje / Sugerencia" class="textareaCont" required></textarea>
+                <input class="btn" type="submit" value="Enviar">
+            </div>
+        </form>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js"></script>
+    <script>
+        montarLayout(Sesion.activa() ? "usuario" : "publico");
+        montarFooter();
+    </script>
+</body>
+</html>

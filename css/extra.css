@@ -1,0 +1,37 @@
+/* Estilos que no existian en el monolito: mensajes de la API y estados de carga.
+   Todo lo demas se hereda de style.css tal cual estaba. */
+
+.mensajeError,
+.mensajeOk {
+    display: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.mensajeError {
+    background: #fdecea;
+    color: #a4231f;
+    border: 1px solid #f5b7b1;
+}
+
+.mensajeOk {
+    background: #e8f6ed;
+    color: #1e7a45;
+    border: 1px solid #a9dfbf;
+}
+
+.cargando {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+}
+
+.vacio {
+    text-align: center;
+    padding: 40px 20px;
+    color: #777;
+}

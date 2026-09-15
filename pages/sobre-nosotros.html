@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre nosotros</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/extra.css">
+</head>
+<body class="bodyBase">
+    <div id="layout"></div>
+
+    <main class="bodyAboutUs">
+        <section id="cifras">
+            <h2>Cifras Importantes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Información sobre personas con discapacidad auditiva en Colombia</th>
+                        <th>Datos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Colombianos con discapacidad auditiva</td>
+                        <td>Aproximadamente 400.000 colombianos, 60% adultos mayores, 40% población entre primera infancia y adultez. En Cundinamarca, según cifras del INSOR, hay aproximadamente 6.500 personas con discapacidad auditiva.</td>
+                    </tr>
+                    <tr>
+                        <td>Leyes que protegen a las personas con discapacidad auditiva</td>
+                        <td>
+                            Ley 324 de 1996, que reconoce la lengua de señas colombiana (LSC) como idioma de la comunidad sorda.<br>
+                            Ley 1618 de 2013, que adopta acciones afirmativas y ajustes razonables para reducir la discriminación.<br>
+                            Decreto 1421 de 2017, que reglamentó su atención en el marco de la educación inclusiva.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Intérpretes</td>
+                        <td>Según cifras estimadas del INSOR, se estima que solamente se cuenta con 400 intérpretes en todo el territorio nacional.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="informacion">
+            <h2>Información adicional</h2>
+            <p id="textoInformacion">enSEÑArte somos un equipo apasionado y comprometido con la enseñanza y el aprendizaje de la lengua de señas colombiana. Nuestro objetivo es crear un espacio inclusivo y accesible para todos, donde la comunicación sin barreras sea una realidad. Creemos firmemente en la importancia de la educación inclusiva y trabajamos juntos para facilitar recursos y herramientas que ayuden a cerrar la brecha en la comunicación.</p>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js"></script>
+    <script>
+        montarLayout(Sesion.activa() ? "usuario" : "publico");
+        montarFooter();
+    </script>
+</body>
+</html>

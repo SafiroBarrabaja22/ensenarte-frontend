@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>enSEÑArte - Inicio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/extra.css">
+</head>
+<body class="bodyBase">
+    <div id="layout"></div>
+
+    <main class="bodyHome">
+        <section id="inicio" class="heroSection">
+            <div class="heroText">
+                <h1 class="animateText">Bienvenido a nuestro aplicativo web, esperamos disfruten de nuestros cursos</h1>
+                <p class="animateText">Inicia sesión o regístrate</p>
+                <div class="btnContainer">
+                    <a href="pages/login.html" class="btnHome btnLeft">Iniciar Sesión</a>
+                    <a href="pages/signup.html" class="btnHome btnRight">Registrarse</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="heroImage">
+            <img src="assets/imagenes/XD.jpg" alt="Imagen principal">
+        </div>
+
+        <section id="servicios" class="servicesSection">
+            <h2>¿Por qué aprender lengua de señas?</h2>
+            <p class="servicesDescription">Aprender lengua de señas es esencial para fomentar la inclusión y la igualdad de oportunidades, permitiendo una comunicación efectiva con las personas sordas o con dificultades auditivas. Al dominar este lenguaje, no solo se promueve la accesibilidad, sino que también se enriquece la capacidad de interacción en diversos contextos sociales y laborales. Además, aprender lengua de señas fortalece la empatía y el respeto por la diversidad, contribuyendo a una sociedad más justa e inclusiva.</p>
+            <h2>¿Cómo aprender Lengua de Señas Colombiana?</h2>
+            <div class="servicesContainer">
+                <div class="service">
+                    <img src="assets/imagenes/cursos.jpg" alt="Cursos" class="serviceImage">
+                    <h3>Nuestros Cursos</h3>
+                    <p>Con nuestros diferentes cursos enfocados a que aprendas desde las palabras más básicas del LSC para un amplio grupo de personas.</p>
+                </div>
+                <div class="service">
+                    <img src="assets/imagenes/livres.jpg" alt="Diccionarios" class="serviceImage">
+                    <h3>Diccionarios</h3>
+                    <p>Cada curso tiene un glosario que nos permite visualizar en el momento que deseemos cada palabra que se aprenda en el respectivo curso.</p>
+                </div>
+                <div class="service">
+                    <img src="assets/imagenes/evaluacionInicio.jpg" alt="Evaluaciones" class="serviceImage">
+                    <h3>Evaluaciones</h3>
+                    <p>Todos los cursos cuentan con un apartado para evaluar lo aprendido, donde se pondrán a prueba tus conocimientos para lograr el máximo puntaje.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="nosotros" class="aboutSection">
+            <h2>Objetivo General</h2>
+            <p>Fortalecer la inclusión y la comunicación efectiva en la comunidad de Cundinamarca a través del desarrollo de una plataforma digital innovadora que brinde herramientas interactivas y accesibles para el aprendizaje y la práctica del lenguaje de señas colombiano (LSC), empoderando a las personas sordas y oyentes a comunicarse de manera fluida y respetuosa.</p>
+        </section>
+
+        <section id="contacto" class="contactSection">
+            <h2>Contáctanos</h2>
+            <p>Si tienes algún tipo de sugerencia por favor coméntala, tu opinión es importante para nosotros.</p>
+            <a href="pages/contacto.html" class="btnHome">Manda tu ticket aquí</a>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/layout.js"></script>
+    <script>
+        montarLayout(Sesion.activa() ? "usuario" : "publico");
+        montarFooter();
+    </script>
+</body>
+</html>

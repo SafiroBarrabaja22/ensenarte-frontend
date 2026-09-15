@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar perfil</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/extra.css">
+</head>
+<body class="bodyBase">
+    <div id="layout"></div>
+
+    <main class="bodyeditarPerfil">
+        <div class="perfilPage">
+            <section class="bodyEditUser">
+                <h2>Perfil de usuario</h2>
+                <div id="mensaje"></div>
+
+                <div class="profilePicture" id="selectorAvatar"></div>
+
+                <div class="formActualizarPerfil">
+                    <label for="username">Nombre de usuario:</label>
+                    <input type="text" id="username" name="username" placeholder="Nuevo nombre de perfil">
+                </div>
+                <div class="formActualizarPerfil">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" name="email" placeholder="Nuevo correo">
+                </div>
+                <button class="botonActualizarDatos" id="btnGuardarDatos">Guardar cambios</button>
+
+                <h2>Cambiar contraseña</h2>
+                <div id="mensajePassword"></div>
+                <div class="formActualizarPerfil">
+                    <label for="passwordActual">Contraseña actual:</label>
+                    <input type="password" id="passwordActual">
+                </div>
+                <div class="formActualizarPerfil">
+                    <label for="passwordNueva">Nueva contraseña:</label>
+                    <input type="password" id="passwordNueva" minlength="8">
+                </div>
+                <div class="formActualizarPerfil">
+                    <label for="passwordConfirmar">Confirmar contraseña:</label>
+                    <input type="password" id="passwordConfirmar" minlength="8">
+                </div>
+                <button class="botonActualizarDatos" id="btnCambiarPassword">Cambiar contraseña</button>
+            </section>
+        </div>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/pages/editar-perfil.js"></script>
+</body>
+</html>

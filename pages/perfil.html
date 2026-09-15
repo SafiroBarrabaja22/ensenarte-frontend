@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de usuario</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/extra.css">
+</head>
+<body class="bodyBase">
+    <div id="layout"></div>
+
+    <main class="bodyPerfil">
+        <div class="perfilPage">
+            <h1 class="titlePerfil">Perfil de Usuario</h1>
+            <div class="infoUsuarioPerfil">
+                <img id="fotoPerfil" src="../assets/imagenes/imgPredeterminadaUsuario.png" alt="Foto de Usuario" class="fotoUsuarioPerfil">
+                <h2 class="nombreUsuarioPerfil" id="nombreUsuario"></h2>
+                <p class="emailUsuarioPerfil" id="correoUsuario"></p>
+                <p class="emailUsuarioPerfil" id="estrellasUsuario"></p>
+            </div>
+
+            <h2>Cursos completados</h2>
+            <div id="progresoUsuario"><p class="cargando">Cargando progreso...</p></div>
+
+            <div class="buttonContainer">
+                <a href="editar-perfil.html"><button class="buttonSelector">Editar perfil</button></a>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/pages/perfil.js"></script>
+</body>
+</html>

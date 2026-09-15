@@ -1,0 +1,11 @@
+# Dependencias (por si mas adelante se agrega un bundler)
+node_modules/
+
+# Configuracion local del entorno
+js/config.local.js
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

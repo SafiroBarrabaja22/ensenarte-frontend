@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/extra.css">
+</head>
+<body class="bodyLogin">
+    <div class="disLogin">
+        <form class="formLogin" id="formRegistro">
+            <h1 class="titleLogin">Registro</h1>
+            <div id="mensaje"></div>
+            <div class="inpLogin">
+                <input type="text" id="nombre" class="inputLogin" placeholder="Usuario" required>
+            </div>
+            <div class="inpLogin">
+                <input type="email" id="correo" class="inputLogin" placeholder="Correo" required>
+            </div>
+            <div class="inpLogin">
+                <input type="password" id="password" class="inputLogin" placeholder="Contraseña (mínimo 8 caracteres)" minlength="8" required>
+            </div>
+            <button type="submit" class="submitLogin" id="btnEnviar">Registrarse</button>
+            <p class="footerLogin">¿Ya tienes cuenta?<a href="login.html" class="linkLogin">Inicia sesión aquí</a></p>
+        </form>
+        <div></div>
+        <div class="bannerLogin">
+            <h1 class="saludoslogin">Registrarse</h1>
+            <p class="infoLogin">Si aún no estás registrado <br> &lt;-- hazlo aquí</p>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/pages/registro.js"></script>
+</body>
+</html>

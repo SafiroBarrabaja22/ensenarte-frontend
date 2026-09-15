@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Diccionario</title>
+    <link rel="stylesheet" href="../../css/panel.css">
+    <link rel="stylesheet" href="../../css/extra.css">
+</head>
+<body class="panelBody">
+    <div id="panelLayout"></div>
+
+    <main class="panelMain">
+        <h2 id="tituloCurso">Diccionario</h2>
+        <div id="mensaje"></div>
+
+        <section class="panelSeccion">
+            <h2>Nueva palabra</h2>
+            <div class="panelForm">
+                <div>
+                    <label for="tituloPalabra">Palabra</label>
+                    <input type="text" id="tituloPalabra" placeholder="Agua">
+                </div>
+                <div>
+                    <label for="imagenPalabra">Imagen frontal</label>
+                    <input type="text" id="imagenPalabra" placeholder="agua.png">
+                </div>
+                <div>
+                    <label for="gifPalabra">Gif de la seña</label>
+                    <input type="text" id="gifPalabra" placeholder="agua.gif">
+                </div>
+                <div class="panelAcciones">
+                    <button class="panelBtn" id="btnCrearPalabra">Agregar palabra</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="panelSeccion">
+            <h2>Palabras registradas</h2>
+            <table class="panelTabla">
+                <thead>
+                    <tr><th>Palabra</th><th>Imagen</th><th>Gif</th><th>Acciones</th></tr>
+                </thead>
+                <tbody id="tablaPalabras">
+                    <tr><td colspan="4" class="cargando">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/pages/panel/layout-panel.js"></script>
+    <script src="../../js/pages/panel/diccionario.js"></script>
+</body>
+</html>

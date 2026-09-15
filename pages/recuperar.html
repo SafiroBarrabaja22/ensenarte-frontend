@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/extra.css">
+</head>
+<body class="bodyLogin">
+    <div class="disLogin">
+        <form class="formLogin" id="formSolicitar">
+            <h1 class="titleLogin">Recuperar</h1>
+            <div id="mensaje"></div>
+            <div class="inpLogin">
+                <input type="email" id="correo" class="inputLogin" placeholder="Tu correo registrado" required>
+            </div>
+            <button type="submit" class="submitLogin">Enviar instrucciones</button>
+            <p class="footerLogin">¿Ya tienes cuenta?<a href="login.html" class="linkLogin">Inicia sesión aquí</a></p>
+        </form>
+
+        <form class="formLogin" id="formConfirmar" style="display:none;">
+            <h1 class="titleLogin">Nueva contraseña</h1>
+            <div id="mensajeConfirmar"></div>
+            <div class="inpLogin">
+                <input type="text" id="token" class="inputLogin" placeholder="Código de recuperación" required>
+            </div>
+            <div class="inpLogin">
+                <input type="password" id="passwordNueva" class="inputLogin" placeholder="Nueva contraseña" minlength="8" required>
+            </div>
+            <div class="inpLogin">
+                <input type="password" id="passwordConfirmar" class="inputLogin" placeholder="Repite la contraseña" minlength="8" required>
+            </div>
+            <button type="submit" class="submitLogin">Cambiar contraseña</button>
+        </form>
+
+        <div></div>
+        <div class="bannerLogin">
+            <h1 class="saludoslogin">Recupera tu contraseña</h1>
+            <p class="infoLogin">Te enviamos un código de un solo uso a tu correo.</p>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/pages/recuperar.js"></script>
+</body>
+</html>

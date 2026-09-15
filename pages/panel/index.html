@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Cursos</title>
+    <link rel="stylesheet" href="../../css/panel.css">
+    <link rel="stylesheet" href="../../css/extra.css">
+</head>
+<body class="panelBody">
+    <div id="panelLayout"></div>
+
+    <main class="panelMain">
+        <div id="mensaje"></div>
+
+        <section class="panelSeccion">
+            <h2>Resumen</h2>
+            <div class="panelCards" id="resumen"></div>
+        </section>
+
+        <section class="panelSeccion">
+            <h2 id="tituloFormulario">Crear curso</h2>
+            <div class="panelForm">
+                <div>
+                    <label for="titulo">Título</label>
+                    <input type="text" id="titulo" placeholder="Abecedario">
+                </div>
+                <div>
+                    <label for="nombre">Slug (identificador en la URL)</label>
+                    <input type="text" id="nombre" placeholder="abecedario">
+                </div>
+                <div>
+                    <label for="portada">Archivo de portada</label>
+                    <input type="text" id="portada" placeholder="portadaAbecedario.jpg">
+                </div>
+                <div>
+                    <label for="imgDiccionario">Imagen del diccionario</label>
+                    <input type="text" id="imgDiccionario" placeholder="livres.jpg">
+                </div>
+                <div>
+                    <label for="imgEvaluacion">Imagen de la evaluación</label>
+                    <input type="text" id="imgEvaluacion" placeholder="evaluacionInicio.jpg">
+                </div>
+                <div>
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" rows="2"></textarea>
+                </div>
+                <div class="panelAcciones">
+                    <button class="panelBtn" id="btnGuardar">Guardar curso</button>
+                    <button class="panelBtn secundario" id="btnCancelar" style="display:none;">Cancelar</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="panelSeccion">
+            <h2>Cursos registrados</h2>
+            <table class="panelTabla">
+                <thead>
+                    <tr>
+                        <th>Título</th><th>Slug</th><th>Activo</th><th>Creado por</th><th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCursos">
+                    <tr><td colspan="5" class="cargando">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/pages/panel/layout-panel.js"></script>
+    <script src="../../js/pages/panel/dashboard.js"></script>
+</body>
+</html>
