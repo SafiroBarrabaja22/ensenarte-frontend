@@ -498,8 +498,9 @@
     .logo a { color: var(--ink); }
     .container .menu { margin-left: auto; }
     .container .menu a { color: var(--teal-dark); }
-    .container .menu a:first-child { border-color: var(--teal); }
-    .container .menu a:hover { color: var(--teal); border-color: var(--coral); }
+    .container .menu a:first-child { border-color: var(--teal); background: var(--teal); color: #fff; }
+    .container .menu a:first-child:hover { background: var(--teal-dark); color: #fff; }
+    .container .menu a:not(:first-child):hover { color: var(--teal); border-color: var(--coral); }
     .menuUsuario { margin-left: auto; color: var(--ink); }
     .heroSection { min-height: 620px; height: 78vh; background: #eaf4ef; }
     .heroSection::before, .heroSection::after { content: ""; position: absolute; pointer-events: none; z-index: 1; }
@@ -510,6 +511,7 @@
     .heroEyebrow { color: var(--teal); }
     .heroText .btnLeft { background: var(--teal); }
     .heroText .btnLeft:hover { background: var(--teal-dark); }
+    .heroText .btnLeft { color: #fff; }
     .heroText .btnRight { color: var(--teal-dark); border-color: var(--teal); }
     .heroText .btnRight:hover { background: #d7ebe4; }
     .servicesSection { background: #fff; }
@@ -1315,6 +1317,9 @@
         font-family: 'DM Sans', 'Montserrat', sans-serif;
         place-items: center;
     }
+    .authHomeLink { position: fixed; top: 24px; left: 30px; z-index: 10; color: var(--ink); text-decoration: none; font-size: 21px; font-weight: 800; letter-spacing: .02em; }
+    .authHomeLink span { color: var(--teal); font-weight: 500; }
+    .authHomeLink:hover { color: var(--teal-dark); }
     .disLogin {
         width: min(920px, 100%);
         min-height: 560px;
@@ -1364,6 +1369,7 @@
         .bannerLogin { order: -1; padding: 34px 30px; }
         .formLogin { padding: 34px 30px; }
         .saludoslogin { font-size: 34px; }
+        .authHomeLink { top: 18px; left: 20px; font-size: 18px; }
     }
 
     /* Decorative background language shared across the public learning views. */
@@ -1432,6 +1438,12 @@
     body.bodyBase > *, body.bodyLogin > *, body.bodyEvaluationView > *, body.bodyFeedbackView > * {
         position: relative;
         z-index: 1;
+    }
+    body.bodyLogin > a.authHomeLink {
+        position: fixed;
+        top: 24px;
+        left: 30px;
+        z-index: 10;
     }
     body.bodyBase #layout { position: relative; z-index: 40; }
 
