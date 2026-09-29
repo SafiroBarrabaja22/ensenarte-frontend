@@ -1,23 +1,35 @@
 /** Cabecera del panel y control de acceso. */
 
-function montarPanel() {
+async function montarPanel() {
   if (!Sesion.activa()) {
     irALogin();
     return false;
   }
 
-  const usuario = Sesion.usuario();
-  if (usuario && usuario.es_creador === false) {
+  let usuario;
+  try {
+    usuario = await api("/auth/perfil/");
+    Sesion.actualizarUsuario(usuario);
+  } catch (error) {
+    console.error("No se pudo validar el acceso al panel.", error);
+    return false;
+  }
+
+  if (usuario && !usuario.es_creador && !usuario.es_profesor) {
     window.location.href = "../inicio-usuario.html";
     return false;
   }
 
   const contenedor = document.getElementById("panelLayout");
+  const enlaceBiblioteca = usuario.es_interprete
+    ? '<a href="recursos.html">Biblioteca visual</a>'
+    : "";
   contenedor.innerHTML = `
     <header class="panelHeader">
       <h1>Panel administrativo - enSEÑArte</h1>
       <nav>
         <a href="index.html">Cursos</a>
+        ${enlaceBiblioteca}
         <a href="../inicio-usuario.html">Volver al sitio</a>
         <a href="#" id="salirPanel">Cerrar sesión</a>
       </nav>

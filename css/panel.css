@@ -202,3 +202,103 @@
     .panelCards { grid-template-columns: 1fr; }
     .panelHeader h1 { font-size: 1rem; }
 }
+
+.campoSeleccionRecurso { display: flex; align-items: center; gap: 8px; }
+.campoSeleccionRecurso input { min-width: 0; flex: 1; }
+.campoSeleccionRecurso .panelBtn { flex: 0 0 auto; }
+
+.formularioRecurso input[type="file"] { width: 100%; box-sizing: border-box; }
+.formularioRecurso small { display: block; margin-top: 6px; color: #63777a; }
+.previsualizacionRecurso { display: block; width: min(100%, 360px); max-height: 240px; margin-top: 12px; object-fit: contain; background: #eef4f1; }
+.miniaturaCurso { display: block; width: 112px; height: 72px; object-fit: contain; border-radius: 4px; background: #eef4f1; }
+
+.filtrosRecursos {
+    display: grid;
+    grid-template-columns: auto minmax(160px, 1fr) auto minmax(120px, 180px);
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.filtrosRecursos input,
+.filtrosRecursos select,
+.modalRecursos input[type="search"] {
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #cbdcd7;
+    border-radius: 6px;
+    background: #fff;
+    color: #173039;
+    font: inherit;
+}
+
+.bibliotecaGrid,
+.selectorRecursosGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+}
+
+.recursoVisual {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #dbe8e3;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.recursoVisual > img {
+    display: block;
+    width: 100%;
+    height: 170px;
+    object-fit: contain;
+    background: #eef4f1;
+}
+
+.recursoVisualInfo { display: flex; justify-content: space-between; gap: 8px; padding: 12px; }
+.recursoVisualInfo strong { overflow-wrap: anywhere; }
+.recursoVisualInfo span { flex: 0 0 auto; color: #63777a; }
+.recursoVisual > .panelAcciones { padding: 0 12px 12px; }
+
+.modalRecursos {
+    width: min(820px, calc(100% - 32px));
+    max-height: min(80vh, 720px);
+    box-sizing: border-box;
+    padding: 22px;
+    border: 1px solid #dbe8e3;
+    border-radius: 8px;
+    color: #173039;
+}
+
+.modalRecursos::backdrop { background: rgba(15, 35, 38, .58); }
+.modalRecursosHeader { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
+.modalRecursosHeader h2 { margin: 0; font-size: 1.2rem; }
+.modalRecursos > label { display: block; margin-bottom: 6px; font-weight: 700; }
+.modalRecursos > input { width: 100%; margin-bottom: 16px; }
+.selectorRecursosGrid { max-height: 52vh; overflow: auto; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
+
+.opcionRecurso {
+    display: grid;
+    grid-template-rows: 110px auto auto;
+    gap: 5px;
+    min-width: 0;
+    padding: 8px;
+    border: 1px solid #dbe8e3;
+    border-radius: 6px;
+    background: #fff;
+    color: #173039;
+    text-align: left;
+    cursor: pointer;
+}
+
+.opcionRecurso:hover, .opcionRecurso:focus-visible { border-color: #087f7b; outline: 2px solid rgba(8, 127, 123, .18); }
+.opcionRecurso img { width: 100%; height: 110px; object-fit: contain; background: #eef4f1; }
+.opcionRecurso span { overflow-wrap: anywhere; font-weight: 700; }
+.opcionRecurso small { color: #63777a; }
+
+@media (max-width: 600px) {
+    .filtrosRecursos { grid-template-columns: 1fr; }
+    .campoSeleccionRecurso { align-items: stretch; flex-direction: column; }
+    .modalRecursos { padding: 16px; }
+}

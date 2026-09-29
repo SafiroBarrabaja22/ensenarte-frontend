@@ -23,11 +23,17 @@
                 </div>
                 <div>
                     <label for="imagenPalabra">Imagen frontal</label>
-                    <input type="text" id="imagenPalabra" placeholder="agua.png">
+                    <div class="campoSeleccionRecurso">
+                        <input type="text" id="imagenPalabra" placeholder="agua.png">
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="imagenPalabra">Buscar imagen</button>
+                    </div>
                 </div>
                 <div>
                     <label for="gifPalabra">Gif de la seña</label>
-                    <input type="text" id="gifPalabra" placeholder="agua.gif">
+                    <div class="campoSeleccionRecurso">
+                        <input type="text" id="gifPalabra" placeholder="agua.gif">
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="gifPalabra" data-extension="gif">Buscar GIF</button>
+                    </div>
                 </div>
                 <div class="panelAcciones">
                     <button class="panelBtn" id="btnCrearPalabra">Agregar palabra</button>
@@ -48,10 +54,11 @@
         </section>
     </main>
 
-    <script src="../../js/config.js"></script>
+    <script src="../../js/config.js?v=2"></script>
     <script src="../../js/api.js"></script>
     <script src="../../js/layout.js"></script>
-    <script src="../../js/pages/panel/layout-panel.js"></script>
-    <script src="../../js/pages/panel/diccionario.js"></script>
+    <script src="../../js/pages/panel/layout-panel.js?v=5"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=1"></script>
+    <script src="../../js/pages/panel/diccionario.js?v=2"></script>
 </body>
 </html>

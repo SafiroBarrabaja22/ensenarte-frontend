@@ -14,12 +14,19 @@ const CONFIG = {
 /** Resuelve la ruta de una imagen segun la profundidad de la pagina actual. */
 function rutaImagen(archivo) {
   if (!archivo) return prefijoRaiz() + CONFIG.RUTA_IMAGENES + CONFIG.AVATAR_POR_DEFECTO;
-  return prefijoRaiz() + CONFIG.RUTA_IMAGENES + archivo;
+  return resolverRutaArchivo(archivo, CONFIG.RUTA_IMAGENES);
 }
 
 function rutaVideo(archivo) {
   if (!archivo) return "";
-  return prefijoRaiz() + CONFIG.RUTA_VIDEOS + archivo;
+  return resolverRutaArchivo(archivo, CONFIG.RUTA_VIDEOS);
+}
+
+function resolverRutaArchivo(archivo, carpetaAssets) {
+  const ruta = String(archivo);
+  if (/^(https?:|data:|blob:)/i.test(ruta)) return ruta;
+  if (ruta.startsWith("/")) return new URL(ruta, CONFIG.API_BASE_URL).href;
+  return prefijoRaiz() + carpetaAssets + ruta;
 }
 
 /**

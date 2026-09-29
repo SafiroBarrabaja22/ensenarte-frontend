@@ -1,3 +1,6 @@
+const enlaceAdmin = document.getElementById("enlaceAdmin");
+enlaceAdmin.href = `${new URL(CONFIG.API_BASE_URL).origin}/admin/`;
+
 document.getElementById("formLogin").addEventListener("submit", async (evento) => {
   evento.preventDefault();
   const boton = document.getElementById("btnEnviar");
@@ -9,8 +12,14 @@ document.getElementById("formLogin").addEventListener("submit", async (evento) =
       document.getElementById("usuario").value.trim(),
       document.getElementById("password").value
     );
-    // Mismo criterio que el monolito: los creadores entran al panel.
-    window.location.href = usuario.es_creador ? "panel/index.html" : "inicio-usuario.html";
+    if (usuario.es_interprete && !usuario.es_creador && !usuario.es_profesor) {
+      window.location.href = "panel/recursos.html";
+    } else {
+      window.location.href =
+        usuario.es_creador || usuario.es_profesor
+          ? "panel/index.html"
+          : "inicio-usuario.html";
+    }
   } catch (error) {
     const texto =
       error.status === 401
