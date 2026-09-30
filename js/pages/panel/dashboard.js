@@ -12,7 +12,8 @@ const campos = {
 };
 
 (async function iniciar() {
-  if (!montarPanel()) return;
+  if (!(await montarPanel())) return;
+  SelectorRecursos.conectar();
   await cargarResumen();
   await cargarCursos();
 })();
@@ -37,7 +38,7 @@ async function cargarCursos() {
     const cursos = comoLista(await api("/panel/cursos/"));
 
     if (!cursos.length) {
-      tabla.innerHTML = '<tr><td colspan="5" class="vacio">No hay cursos todavía.</td></tr>';
+      tabla.innerHTML = '<tr><td colspan="6" class="vacio">No hay cursos todavía.</td></tr>';
       return;
     }
 
@@ -46,6 +47,7 @@ async function cargarCursos() {
         (curso) => `
         <tr>
           <td>${esc(curso.titulo)}</td>
+          <td><img class="miniaturaCurso" src="${esc(rutaImagen(curso.portada_curso))}" alt="Portada de ${esc(curso.titulo)}"></td>
           <td>${esc(curso.nombre)}</td>
           <td>${curso.activo ? "Sí" : "No"}</td>
           <td>${esc(curso.creado_por) || "-"}</td>
@@ -66,7 +68,7 @@ async function cargarCursos() {
       boton.addEventListener("click", () => eliminarCurso(boton.dataset.eliminar))
     );
   } catch (error) {
-    tabla.innerHTML = `<tr><td colspan="5" class="vacio">${esc(error.message)}</td></tr>`;
+    tabla.innerHTML = `<tr><td colspan="6" class="vacio">${esc(error.message)}</td></tr>`;
   }
 }
 

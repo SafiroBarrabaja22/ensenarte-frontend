@@ -14,12 +14,12 @@ document.getElementById("formLogin").addEventListener("submit", async (evento) =
     );
     if (usuario.es_interprete && !usuario.es_creador && !usuario.es_profesor) {
       window.location.href = "panel/recursos.html";
-      return;
+    } else {
+      window.location.href =
+        usuario.es_creador || usuario.es_profesor
+          ? "panel/index.html"
+          : "inicio-usuario.html";
     }
-    window.location.href =
-      usuario.es_creador || usuario.es_profesor
-        ? "panel/index.html"
-        : "inicio-usuario.html";
   } catch (error) {
     const texto =
       error.status === 401

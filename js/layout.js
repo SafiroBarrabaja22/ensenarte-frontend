@@ -26,7 +26,6 @@ function montarLayout(tipo) {
     <a href="${raiz}pages/cursos-usuario.html">Cursos</a>
     <a href="${raiz}pages/contacto.html">Soporte</a>
     ${usuario && usuario.es_creador ? `<a href="${raiz}pages/panel/index.html">Panel</a>` : ""}
-    ${usuario && usuario.es_interprete ? `<a href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
     <a href="#" id="linkCerrarSesion">Cerrar sesion</a>`;
 
   const bloqueDerecho =

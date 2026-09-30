@@ -16,7 +16,7 @@ const Auth = {
       autenticado: false,
     });
     Sesion.guardar({ access: datos.access, refresh: datos.refresh }, datos.usuario);
-    return this.perfil();
+    return datos.usuario;
   },
 
   async perfil() {

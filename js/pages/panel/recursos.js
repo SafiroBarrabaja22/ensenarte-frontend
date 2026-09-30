@@ -25,11 +25,7 @@ const FORMATO_RECURSO = new Set(["png", "gif", "jpg", "jpeg", "webp"]);
   });
 
   document.getElementById("formRecurso").addEventListener("submit", subirRecurso);
-  document.getElementById("archivoRecurso").addEventListener("change", (evento) => {
-    previsualizarRecurso(evento);
-    document.getElementById("nombreArchivoRecurso").textContent =
-      evento.currentTarget.files[0]?.name || "Ningún archivo seleccionado";
-  });
+  document.getElementById("archivoRecurso").addEventListener("change", previsualizarRecurso);
   document.getElementById("filtroExtension").addEventListener("change", cargarRecursos);
 
   let temporizadorBusqueda;
@@ -77,8 +73,8 @@ function tarjetaRecurso(recurso) {
         <span>.${escaparHtml(recurso.extension.toUpperCase())}</span>
       </div>
       <div class="panelAcciones">
-        <button class="panelBtn iconoAccion secundario" type="button" title="Renombrar recurso" aria-label="Renombrar recurso" data-renombrar="${recurso.id}">&#9998;</button>
-        <button class="panelBtn iconoAccion peligro" type="button" title="Eliminar recurso" aria-label="Eliminar recurso" data-eliminar-recurso="${recurso.id}">&#128465;</button>
+        <button class="panelBtn secundario" data-renombrar="${recurso.id}">Renombrar</button>
+        <button class="panelBtn peligro" data-eliminar-recurso="${recurso.id}">Eliminar</button>
       </div>
     </article>`;
 }
@@ -154,7 +150,6 @@ async function subirRecurso(evento) {
       esFormData: true,
     });
     formulario.reset();
-    document.getElementById("nombreArchivoRecurso").textContent = "Ningún archivo seleccionado";
     mostrarMensaje("mensaje", "Imagen cargada en la biblioteca.", "ok");
     await cargarRecursos();
   } catch (error) {

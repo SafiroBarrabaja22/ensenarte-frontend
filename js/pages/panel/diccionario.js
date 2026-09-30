@@ -3,7 +3,8 @@
 const cursoIdDiccionario = new URLSearchParams(window.location.search).get("curso");
 
 (async function iniciar() {
-  if (!montarPanel()) return;
+  if (!(await montarPanel())) return;
+  SelectorRecursos.conectar();
   if (!cursoIdDiccionario) {
     window.location.href = "index.html";
     return;

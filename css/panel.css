@@ -184,7 +184,7 @@
 .panelTabla th { background: #e2f2ed; color: #155e5c; }
 .panelTabla tr:hover td { background: #f7fbf9; }
 
-.panelBtn { min-height: 42px; padding: 0 16px; border-radius: 7px; background: #087f7b; font-weight: 700; box-sizing: border-box; }
+.panelBtn { min-height: 38px; padding: 8px 13px; border-radius: 6px; background: #087f7b; font-weight: 700; }
 .panelBtn:hover { background: #075e5c; }
 .panelBtn.secundario { background: #728589; }
 .panelBtn.peligro { background: #d85b50; }
@@ -207,17 +207,9 @@
 .campoSeleccionRecurso input { min-width: 0; flex: 1; }
 .campoSeleccionRecurso .panelBtn { flex: 0 0 auto; }
 
-.formularioRecurso { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
-.formularioRecurso > .panelAcciones { grid-column: 1 / -1; }
-.selectorArchivoControl { position: relative; }
-.selectorArchivoControl input[type="file"] { display: none; }
-.selectorArchivo { display: flex !important; align-items: center; gap: 12px; min-height: 42px; margin: 0 !important; padding: 5px 8px; border: 1px solid #cbdcd7; border-radius: 7px; background: #f7fbf9; color: #63777a !important; font-size: .9rem !important; font-weight: 400 !important; cursor: pointer; box-sizing: border-box; }
-.selectorArchivo:focus-within { border-color: #087f7b; outline: 3px solid rgba(8, 127, 123, .12); }
-.selectorArchivoBoton { display: inline-flex; align-items: center; min-height: 32px; padding: 0 16px; border-radius: 6px; background: #087f7b; color: #fff; font-size: .9rem; font-weight: 700; white-space: nowrap; }
-.selectorArchivo:hover .selectorArchivoBoton { background: #075e5c; }
-.selectorArchivo span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.formularioRecurso small { display: block; margin-top: 8px; color: #63777a; font-size: .9rem; line-height: 1.45; }
-.previsualizacionRecurso { display: block; width: 100%; height: 240px; margin-top: 14px; border: 1px solid #dbe8e3; border-radius: 7px; object-fit: contain; background: #eef4f1; }
+.formularioRecurso input[type="file"] { width: 100%; box-sizing: border-box; }
+.formularioRecurso small { display: block; margin-top: 6px; color: #63777a; }
+.previsualizacionRecurso { display: block; width: min(100%, 360px); max-height: 240px; margin-top: 12px; object-fit: contain; background: #eef4f1; }
 .miniaturaCurso { display: block; width: 112px; height: 72px; object-fit: contain; border-radius: 4px; background: #eef4f1; }
 
 .filtrosRecursos {
@@ -226,10 +218,6 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 18px;
-    padding: 14px 16px;
-    border: 1px solid #dbe8e3;
-    border-radius: 8px;
-    background: #fff;
 }
 
 .filtrosRecursos input,
@@ -237,8 +225,7 @@
 .modalRecursos input[type="search"] {
     min-width: 0;
     box-sizing: border-box;
-    min-height: 42px;
-    padding: 0 12px;
+    padding: 10px 12px;
     border: 1px solid #cbdcd7;
     border-radius: 6px;
     background: #fff;
@@ -253,8 +240,6 @@
     gap: 14px;
 }
 
-.bibliotecaGrid { grid-template-columns: minmax(0, 1fr); }
-
 .recursoVisual {
     min-width: 0;
     overflow: hidden;
@@ -263,22 +248,18 @@
     background: #fff;
 }
 
-.recursoVisual { display: grid; grid-template-columns: 240px minmax(0, 1fr) auto; align-items: center; gap: 20px; min-height: 176px; padding: 14px; }
-.recursoVisual > img { display: block; width: 240px; height: 148px; border-radius: 6px; object-fit: contain; background: #eef4f1; }
-.recursoVisualInfo { display: flex; flex-direction: column; gap: 6px; padding: 0; }
+.recursoVisual > img {
+    display: block;
+    width: 100%;
+    height: 170px;
+    object-fit: contain;
+    background: #eef4f1;
+}
+
+.recursoVisualInfo { display: flex; justify-content: space-between; gap: 8px; padding: 12px; }
 .recursoVisualInfo strong { overflow-wrap: anywhere; }
 .recursoVisualInfo span { flex: 0 0 auto; color: #63777a; }
-.recursoVisual > .panelAcciones { justify-content: flex-end; padding: 0; }
-.iconoAccion { width: 42px; height: 42px; min-height: 42px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 1.25rem; line-height: 1; }
-
-@media (max-width: 600px) {
-    .formularioRecurso { grid-template-columns: 1fr; }
-    .formularioRecurso > .panelAcciones { grid-column: auto; }
-    .filtrosRecursos { padding: 14px; }
-    .recursoVisual { grid-template-columns: 1fr; gap: 12px; }
-    .recursoVisual > img { width: 100%; height: 200px; }
-    .recursoVisual > .panelAcciones { justify-content: flex-start; }
-}
+.recursoVisual > .panelAcciones { padding: 0 12px 12px; }
 
 .modalRecursos {
     width: min(820px, calc(100% - 32px));
