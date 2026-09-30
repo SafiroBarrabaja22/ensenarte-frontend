@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca visual</title>
+    <link rel="stylesheet" href="../../css/panel.css?v=5">
+    <link rel="stylesheet" href="../../css/extra.css">
+</head>
+<body class="panelBody">
+    <header class="panelHeader">
+        <h1>Biblioteca visual</h1>
+        <nav>
+            <a href="../cursos-usuario.html">Mis cursos</a>
+            <a href="#" id="salirRecursos">Cerrar sesión</a>
+        </nav>
+    </header>
+
+    <main class="panelMain">
+        <div id="mensaje" aria-live="polite"></div>
+
+        <section class="panelSeccion">
+            <h2>Cargar recurso</h2>
+            <form class="panelForm formularioRecurso" id="formRecurso">
+                <div>
+                    <label for="nombreRecurso">Nombre para buscar</label>
+                    <input type="text" id="nombreRecurso" name="nombre" maxlength="120" required>
+                </div>
+                <div>
+                    <label for="archivoRecurso">Imagen</label>
+                    <div class="selectorArchivoControl">
+                        <input type="file" id="archivoRecurso" name="archivo" accept="image/png,image/gif,image/jpeg,image/webp">
+                        <label for="archivoRecurso" class="selectorArchivo">
+                            <span class="selectorArchivoBoton">Seleccionar archivo</span>
+                            <span id="nombreArchivoRecurso">Ningún archivo seleccionado</span>
+                        </label>
+                    </div>
+                    <small>PNG, GIF, JPG o WebP; máximo 10 MB.</small>
+                    <img id="previewRecurso" class="previsualizacionRecurso" alt="Vista previa de la imagen" hidden>
+                </div>
+                <div class="panelAcciones">
+                    <button class="panelBtn" type="submit" id="btnSubirRecurso">Subir imagen</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panelSeccion">
+            <h2>Recursos disponibles</h2>
+            <div class="filtrosRecursos">
+                <label for="buscarRecursos">Buscar por nombre</label>
+                <input type="search" id="buscarRecursos" placeholder="Ej. saludo hola">
+                <label for="filtroExtension">Formato</label>
+                <select id="filtroExtension">
+                    <option value="">Todos</option>
+                    <option value="png">PNG</option>
+                    <option value="gif">GIF</option>
+                    <option value="jpg">JPG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WebP</option>
+                </select>
+            </div>
+            <div class="bibliotecaGrid" id="listaRecursos" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <script src="../../js/config.js?v=2"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/pages/panel/recursos.js?v=2"></script>
+</body>
+</html>
