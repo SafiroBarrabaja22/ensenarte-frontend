@@ -13,6 +13,10 @@ const FORMATO_RECURSO = new Set(["png", "gif", "jpg", "jpeg", "webp"]);
       window.location.href = "../inicio-usuario.html";
       return;
     }
+    document.getElementById("volverSitioRecursos").href =
+      usuario.es_creador || usuario.es_profesor
+        ? "index.html"
+        : "../inicio-usuario.html";
   } catch (error) {
     console.error("No se pudo validar el acceso a la biblioteca.", error);
     return;
@@ -25,7 +29,11 @@ const FORMATO_RECURSO = new Set(["png", "gif", "jpg", "jpeg", "webp"]);
   });
 
   document.getElementById("formRecurso").addEventListener("submit", subirRecurso);
+  document.getElementById("btnSeleccionarArchivo").addEventListener("click", () => {
+    document.getElementById("archivoRecurso").click();
+  });
   document.getElementById("archivoRecurso").addEventListener("change", previsualizarRecurso);
+  document.getElementById("btnLimpiarPreview").addEventListener("click", limpiarPrevisualizacion);
   document.getElementById("filtroExtension").addEventListener("change", cargarRecursos);
 
   let temporizadorBusqueda;
@@ -73,8 +81,8 @@ function tarjetaRecurso(recurso) {
         <span>.${escaparHtml(recurso.extension.toUpperCase())}</span>
       </div>
       <div class="panelAcciones">
-        <button class="panelBtn secundario" data-renombrar="${recurso.id}">Renombrar</button>
-        <button class="panelBtn peligro" data-eliminar-recurso="${recurso.id}">Eliminar</button>
+        <button class="panelBtn secundario botonIcono" type="button" data-renombrar="${recurso.id}" aria-label="Renombrar" title="Renombrar">&#9998;</button>
+        <button class="panelBtn peligro botonIcono" type="button" data-eliminar-recurso="${recurso.id}" aria-label="Eliminar" title="Eliminar">&#128465;</button>
       </div>
     </article>`;
 }
@@ -162,16 +170,31 @@ async function subirRecurso(evento) {
 function previsualizarRecurso(evento) {
   const archivo = evento.currentTarget.files[0];
   const vista = document.getElementById("previewRecurso");
+  const nombreArchivo = document.getElementById("nombreArchivoRecurso");
+  const textoPrevisualizacion = document.querySelector(".textoPrevisualizacion");
+  const botonLimpiar = document.getElementById("btnLimpiarPreview");
   if (vista.dataset.urlTemporal) URL.revokeObjectURL(vista.dataset.urlTemporal);
   if (!archivo) {
     vista.hidden = true;
+    botonLimpiar.hidden = true;
+    nombreArchivo.textContent = "Ningún archivo seleccionado";
+    textoPrevisualizacion.hidden = false;
     vista.removeAttribute("src");
     delete vista.dataset.urlTemporal;
     return;
   }
+  nombreArchivo.textContent = archivo.name;
   vista.dataset.urlTemporal = URL.createObjectURL(archivo);
   vista.src = vista.dataset.urlTemporal;
   vista.hidden = false;
+  textoPrevisualizacion.hidden = true;
+  botonLimpiar.hidden = false;
+}
+
+function limpiarPrevisualizacion() {
+  const archivo = document.getElementById("archivoRecurso");
+  archivo.value = "";
+  previsualizarRecurso({ currentTarget: archivo });
 }
 
 function escaparHtml(valor) {

@@ -207,9 +207,21 @@
 .campoSeleccionRecurso input { min-width: 0; flex: 1; }
 .campoSeleccionRecurso .panelBtn { flex: 0 0 auto; }
 
-.formularioRecurso input[type="file"] { width: 100%; box-sizing: border-box; }
+.formularioRecurso { grid-template-columns: minmax(220px, 1fr) minmax(360px, 1.5fr) auto; align-items: start; }
+.formularioRecurso > .panelAcciones { grid-column: 1; grid-row: 2; align-self: start; }
+.zonaCargaRecurso { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; width: 100%; height: 300px; padding: 12px; box-sizing: border-box; border: 1px dashed #b8cfca; border-radius: 7px; background: #f2f7f5; overflow: hidden; }
+.zonaCargaRecurso input[type="file"] { display: none !important; }
+.selectorArchivo { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.selectorArchivoBtn { display: inline-flex !important; align-items: center; justify-content: center; flex: 0 0 auto; min-width: 170px; box-sizing: border-box; color: #fff !important; white-space: nowrap; }
+.selectorArchivo span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #63777a; }
 .formularioRecurso small { display: block; margin-top: 6px; color: #63777a; }
-.previsualizacionRecurso { display: block; width: min(100%, 360px); max-height: 240px; margin-top: 12px; object-fit: contain; background: #eef4f1; }
+.marcoPrevisualizacion { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; box-sizing: border-box; overflow: hidden; }
+.previsualizacionRecurso { display: block; width: 100% !important; height: 100% !important; max-width: 100%; max-height: 100%; object-fit: contain; }
+.previsualizacionRecurso[hidden] { display: none !important; }
+.textoPrevisualizacion { color: #63777a; font-size: .9rem; }
+.botonLimpiarPreview { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 6px; background: #d85b50; color: #fff; cursor: pointer; font-size: 1.1rem; font-weight: 700; }
+.botonLimpiarPreview:hover { background: #b9473d; }
+.botonLimpiarPreview[hidden] { display: none; }
 .miniaturaCurso { display: block; width: 112px; height: 72px; object-fit: contain; border-radius: 4px; background: #eef4f1; }
 
 .filtrosRecursos {
@@ -236,11 +248,14 @@
 .bibliotecaGrid,
 .selectorRecursosGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    grid-template-columns: 1fr;
     gap: 14px;
 }
 
 .recursoVisual {
+    display: grid;
+    grid-template-columns: 170px 220px minmax(0, 1fr);
+    align-items: center;
     min-width: 0;
     overflow: hidden;
     border: 1px solid #dbe8e3;
@@ -251,7 +266,7 @@
 .recursoVisual > img {
     display: block;
     width: 100%;
-    height: 170px;
+    height: 150px;
     object-fit: contain;
     background: #eef4f1;
 }
@@ -259,7 +274,10 @@
 .recursoVisualInfo { display: flex; justify-content: space-between; gap: 8px; padding: 12px; }
 .recursoVisualInfo strong { overflow-wrap: anywhere; }
 .recursoVisualInfo span { flex: 0 0 auto; color: #63777a; }
-.recursoVisual > .panelAcciones { padding: 0 12px 12px; }
+.recursoVisual > img { grid-column: 1; grid-row: 1; }
+.recursoVisualInfo { grid-column: 2; grid-row: 1; }
+.recursoVisual > .panelAcciones { grid-column: 3; grid-row: 1; justify-self: end; width: max-content; flex-direction: column; align-items: stretch; padding: 12px; }
+.recursoVisual > .panelAcciones .panelBtn { width: 42px; min-width: 42px; height: 38px; padding: 0; font-size: 1.2rem; line-height: 1; }
 
 .modalRecursos {
     width: min(820px, calc(100% - 32px));
@@ -298,6 +316,11 @@
 .opcionRecurso small { color: #63777a; }
 
 @media (max-width: 600px) {
+    .formularioRecurso { grid-template-columns: 1fr; }
+    .recursoVisual { grid-template-columns: 112px minmax(0, 1fr); }
+    .recursoVisual > img { grid-column: 1; grid-row: 1; height: 120px; }
+    .recursoVisualInfo { grid-column: 2; grid-row: 1; align-self: start; }
+    .recursoVisual > .panelAcciones { grid-column: 1 / -1; grid-row: 2; flex-direction: row; }
     .filtrosRecursos { grid-template-columns: 1fr; }
     .campoSeleccionRecurso { align-items: stretch; flex-direction: column; }
     .modalRecursos { padding: 16px; }
