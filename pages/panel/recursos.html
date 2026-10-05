@@ -11,7 +11,7 @@
     <header class="panelHeader">
         <h1>Biblioteca visual</h1>
         <nav>
-            <a href="../../index.html">Volver al sitio</a>
+            <a href="../inicio-usuario.html" id="volverSitioRecursos">Volver al sitio</a>
             <a href="#" id="salirRecursos">Cerrar sesión</a>
         </nav>
     </header>
@@ -28,9 +28,19 @@
                 </div>
                 <div>
                     <label for="archivoRecurso">Imagen</label>
-                    <input type="file" id="archivoRecurso" name="archivo" accept="image/png,image/gif,image/jpeg,image/webp" required>
+                    <div class="zonaCargaRecurso">
+                        <input type="file" id="archivoRecurso" name="archivo" accept="image/png,image/gif,image/jpeg,image/webp" required>
+                        <div class="selectorArchivo">
+                            <button class="panelBtn selectorArchivoBtn" type="button" id="btnSeleccionarArchivo">Seleccionar archivo</button>
+                            <span id="nombreArchivoRecurso">Ningún archivo seleccionado</span>
+                        </div>
+                        <div class="marcoPrevisualizacion">
+                            <img id="previewRecurso" class="previsualizacionRecurso" alt="Vista previa de la imagen" hidden>
+                            <span class="textoPrevisualizacion">La vista previa aparecerá aquí</span>
+                            <button class="botonLimpiarPreview" type="button" id="btnLimpiarPreview" aria-label="Eliminar imagen seleccionada" title="Eliminar imagen seleccionada" hidden>&#10005;</button>
+                        </div>
+                    </div>
                     <small>PNG, GIF, JPG o WebP; máximo 10 MB.</small>
-                    <img id="previewRecurso" class="previsualizacionRecurso" alt="Vista previa de la imagen" hidden>
                 </div>
                 <div class="panelAcciones">
                     <button class="panelBtn" type="submit" id="btnSubirRecurso">Subir imagen</button>
