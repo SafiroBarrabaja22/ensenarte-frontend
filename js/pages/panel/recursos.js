@@ -1,4 +1,17 @@
-const FORMATO_RECURSO = new Set(["png", "gif", "jpg", "jpeg", "webp"]);
+const FORMATO_RECURSO = new Set([
+  "png",
+  "gif",
+  "jpg",
+  "jpeg",
+  "jfif",
+  "webp",
+  "bmp",
+  "tif",
+  "tiff",
+  "avif",
+  "heic",
+  "heif",
+]);
 
 (async function iniciarBiblioteca() {
   if (!Sesion.activa()) {
@@ -35,6 +48,7 @@ const FORMATO_RECURSO = new Set(["png", "gif", "jpg", "jpeg", "webp"]);
   document.getElementById("archivoRecurso").addEventListener("change", previsualizarRecurso);
   document.getElementById("btnLimpiarPreview").addEventListener("click", limpiarPrevisualizacion);
   document.getElementById("filtroExtension").addEventListener("change", cargarRecursos);
+  document.getElementById("filtroCategoria").addEventListener("change", cargarRecursos);
 
   let temporizadorBusqueda;
   document.getElementById("buscarRecursos").addEventListener("input", () => {
@@ -50,8 +64,10 @@ async function cargarRecursos() {
   const parametros = new URLSearchParams();
   const busqueda = document.getElementById("buscarRecursos").value.trim();
   const extension = document.getElementById("filtroExtension").value;
+  const categoria = document.getElementById("filtroCategoria").value;
   if (busqueda) parametros.set("q", busqueda);
   if (extension) parametros.set("extension", extension);
+  if (categoria) parametros.set("categoria", categoria);
 
   contenedor.innerHTML = '<p class="cargando">Cargando recursos...</p>';
   try {
@@ -78,7 +94,7 @@ function tarjetaRecurso(recurso) {
       <img src="${escaparHtml(rutaImagen(recurso.archivo_url))}" alt="${escaparHtml(recurso.nombre)}">
       <div class="recursoVisualInfo">
         <strong>${escaparHtml(recurso.nombre)}</strong>
-        <span>.${escaparHtml(recurso.extension.toUpperCase())}</span>
+        <span>${escaparHtml(recurso.categoria)} · .${escaparHtml(recurso.extension.toUpperCase())}</span>
       </div>
       <div class="panelAcciones">
         <button class="panelBtn secundario botonIcono" type="button" data-renombrar="${recurso.id}" aria-label="Renombrar" title="Renombrar">&#9998;</button>
@@ -137,6 +153,7 @@ async function subirRecurso(evento) {
   evento.preventDefault();
   const formulario = evento.currentTarget;
   const nombre = document.getElementById("nombreRecurso").value.trim();
+  const categoria = document.getElementById("categoriaRecurso").value;
   const archivo = document.getElementById("archivoRecurso").files[0];
   const boton = document.getElementById("btnSubirRecurso");
 
@@ -147,6 +164,7 @@ async function subirRecurso(evento) {
 
   const datos = new FormData();
   datos.append("nombre", nombre);
+  datos.append("categoria", categoria);
   datos.append("archivo", archivo);
   boton.disabled = true;
   mostrarMensaje("mensaje", "");
@@ -158,6 +176,7 @@ async function subirRecurso(evento) {
       esFormData: true,
     });
     formulario.reset();
+    previsualizarRecurso({ currentTarget: document.getElementById("archivoRecurso") });
     mostrarMensaje("mensaje", "Imagen cargada en la biblioteca.", "ok");
     await cargarRecursos();
   } catch (error) {

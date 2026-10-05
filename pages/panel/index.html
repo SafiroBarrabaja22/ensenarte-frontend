@@ -33,21 +33,28 @@
                     <label for="portada">Archivo de portada</label>
                     <div class="campoSeleccionRecurso">
                         <input type="text" id="portada" placeholder="portadaAbecedario.jpg">
-                        <button class="panelBtn secundario" type="button" data-selector-recurso="portada">Buscar imagen</button>
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="portada" data-categoria="recurso">Buscar imagen</button>
                     </div>
                 </div>
                 <div>
                     <label for="imgDiccionario">Imagen del diccionario</label>
                     <div class="campoSeleccionRecurso">
                         <input type="text" id="imgDiccionario" placeholder="livres.jpg">
-                        <button class="panelBtn secundario" type="button" data-selector-recurso="imgDiccionario">Buscar imagen</button>
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="imgDiccionario" data-categoria="recurso">Buscar imagen</button>
                     </div>
                 </div>
                 <div>
                     <label for="imgEvaluacion">Imagen de la evaluación</label>
                     <div class="campoSeleccionRecurso">
                         <input type="text" id="imgEvaluacion" placeholder="evaluacionInicio.jpg">
-                        <button class="panelBtn secundario" type="button" data-selector-recurso="imgEvaluacion">Buscar imagen</button>
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="imgEvaluacion" data-categoria="recurso">Buscar imagen</button>
+                    </div>
+                </div>
+                <div>
+                    <label for="insignia">Insignia del curso</label>
+                    <div class="campoSeleccionRecurso">
+                        <input type="text" id="insignia" placeholder="Opcional">
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="insignia" data-categoria="insignia">Buscar insignia</button>
                     </div>
                 </div>
                 <div>
@@ -66,21 +73,21 @@
             <table class="panelTabla">
                 <thead>
                     <tr>
-                        <th>Título</th><th>Portada</th><th>Slug</th><th>Activo</th><th>Creado por</th><th>Acciones</th>
+                        <th>Título</th><th>Portada</th><th>Insignia</th><th>Slug</th><th>Activo</th><th>Creado por</th><th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tablaCursos">
-                    <tr><td colspan="6" class="cargando">Cargando...</td></tr>
+                    <tr><td colspan="7" class="cargando">Cargando...</td></tr>
                 </tbody>
             </table>
         </section>
     </main>
 
     <script src="../../js/config.js?v=2"></script>
-    <script src="../../js/api.js"></script>
-    <script src="../../js/layout.js"></script>
-    <script src="../../js/pages/panel/layout-panel.js?v=4"></script>
-    <script src="../../js/pages/panel/selector-recursos.js?v=1"></script>
-    <script src="../../js/pages/panel/dashboard.js?v=3"></script>
+    <script src="../../js/api.js?v=2"></script>
+    <script src="../../js/layout.js?v=2"></script>
+    <script src="../../js/pages/panel/layout-panel.js?v=5"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=5"></script>
+    <script src="../../js/pages/panel/dashboard.js?v=5"></script>
 </body>
 </html>

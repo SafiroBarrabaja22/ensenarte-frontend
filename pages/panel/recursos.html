@@ -27,9 +27,17 @@
                     <input type="text" id="nombreRecurso" name="nombre" maxlength="120" required>
                 </div>
                 <div>
+                    <label for="categoriaRecurso">Usar como</label>
+                    <select id="categoriaRecurso" name="categoria">
+                        <option value="recurso">Recurso de curso</option>
+                        <option value="avatar">Avatar de usuario</option>
+                        <option value="insignia">Insignia de curso</option>
+                    </select>
+                </div>
+                <div>
                     <label for="archivoRecurso">Imagen</label>
                     <div class="zonaCargaRecurso">
-                        <input type="file" id="archivoRecurso" name="archivo" accept="image/png,image/gif,image/jpeg,image/webp" required>
+                        <input type="file" id="archivoRecurso" name="archivo" accept="image/png,image/gif,image/jpeg,image/webp,image/bmp,image/tiff,image/tif,image/avif,image/heic,image/heif,.jfif,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tif,.tiff,.avif,.heic,.heif" required>
                         <div class="selectorArchivo">
                             <button class="panelBtn selectorArchivoBtn" type="button" id="btnSeleccionarArchivo">Seleccionar archivo</button>
                             <span id="nombreArchivoRecurso">Ningún archivo seleccionado</span>
@@ -62,14 +70,21 @@
                     <option value="jpeg">JPEG</option>
                     <option value="webp">WebP</option>
                 </select>
+                <label for="filtroCategoria">Categoría</label>
+                <select id="filtroCategoria">
+                    <option value="">Todas</option>
+                    <option value="recurso">Recursos</option>
+                    <option value="avatar">Avatares</option>
+                    <option value="insignia">Insignias</option>
+                </select>
             </div>
             <div class="bibliotecaGrid" id="listaRecursos" aria-live="polite"></div>
         </section>
     </main>
 
     <script src="../../js/config.js?v=2"></script>
-    <script src="../../js/api.js"></script>
-    <script src="../../js/layout.js"></script>
-    <script src="../../js/pages/panel/recursos.js?v=2"></script>
+    <script src="../../js/api.js?v=2"></script>
+    <script src="../../js/layout.js?v=2"></script>
+    <script src="../../js/pages/panel/recursos.js?v=5"></script>
 </body>
 </html>

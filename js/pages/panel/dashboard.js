@@ -8,6 +8,7 @@ const campos = {
   portada_curso: "portada",
   imagen_diccionario: "imgDiccionario",
   imagen_evaluacion: "imgEvaluacion",
+  insignia: "insignia",
   descripcion: "descripcion",
 };
 
@@ -38,7 +39,7 @@ async function cargarCursos() {
     const cursos = comoLista(await api("/panel/cursos/"));
 
     if (!cursos.length) {
-      tabla.innerHTML = '<tr><td colspan="6" class="vacio">No hay cursos todavía.</td></tr>';
+      tabla.innerHTML = '<tr><td colspan="7" class="vacio">No hay cursos todavía.</td></tr>';
       return;
     }
 
@@ -48,6 +49,7 @@ async function cargarCursos() {
         <tr>
           <td>${esc(curso.titulo)}</td>
           <td><img class="miniaturaCurso" src="${esc(rutaImagen(curso.portada_curso))}" alt="Portada de ${esc(curso.titulo)}"></td>
+          <td>${curso.insignia ? `<img class="miniaturaInsignia" src="${esc(rutaImagen(curso.insignia))}" alt="Insignia de ${esc(curso.titulo)}">` : "-"}</td>
           <td>${esc(curso.nombre)}</td>
           <td>${curso.activo ? "Sí" : "No"}</td>
           <td>${esc(curso.creado_por) || "-"}</td>
@@ -68,7 +70,7 @@ async function cargarCursos() {
       boton.addEventListener("click", () => eliminarCurso(boton.dataset.eliminar))
     );
   } catch (error) {
-    tabla.innerHTML = `<tr><td colspan="6" class="vacio">${esc(error.message)}</td></tr>`;
+    tabla.innerHTML = `<tr><td colspan="7" class="vacio">${esc(error.message)}</td></tr>`;
   }
 }
 

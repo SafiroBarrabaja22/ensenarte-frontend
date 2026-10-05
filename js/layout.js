@@ -31,6 +31,7 @@ function montarLayout(tipo) {
   const bloqueDerecho =
     tipo === "usuario"
       ? `<div class="menuUsuario">
+         <img class="avatarHeader" src="${avatarDe(usuario)}" alt="Avatar de ${usuario ? usuario.nombre : "usuario"}" loading="lazy">
          <span class="nombreHeader">${usuario ? usuario.nombre : ""}</span>
          <a class="perfilHeader" href="${raiz}pages/perfil.html">Perfil</a>
          </div>`

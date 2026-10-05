@@ -504,6 +504,7 @@
     .container .menu a:first-child:hover { background: var(--teal-dark); color: #fff; }
     .container .menu a:not(:first-child):hover { color: var(--teal); border-color: var(--coral); }
     .menuUsuario { display: flex; align-items: center; gap: 12px; margin-left: auto; color: var(--ink); line-height: normal; }
+    .avatarHeader { width: 38px; height: 38px; flex-shrink: 0; object-fit: cover; border: 2px solid #dcefe9; border-radius: 50%; background: #f5faf7; box-shadow: 0 3px 10px rgba(23, 44, 53, .08); }
     .nombreHeader { max-width: 180px; overflow: hidden; color: var(--ink); font-size: 16px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
     .perfilHeader { display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px; border: 1px solid var(--teal); border-radius: 999px; background: #e2f2ed; color: var(--teal-dark); font-size: 13px; font-weight: 800; line-height: 1; text-decoration: none; transition: background .2s ease, color .2s ease; }
     .perfilHeader:hover { background: var(--teal); color: #fff; }
@@ -886,6 +887,45 @@
     
     .profilePicture {
         margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+    }
+    .avatarSelectorTrigger {
+        position: relative;
+        width: 110px;
+        height: 110px;
+        border: 3px solid #3bb4a7;
+        background: transparent;
+        border-radius: 50%;
+        padding: 0;
+        cursor: pointer;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .avatarSelectorTrigger img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 50%;
+    }
+    .lapizAvatar {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #1b7d75;
+        color: #fff;
+        font-size: 16px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     .perfilPage {
         background-color: #fff;
@@ -897,12 +937,71 @@
         width: 2000px;
         height: 100%;
     }
-    .profilePicture img {
-        width: 100px;
-        height: 100px;
+    .modalAvatarSelector {
+        border: none;
+        border-radius: 18px;
+        padding: 20px;
+        width: min(560px, 90vw);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    }
+    .modalAvatarHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    .modalAvatarGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+        gap: 12px;
+    }
+    .avatarOption {
+        background: transparent;
+        border: 2px solid transparent;
         border-radius: 50%;
-        margin-bottom: 10px;
-        margin: 10px 15px;
+        padding: 0;
+        cursor: pointer;
+        width: 82px;
+        height: 82px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .avatarOption img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        display: block;
+    }
+    .avatarOptionSelected {
+        border-color: #2aa89b;
+        box-shadow: 0 0 0 3px rgba(42, 168, 155, 0.2);
+    }
+    .listaCursosCompletados {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+    }
+    .cursoCompletado {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eaeaea;
+    }
+    .cursoCompletadoInfo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .insigniaCursoPerfil {
+        width: 38px;
+        height: 38px;
+        object-fit: contain;
+        border-radius: 50%;
+        border: 1px solid #d5d5d5;
+        background: #f8f8f8;
     }
     
     .formActualizarPerfil {
@@ -1511,6 +1610,7 @@
 
     .itemCursos figure { height: 220px; margin: 0; background: #e2f2ed; }
     .itemCursos img { height: 100%; border-radius: 0; }
+    .itemCursos .insigniaCurso { width: 44px; height: 44px; margin: 12px 0 0 24px; object-fit: contain; border-radius: 50%; }
     .infoCurso { min-height: 210px; padding: 24px 26px 26px; gap: 12px; line-height: 1.45; }
     .itemCursos h2 { font-size: 24px; }
     .itemCursos p { color: var(--muted); font-size: 16px; font-weight: 500; line-height: 1.55; }

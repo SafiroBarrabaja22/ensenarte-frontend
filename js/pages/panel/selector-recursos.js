@@ -2,6 +2,7 @@ const SelectorRecursos = (() => {
   let dialog;
   let campoDestino;
   let extensionForzada = "";
+  let categoriaForzada = "recurso";
 
   function conectar() {
     document.querySelectorAll("[data-selector-recurso]").forEach((boton) => {
@@ -18,8 +19,10 @@ const SelectorRecursos = (() => {
         <h2>Seleccionar imagen</h2>
         <button class="panelBtn secundario" type="button" data-cerrar-recursos>Cerrar</button>
       </div>
-      <label for="buscarEnBiblioteca">Buscar por nombre</label>
-      <input type="search" id="buscarEnBiblioteca" placeholder="Escribe un nombre">
+      <div class="modalRecursosFiltros">
+        <label for="buscarEnBiblioteca">Buscar por nombre</label>
+        <input type="search" id="buscarEnBiblioteca" placeholder="Escribe un nombre">
+      </div>
       <div class="selectorRecursosGrid" id="resultadosBiblioteca" aria-live="polite"></div>`;
     document.body.append(dialog);
     dialog.querySelector("[data-cerrar-recursos]").addEventListener("click", () => dialog.close());
@@ -32,6 +35,8 @@ const SelectorRecursos = (() => {
   function abrir(boton) {
     campoDestino = document.getElementById(boton.dataset.selectorRecurso);
     extensionForzada = boton.dataset.extension || "";
+    categoriaForzada = boton.dataset.categoria || "recurso";
+    dialog.dataset.categoria = categoriaForzada;
     dialog.querySelector("#buscarEnBiblioteca").value = "";
     dialog.showModal();
     buscar();
@@ -41,8 +46,10 @@ const SelectorRecursos = (() => {
     const resultados = dialog.querySelector("#resultadosBiblioteca");
     const parametros = new URLSearchParams();
     const texto = dialog.querySelector("#buscarEnBiblioteca").value.trim();
+    const categoriaActiva = dialog.dataset.categoria || categoriaForzada || "recurso";
     if (texto) parametros.set("q", texto);
     if (extensionForzada) parametros.set("extension", extensionForzada);
+    parametros.set("categoria", categoriaActiva);
     resultados.innerHTML = '<p class="cargando">Buscando...</p>';
 
     try {

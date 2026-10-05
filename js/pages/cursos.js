@@ -36,6 +36,7 @@ function tarjetaCurso(curso) {
         <img class="imgCursos" src="${rutaImagen(curso.portada_curso)}" alt="${curso.titulo}">
       </figure>
       <div class="infoCurso">
+        ${curso.insignia ? `<img class="insigniaCurso" src="${rutaImagen(curso.insignia)}" alt="Insignia de ${curso.titulo}">` : ""}
         <h2>${curso.titulo}</h2>
         ${curso.descripcion ? `<p class="descripcionCurso">${curso.descripcion}</p>` : ""}
         <a href="${destino}">Entrar al curso</a>
