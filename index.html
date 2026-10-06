@@ -4,68 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>enSEÑArte - Inicio</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=16">
     <link rel="stylesheet" href="css/extra.css">
 </head>
 <body class="bodyBase">
     <div id="layout"></div>
 
     <main class="bodyHome">
-        <section id="inicio" class="heroSection">
-            <div class="heroText">
-                <p class="heroEyebrow animateText">Lengua de Señas Colombiana · LSC</p>
-                <h1 class="animateText">Aprende a comunicarte con las manos</h1>
-                <p class="animateText">Cursos claros, práctica guiada y un diccionario para aprender a tu ritmo.</p>
-                <div class="btnContainer">
-                    <a href="pages/login.html" class="btnHome btnLeft">Iniciar Sesión</a>
-                    <a href="pages/signup.html" class="btnHome btnRight">Registrarse</a>
+        <section id="inicio" class="heroSection hero">
+            <div class="homeContainer heroGrid hero__inner">
+                <div class="heroText hero__text">
+                    <p class="heroEyebrow">TU ESPACIO DE APRENDIZAJE · LSC</p>
+                    <h1>Bienvenid@ a <span>enSEÑArte</span></h1>
+                    <p class="heroSubtitle">Explora tus cursos y continúa practicando a tu ritmo.</p>
+                    <div class="btnContainer">
+                        <a href="pages/cursos.html" class="btnHome btnLeft">Consulta nuestros cursos</a>
+                        <a href="pages/panel/recursos.html" class="btnHome btnRight"><svg class="icon icon16" aria-hidden="true"><use href="#i-photo"></use></svg> Biblioteca visual</a>
+                    </div>
+                    <div id="accesoPanel"></div>
                 </div>
+                <aside class="tarjetaContinuacion hero__card" id="tarjetaContinuacion">
+                    <span class="iconoContinuacion" aria-hidden="true"><svg class="icon icon26"><use href="#i-books"></use></svg></span>
+                    <h2>Empieza tu primer curso</h2>
+                    <p>Descubre las señas y avanza a tu propio ritmo.</p>
+                    <a href="pages/cursos.html" class="botonContinuar">Ver cursos</a>
+                </aside>
             </div>
         </section>
 
         <section id="servicios" class="servicesSection">
-            <h2>¿Por qué aprender lengua de señas?</h2>
-            <p class="servicesDescription">Aprender lengua de señas es esencial para fomentar la inclusión y la igualdad de oportunidades, permitiendo una comunicación efectiva con las personas sordas o con dificultades auditivas. Al dominar este lenguaje, no solo se promueve la accesibilidad, sino que también se enriquece la capacidad de interacción en diversos contextos sociales y laborales. Además, aprender lengua de señas fortalece la empatía y el respeto por la diversidad, contribuyendo a una sociedad más justa e inclusiva.</p>
-            <h2>¿Cómo aprender Lengua de Señas Colombiana?</h2>
-            <div class="servicesContainer">
-                <div class="service">
-                    <div class="serviceNumber" aria-hidden="true">1</div>
-                    <h3>Nuestros Cursos</h3>
-                    <p>Con nuestros diferentes cursos enfocados a que aprendas desde las palabras más básicas del LSC para un amplio grupo de personas.</p>
-                </div>
-                <div class="service">
-                    <div class="serviceNumber" aria-hidden="true">2</div>
-                    <h3>Diccionarios</h3>
-                    <p>Cada curso tiene un glosario que nos permite visualizar en el momento que deseemos cada palabra que se aprenda en el respectivo curso.</p>
-                </div>
-                <div class="service">
-                    <div class="serviceNumber" aria-hidden="true">3</div>
-                    <h3>Evaluaciones</h3>
-                    <p>Todos los cursos cuentan con un apartado para evaluar lo aprendido, donde se pondrán a prueba tus conocimientos para lograr el máximo puntaje.</p>
+            <div class="homeContainer">
+                <h2>¿Por qué aprender lengua de señas?</h2>
+                <p class="servicesDescription">Aprender lengua de señas es esencial para fomentar la inclusión y la igualdad de oportunidades, permitiendo una comunicación efectiva y enriquecedora. Además, aprender LSC fortalece la empatía y el respeto por la diversidad.</p>
+                <div class="servicesContainer">
+                    <article class="service"><span class="serviceIcon serviceIconCursos" aria-hidden="true"><svg class="icon icon26"><use href="#i-books"></use></svg></span><h3>Nuestros Cursos</h3><p>Aprende desde las palabras más básicas de la LSC con cursos claros y prácticos.</p></article>
+                    <article class="service"><span class="serviceIcon serviceIconDiccionario" aria-hidden="true"><svg class="icon icon26"><use href="#i-book-2"></use></svg></span><h3>Diccionarios</h3><p>Consulta el glosario visual de cada curso cuando quieras practicar.</p></article>
+                    <article class="service"><span class="serviceIcon serviceIconEvaluacion" aria-hidden="true"><svg class="icon icon26"><use href="#i-checklist"></use></svg></span><h3>Evaluaciones</h3><p>Pon a prueba lo aprendido y consigue el máximo puntaje.</p></article>
                 </div>
             </div>
         </section>
 
-        <section id="nosotros" class="aboutSection">
-            <h2>Objetivo General</h2>
-            <p>Fortalecer la inclusión y la comunicación efectiva en la comunidad de Cundinamarca a través del desarrollo de una plataforma digital innovadora que brinde herramientas interactivas y accesibles para el aprendizaje y la práctica del lenguaje de señas colombiano (LSC), empoderando a las personas sordas y oyentes a comunicarse de manera fluida y respetuosa.</p>
-        </section>
+        <section id="nosotros" class="aboutSection"><div class="homeContainer"><h2>Aprende a comunicarte con las manos</h2><p>Fortalecemos la inclusión y la comunicación efectiva a través de una plataforma digital accesible para aprender y practicar la Lengua de Señas Colombiana.</p></div></section>
 
-        <section id="contacto" class="contactSection">
-            <h2>Contáctanos</h2>
-            <p>Si tienes algún tipo de sugerencia por favor coméntala, tu opinión es importante para nosotros.</p>
-            <a href="pages/contacto.html" class="btnHome">Manda tu ticket aquí</a>
-        </section>
+        <section id="contacto" class="contactSection"><div class="homeContainer contactBanner"><div><h2>¿Tienes una sugerencia?</h2><p>Cuéntanos cómo mejorar enSEÑArte.</p></div><a href="pages/contacto.html" class="contactButton"><svg class="icon icon16" aria-hidden="true"><use href="#i-message-circle"></use></svg>Manda tu ticket aquí</a></div></section>
     </main>
 
-    <div id="footer"></div>
+    <footer class="siteFooter"><div class="homeContainer"><span>enSEÑArte · Aprende Lengua de Señas Colombiana</span><nav><a href="pages/cursos.html">Cursos</a><a href="pages/panel/recursos.html">Biblioteca visual</a><a href="pages/contacto.html">Contacto</a></nav></div></footer>
 
     <script src="js/config.js?v=2"></script>
     <script src="js/api.js"></script>
-    <script src="js/layout.js"></script>
+    <script src="js/layout.js?v=5"></script>
     <script>
-        montarLayout(Sesion.activa() ? "usuario" : "publico");
-        montarFooter();
+        const esVisitante = !Sesion.activa();
+        document.body.classList.toggle("homePublico", esVisitante);
+        montarLayout(esVisitante ? "publico" : "usuario");
+        if (esVisitante) {
+            document.querySelector(".btnRight").href = "pages/signup.html";
+            document.querySelector(".btnRight").innerHTML = "Crear cuenta";
+            document.getElementById("tarjetaContinuacion").innerHTML = `
+                <span class="iconoContinuacion" aria-hidden="true"><svg class="icon icon26"><use href="#i-user"></use></svg></span>
+                <h2>Crea tu cuenta gratis</h2>
+                <p>Guarda tu progreso, gana insignias y practica a tu ritmo.</p>
+                <a href="pages/signup.html" class="botonContinuar">Registrarse</a>
+                <a href="pages/login.html" class="enlaceInicioSesion">¿Ya tienes cuenta? Inicia sesión</a>`;
+        }
     </script>
 </body>
-</html>
+     <script src="js/layout.js?v=7"></script>

@@ -3,28 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selector de curso</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Curso</title>
+    <link rel="stylesheet" href="../css/style.css?v=15">
     <link rel="stylesheet" href="../css/extra.css">
 </head>
 <body class="bodyBase">
     <div id="layout"></div>
 
-    <main class="bodySelectorCursos">
-        <h1 id="tituloCurso">Cargando...</h1>
-        <div id="mensaje"></div>
-        <div class="containerSelectorItems" id="opcionesCurso"></div>
+    <main class="bodyCursoNuevo">
+        <section class="cabeceraCursoNuevo">
+            <div class="decoracionCursoCirculo" aria-hidden="true"></div>
+            <div class="decoracionCursoCuadrado" aria-hidden="true"></div>
+            <div class="migasCurso"><a href="cursos-usuario.html">Cursos</a><span aria-hidden="true">›</span><span id="migaCurso">Curso</span></div>
+            <div class="identidadCursoNuevo">
+                <div class="iconoCursoNuevo"><img id="imagenCurso" src="../assets/imagenes/imgPredeterminadaUsuario.png" alt="Ilustración del curso"></div>
+                <div><h1 id="tituloCurso">Cargando...</h1><p id="descripcionCurso">Cargando información del curso...</p><div class="chipsCursoNuevo"><span><svg class="icon icon16" aria-hidden="true"><use href="#i-book-2"></use></svg><span id="palabrasCurso">0 palabras</span></span><span><svg class="icon icon16" aria-hidden="true"><use href="#i-help-circle"></use></svg><span id="preguntasCurso">0 preguntas</span></span></div></div>
+            </div>
+            <div class="progresoCursoNuevo"><span>Tu progreso</span><strong id="textoProgresoCurso">0%</strong><div class="barraProgresoCurso" role="progressbar" aria-label="Progreso del curso" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span id="barraProgresoCurso"></span></div></div>
+        </section>
 
-        <div class="salidaSelectorCursos">
-            <h2>¿Deseas salir?</h2>
-            <p class="descripcionCurso">Volver al listado de cursos</p>
-            <a href="cursos-usuario.html"><button class="buttonSelector">Salir del curso</button></a>
-        </div>
+        <div id="mensaje"></div>
+        <section class="accionesCursoNuevo" aria-labelledby="tituloAccionesCurso"><h2 id="tituloAccionesCurso">¿Por dónde quieres empezar?</h2><div id="opcionesCurso" class="opcionesCursoNuevas"></div></section>
+        <a class="volverCursosNuevo" href="cursos-usuario.html"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Volver a cursos</a>
     </main>
 
     <script src="../js/config.js?v=2"></script>
     <script src="../js/api.js"></script>
-    <script src="../js/layout.js"></script>
-    <script src="../js/pages/curso.js"></script>
+    <script src="../js/layout.js?v=7"></script>
+    <script src="../js/pages/curso.js?v=5"></script>
 </body>
-</html>
+ </html>

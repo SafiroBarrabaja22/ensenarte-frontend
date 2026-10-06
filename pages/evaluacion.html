@@ -4,34 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluación</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=15">
     <link rel="stylesheet" href="../css/extra.css">
 </head>
 <body class="bodyEvaluationView">
-    <main class="bodyEvaluaciones">
-        <div class="containerEvaluacion">
-            <div class="cuadroEvaluador">
-                <h1 id="tituloCurso">Cargando...</h1>
-                <p id="contador"></p>
-                <h2 id="textoPregunta"></h2>
-
-                <div class="videoContainer" id="contenedorVideo"></div>
-
-                <div class="optionsContainer" id="contenedorOpciones"></div>
-
-                <div class="feedback" id="feedback"></div>
-                <div id="mensaje"></div>
-            </div>
-        </div>
-
-        <div class="buttonContainer">
-            <a id="linkSalir" href="cursos-usuario.html"><button class="buttonBack">Salir</button></a>
-        </div>
+    <div id="layout"></div>
+    <main class="evaluacionNueva">
+        <section class="tarjetaEvaluacionNueva" aria-labelledby="tituloEvaluacion">
+            <div class="decoracionEvaluacion" aria-hidden="true"></div>
+            <header class="cabeceraEvaluacionNueva">
+                <div class="tituloEvaluacionNueva"><span class="iconoEvaluacionMini" aria-hidden="true"><svg class="icon icon20"><use href="#i-checklist"></use></svg></span><h1 id="tituloEvaluacion">Cargando... · Evaluación</h1></div>
+                <button type="button" class="botonSalirEvaluacion" id="btnSalirEvaluacion"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Salir</button>
+            </header>
+            <div class="progresoEvaluacionNueva"><span id="contador">Pregunta 1 de 1</span><strong id="porcentajeEvaluacion">0%</strong><div class="barraEvaluacionNueva"><span id="barraEvaluacion"></span></div></div>
+            <h2 id="textoPregunta">Cargando pregunta...</h2>
+            <div class="marcoPregunta" id="contenedorVideo"></div>
+            <div class="opcionesEvaluacionNueva" id="contenedorOpciones"></div>
+            <div class="feedbackEvaluacion" id="feedback" role="status" aria-live="polite"></div>
+            <div id="mensaje" class="mensajeEvaluacion" role="alert"></div>
+            <div class="accionesEvaluacion"><button type="button" class="botonComprobar" id="btnComprobar"><svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> Comprobar</button></div>
+        </section>
     </main>
-
+    <dialog id="dialogSalir" class="dialogSalir"><h2>¿Salir de la evaluación?</h2><p>Perderás tu avance</p><div><button type="button" class="botonSecundario" id="btnSeguir">Seguir aquí</button><button type="button" class="botonPeligro" id="btnConfirmarSalida">Salir</button></div></dialog>
     <script src="../js/config.js?v=2"></script>
     <script src="../js/api.js"></script>
-    <script src="../js/layout.js"></script>
-    <script src="../js/pages/evaluacion.js"></script>
+    <script src="../js/layout.js?v=6"></script>
+    <script src="../js/pages/evaluacion.js?v=5"></script>
 </body>
-</html>
+     <script src="../js/layout.js?v=7"></script>

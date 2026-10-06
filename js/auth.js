@@ -26,7 +26,11 @@ const Auth = {
   },
 
   async actualizarPerfil(datos) {
-    const usuario = await api("/auth/perfil/", { metodo: "PATCH", cuerpo: datos });
+    const usuario = await api("/auth/perfil/", {
+      metodo: "PATCH",
+      cuerpo: datos,
+      esFormData: datos instanceof FormData,
+    });
     Sesion.actualizarUsuario(usuario);
     return usuario;
   },
