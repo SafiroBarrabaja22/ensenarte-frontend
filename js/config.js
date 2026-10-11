@@ -9,7 +9,14 @@ const CONFIG = {
   RUTA_IMAGENES: "assets/imagenes/",
   RUTA_VIDEOS: "assets/videos/",
   AVATAR_POR_DEFECTO: "imgPredeterminadaUsuario.png",
+  // Slugs de los cursos que ofrecen la evaluacion con camara (el modelo solo
+  // reconoce letras). El backend debe rechazar los demas cursos.
+  CURSOS_CON_EVALUACION_CAMARA: ["abecedario"],
 };
+
+function cursoTieneEvaluacionCamara(slug) {
+  return CONFIG.CURSOS_CON_EVALUACION_CAMARA.includes(slug);
+}
 
 /** Resuelve la ruta de una imagen segun la profundidad de la pagina actual. */
 function rutaImagen(archivo) {

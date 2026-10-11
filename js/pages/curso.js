@@ -36,6 +36,10 @@
     const preguntas = Number(curso.total_preguntas || 0);
     const puntaje = resultado ? `${resultado.aciertos} aciertos` : "sin intentos";
     const slugSeguro = encodeURIComponent(curso.nombre);
+    // Si el curso tiene evaluacion con camara, primero se elige entre las dos.
+    const enlaceEvaluacion = cursoTieneEvaluacionCamara(curso.nombre)
+      ? `evaluaciones.html?curso=${slugSeguro}`
+      : `evaluacion.html?curso=${slugSeguro}&plantilla=15`;
     document.getElementById("opcionesCurso").innerHTML = `
       <article class="tarjetaAccionCurso" tabindex="0">
         <div class="cabeceraAccionCurso"><span class="iconoAccionCurso iconoDiccionarioCurso" aria-hidden="true">${iconoSvg("book-2", "icon icon26")}</span><span class="pasoCurso pasoUno">Paso 1</span></div>
@@ -47,7 +51,7 @@
         <div class="cabeceraAccionCurso"><span class="iconoAccionCurso iconoEvaluacionCurso" aria-hidden="true">${iconoSvg("checklist", "icon icon26")}</span><span class="pasoCurso pasoDos">Paso 2</span></div>
         <h3>Evaluación</h3>
         <p>${iconoSvg("help-circle", "icon icon16")} ${preguntas} ${plural(preguntas, "pregunta", "preguntas")} · Mejor puntaje: ${puntaje}</p>
-        <a class="botonAccionCurso" href="evaluacion.html?curso=${slugSeguro}&plantilla=15">${iconoSvg("play", "icon icon16")}Entrar a la evaluación</a>
+        <a class="botonAccionCurso" href="${enlaceEvaluacion}">${iconoSvg("play", "icon icon16")}Entrar a la evaluación</a>
       </article>`;
   } catch (error) {
     document.getElementById("tituloCurso").textContent = "Curso no encontrado";

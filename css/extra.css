@@ -35,3 +35,41 @@
     padding: 40px 20px;
     color: #777;
 }
+
+/* ---- Selector de evaluaciones y evaluacion con camara ---- */
+
+.selectorEvaluaciones { position: relative; z-index: 1; }
+.tarjetaTipoEvaluacion { align-items: flex-start; padding: 16px; text-decoration: none; }
+.tarjetaTipoEvaluacion strong { display: block; margin-bottom: 4px; }
+.tarjetaTipoEvaluacion small { display: block; color: #5c6f75; font-size: 13px; line-height: 1.4; }
+
+.instruccionesCamara { position: relative; z-index: 1; margin: 0 0 8px; padding-left: 20px; color: var(--ink); font-size: 14px; line-height: 1.7; }
+.estadoCargaCamara { min-height: 20px; color: #5c6f75; font-size: 14px; }
+
+.marcoCamara { position: relative; width: 100%; aspect-ratio: 4 / 3; margin-top: 18px; overflow: hidden; border-radius: 12px; background: var(--ink); }
+/* Solo se espeja lo que se VE; la deteccion usa el fotograma original. */
+.marcoCamara video, .marcoCamara canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.tiempoCamara { position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: var(--teal-dark); font-size: 14px; font-weight: 800; }
+.tiempoCamara.poco { background: var(--coral); color: #fff; }
+
+.filaObjetivoCamara { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+.letraObjetivoCamara { display: grid; place-items: center; width: 84px; height: 84px; flex: 0 0 84px; border-radius: 14px; background: var(--mint); color: var(--teal-dark); font-size: 48px; font-weight: 800; line-height: 1; }
+.estadoCamara { flex: 1; min-width: 0; }
+.estadoCamara p { margin: 0 0 4px; color: var(--ink); font-size: 15px; }
+.estadoCamara .detectadoCamara { color: #5c6f75; font-size: 13px; }
+.barraSostener { height: 10px; margin-top: 8px; overflow: hidden; border-radius: 999px; background: var(--mint); }
+.barraSostener span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--teal); transition: width .08s linear; }
+
+.resumenCamara { position: relative; z-index: 1; text-align: center; }
+.resumenCamara h2 { margin: 0; color: var(--ink); font-size: 24px; font-weight: 500; }
+.resumenCamara p { margin: 6px 0; color: #5c6f75; }
+.resumenCamara .porcentajeCamara { margin: 10px 0 4px; color: var(--teal-dark); font-size: 40px; font-weight: 800; }
+.resumenCamara .tituloFalladas { margin-top: 16px; color: var(--ink); font-weight: 700; }
+.letrasFalladas { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+.letrasFalladas li { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #fce4e0; color: #8a2e24; font-size: 18px; font-weight: 800; }
+button.botonResultadoSecundario { background: #fff; font: inherit; font-size: 14px; cursor: pointer; }
+.botonResultadoSecundario:disabled, .botonComprobar:disabled { opacity: .55; cursor: default; }
+
+@media (max-width: 639px) {
+    .letraObjetivoCamara { width: 64px; height: 64px; flex-basis: 64px; font-size: 36px; }
+}
