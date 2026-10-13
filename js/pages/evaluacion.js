@@ -6,6 +6,7 @@ let respuestaSeleccionada = null;
 let respuestaComprobada = false;
 let siguienteIntento = null;
 let ultimoIntento = null;
+let resumenInterfaz = [];
 
 (async function iniciar() {
   if (!requiereSesion()) return;
@@ -23,12 +24,15 @@ let ultimoIntento = null;
 
   try {
     const curso = await api(`/cursos/${slugCurso}/`, { autenticado: false });
+    try { resumenInterfaz = JSON.parse(sessionStorage.getItem(`evaluacion-items-${slugCurso}`) || "[]"); } catch { resumenInterfaz = []; }
     document.getElementById("tituloEvaluacion").textContent = `${nombreCursoParaEvaluacion(curso, slugCurso)} · Evaluación`;
     document.querySelector(".tituloEvaluacionNueva .icon").innerHTML = `<use href="#i-${/abecedario|letra|abc/i.test(`${curso.titulo} ${slugCurso}`) ? "abc" : "books"}"></use>`;
     let intento;
     try {
       intento = await api(`/cursos/${slugCurso}/evaluacion/actual/`);
     } catch {
+      resumenInterfaz = [];
+      try { sessionStorage.removeItem(`evaluacion-items-${slugCurso}`); } catch {}
       intento = await api(`/cursos/${slugCurso}/evaluacion/iniciar/`, { metodo: "POST" });
     }
     pintarPregunta(intento);
@@ -100,6 +104,7 @@ async function comprobarRespuesta() {
     const respuesta = await api(`/cursos/${slugCurso}/evaluacion/responder/`, { metodo: "POST", cuerpo: { opcion_id: Number(respuestaSeleccionada) } });
     const opcionActual = document.querySelector(`[data-id="${respuestaSeleccionada}"]`);
     if (respuesta.correcta) {
+      registrarItemResumen(ultimoIntento?.pregunta, true);
       respuestaComprobada = true;
       opcionActual?.classList.add("correcta");
       document.getElementById("feedback").className = "feedbackEvaluacion correcto";
@@ -112,6 +117,7 @@ async function comprobarRespuesta() {
         actualizarBoton("Siguiente", "i-arrow-right");
       }
     } else {
+      registrarItemResumen(ultimoIntento?.pregunta, false);
       bloqueado = false;
       opcionActual?.classList.add("incorrecta");
       document.getElementById("feedback").className = "feedbackEvaluacion incorrecto";
@@ -138,7 +144,17 @@ function gestionarTeclado(evento) {
 }
 
 function irAResultado() {
+  try { sessionStorage.setItem(`evaluacion-items-${slugCurso}`, JSON.stringify(resumenInterfaz)); } catch {}
   window.location.href = `retroalimentacion.html?curso=${encodeURIComponent(slugCurso)}`;
+}
+
+function registrarItemResumen(pregunta, correcta) {
+  if (!pregunta) return;
+  const index = resumenInterfaz.findIndex(item => item.id === pregunta.id);
+  const item = { id: pregunta.id, etiqueta: String((index >= 0 ? index : resumenInterfaz.length) + 1), detalle: correcta ? "Correcta" : "Fallo", acierto: correcta, termino: pregunta.texto };
+  if (index >= 0) resumenInterfaz[index] = { ...resumenInterfaz[index], ...item, acierto: correcta || resumenInterfaz[index].acierto };
+  else resumenInterfaz.push(item);
+  try { sessionStorage.setItem(`evaluacion-items-${slugCurso}`, JSON.stringify(resumenInterfaz)); } catch {}
 }
 
 function esc(valor) {

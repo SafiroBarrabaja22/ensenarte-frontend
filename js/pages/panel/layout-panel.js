@@ -37,6 +37,17 @@ async function montarPanel() {
       </nav>
     </header>`;
 
+  if (/\/panel\/(preguntas|diccionario)\.html$/i.test(window.location.pathname)) {
+    const main = document.querySelector("main.panelMain");
+    if (main && !main.querySelector(".panelBtnPequeno")) {
+      const volver = document.createElement("a");
+      volver.className = "panelBtn panelBtnPequeno";
+      volver.href = "index.html";
+      volver.textContent = "Volver";
+      main.prepend(volver);
+    }
+  }
+
   document.getElementById("salirPanel").addEventListener("click", (evento) => {
     evento.preventDefault();
     Sesion.cerrar();

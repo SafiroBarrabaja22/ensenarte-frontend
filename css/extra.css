@@ -251,6 +251,8 @@ button.botonResultadoSecundario { background: #fff; font: inherit; font-size: 14
 /* Base compartida y despeje del encabezado fijo en las evaluaciones. */
 :root { --nav-h: 76px; }
 .header { z-index: 100 !important; }
+/* #layout crea su propio contexto; debe quedar encima del main al hacer scroll. */
+body.bodyFeedbackView #layout, body.bodyEvaluationView #layout { position:relative; z-index:120 !important; }
 body.bodyBase.bodyEvaluationView { background: var(--eval-page); }
 .evaluacionNueva.bodyCursos {
   width: min(94%, 1120px);
@@ -458,6 +460,42 @@ body.bodyEvaluationView .barraCategorias, body.bodyEvaluationView .pestanasCurso
 .resumenCamara.animacionFinalizada .puntosCelebracion { opacity:1; }
 
 :root { --resultado-anillo:1500ms; --resultado-chip:550ms; --resultado-fade:450ms; --resultado-pop:550ms; --resultado-rafaga:1000ms; --resultado-entrada-contenido:1500ms; --resultado-stagger-datos:80ms; --resultado-entrada-letras:1800ms; --resultado-stagger-letras:90ms; --resultado-sacudida:500ms; --resultado-despues-letras:700ms; --resultado-datos:800ms; }
+
+/* Estructura compartida de resultados para preguntas y cámara. */
+:root { --resultado-verde:#0F7F7A; --resultado-verde-oscuro:#0B5F5B; --resultado-menta:#E8F2EE; --resultado-coral:#F26B5E; --resultado-ambar:#FDF1DA; --resultado-ambar-texto:#6B4308; --resultado-tinta:#1B2F36; --resultado-fondo:#F6FAF8; }
+body.bodyFeedbackView::before { display:none !important; }
+.resultadosNueva { width:100% !important; max-width:none !important; padding:64px 0 32px !important; }
+.tarjetaResultadoUnificada,.tarjetaEvaluacionNueva.tarjetaCamaraNueva.tarjetaResultadoActiva { width:min(94%,720px) !important; max-width:720px !important; margin:40px auto 32px !important; padding:28px !important; box-sizing:border-box; overflow:hidden; border-radius:16px; background:var(--resultado-fondo); color:var(--resultado-tinta); text-align:left; }
+.evaluacionCamaraPagina:has(.tarjetaResultadoActiva){width:100%!important;max-width:none!important;padding:0!important}
+.evaluacionCamaraPagina .tarjetaCamaraNueva.tarjetaResultadoActiva{margin-top:100px!important}
+.tarjetaResultadoUnificada { position:relative; border:1px solid #DCE8E4; }
+.tarjetaResultadoUnificada::before { content:""; position:absolute; width:150px;height:150px;right:-72px;top:-78px;border:20px solid rgba(15,127,122,.10);border-radius:50%;pointer-events:none; }
+.tarjetaResultadoUnificada > * { position:relative; z-index:1; }
+.tarjetaResultadoUnificada .resultadoCabecera { display:flex;align-items:center;gap:10px;margin-bottom:20px; }
+.tarjetaResultadoUnificada .resultadoCabecera h1 { flex:1;margin:0;font-size:17px;font-weight:500; }
+.resultadoCursoIcon { display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--resultado-menta);color:var(--resultado-verde-oscuro); }
+.resultadoCerrar { flex:0 0 auto;padding:8px 12px;border:1px solid #BFD3CC;border-radius:8px;background:#fff;color:var(--resultado-verde-oscuro);font:inherit;cursor:pointer; }
+.resultadoUnificado .heroResultadoCamara { display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;justify-content:center;gap:28px;min-height:190px;padding:0 0 18px; }
+.resultadoUnificado .leyendaUmbral { position:static;margin:0 0 10px;color:#5C6F75;font-size:12px; }
+.resultadoUnificado .anilloResultadoProgreso { transition:stroke 180ms ease; }
+.resultadoUnificado .textoResultado h2 { margin:0 0 7px;font-size:28px;font-weight:500;line-height:1.2;color:var(--resultado-tinta); }
+.resultadoUnificado .textoResultado p { margin:0;color:#5C6F75;font-size:15px;line-height:1.5; }
+.resultadoUnificado .datosClaveResultado article { --n:0; }
+.resultadoUnificado .datosClaveResultado article:nth-child(2){--n:1}.resultadoUnificado .datosClaveResultado article:nth-child(3){--n:2}
+.resultadoUnificado .resultadoLetra { min-height:76px;white-space:nowrap; }
+.resultadoUnificado .resultadoLetra:nth-child(1){--delay:0ms}.resultadoUnificado .resultadoLetra:nth-child(n+2){--delay:calc(var(--i,1)*90ms)}
+.resultadoUnificado .resultadoLetra.correcta { background:#E1F5EE;border-color:#BFE6D8;color:#085041; }
+.resultadoUnificado .resultadoLetra.fallida { background:#FCE4E0;border-color:#F4B9B1;color:#8A2E24; }
+.resultadoUnificado .resultadoLetra.sinDetalle { background:#F6FAF8;border-color:#DCE8E4;color:#5C6F75; }
+.resultadoUnificado .bloquePracticar { background:#F6FAF8;border:.5px solid #DCE8E4;border-radius:12px; }
+.resultadoUnificado .resultadoLetra:nth-child(1) { grid-column:span 1; }
+.resultadoUnificado .cuadriculaLetrasResultado[style*="--cols:1"] { grid-template-columns:minmax(130px,190px);justify-content:center; }
+.resultadoUnificado .estadoGuardado { justify-content:center;align-items:center;gap:8px;margin-top:14px;font-size:12px; }
+.resultadoUnificado .estadoGuardado.correcto { color:#0B5F5B; }
+.tarjetaResultadoActiva > .cabeceraEvaluacionNueva,.tarjetaResultadoActiva > .decoracionEvaluacion { display:none !important; }
+.tarjetaResultadoActiva #pantallaResumen { display:block !important; }
+.tarjetaResultadoActiva #resumenLocal { display:block !important; }
+@media(max-width:639px){.tarjetaResultadoUnificada,.tarjetaEvaluacionNueva.tarjetaCamaraNueva.tarjetaResultadoActiva{width:94%!important;padding:20px!important}.resultadoUnificado .heroResultadoCamara{grid-template-columns:1fr;justify-items:center;gap:12px;text-align:center;min-height:0}.resultadoUnificado .anilloResultadoCamara{width:130px;height:130px}.resultadoUnificado .textoResultado{text-align:center}.resultadoUnificado .datosClaveResultado{grid-template-columns:1fr}.resultadoUnificado .accionesResultado{flex-direction:column}.resultadoUnificado .accionesResultado>*{width:100%}}
 .anilloResultadoProgreso { transition-duration:var(--resultado-anillo,1500ms),180ms; }
 .medallonResultado.chipAparece { animation-duration:var(--resultado-chip,550ms); }
 .puntosCelebracion.mostrar i { animation-duration:var(--resultado-pop,550ms),var(--dur); }

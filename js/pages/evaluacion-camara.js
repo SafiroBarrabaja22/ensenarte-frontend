@@ -9,6 +9,7 @@
  */
 
 import { ClasificadorKNN, ControlSostener, landmarksAPixeles, normalizarLandmarks } from "../lib/lsc-reconocedor.js";
+import { renderResultados } from "../lib/resultados.js?v=2";
 
 // ---------------------------------------------------------------- configuracion
 // Para cambiar el modelo basta con reemplazar este archivo (o esta ruta).
@@ -51,6 +52,7 @@ let resultAnimFrame = null;
 let resultTimers = [];
 let resultAnimacionActiva = false;
 let datosFinalesAnimacion = null;
+let datosCursoResultado = { nombre: "Curso", icono: "books" };
 
 /**
  * Sesion en curso. `null` si no hay una activa.
@@ -101,7 +103,7 @@ let sesion = null;
   }
 
   api(`/cursos/${slugCurso}/`, { autenticado: false })
-    .then((curso) => { const nombreCurso = nombreCursoParaEvaluacion(curso, slugCurso); $("tituloEvaluacion").textContent = `${nombreCurso} · Evaluación con cámara`; $("iconoCursoEvaluacion").innerHTML = `<svg class="icon icon20" aria-hidden="true"><use href="#i-${/abecedario|letra|abc/i.test(`${nombreCurso} ${slugCurso}`) ? "abc" : "books"}"></use></svg>`; })
+    .then((curso) => { const nombreCurso = nombreCursoParaEvaluacion(curso, slugCurso); datosCursoResultado = { nombre: nombreCurso, icono: /abecedario|letra|abc/i.test(`${nombreCurso} ${slugCurso}`) ? "abc" : "books" }; $("tituloEvaluacion").textContent = `${nombreCurso} · Evaluación con cámara`; $("iconoCursoEvaluacion").innerHTML = `<svg class="icon icon20" aria-hidden="true"><use href="#i-${datosCursoResultado.icono}"></use></svg>`; })
     .catch(() => {});
 })();
 
@@ -420,60 +422,31 @@ function pintarSostener(progreso) {
 // ---------------------------------------------------------------- resumen y envio
 function pintarResumen(intentos, oficial = null) {
   const total = Number(oficial?.total ?? intentos.length);
-  const correctas = Number(oficial?.correctas ?? intentos.filter((i) => i.acerto).length);
+  const correctas = Number(oficial?.correctas ?? intentos.filter(i => i.acerto).length);
   const porcentaje = Number(oficial?.porcentaje ?? Math.floor(correctas * 100 / Math.max(1,total)));
   const umbral = Number(oficial?.umbral_aplicado ?? PORCENTAJE_APROBADO);
   const aprobado = typeof oficial?.aprobado === 'boolean' ? oficial.aprobado : correctas * 100 >= umbral * total;
-  const falladas = intentos.filter((i) => !i.acerto);
-  const tiempos = intentos.filter((i) => i.acerto && Number.isFinite(i.tiempo_ms)).map((i) => i.tiempo_ms);
-  const promedioMs = tiempos.length ? tiempos.reduce((s,t)=>s+t,0)/tiempos.length : 0;
-  const promedioTexto = tiempos.length ? (promedioMs/1000).toFixed(1)+' s' : '—';
-  const circ = 2*Math.PI*62;
-  const anillo=$('anilloResultadoCamara'); anillo.classList.toggle('aprobado',aprobado); anillo.classList.toggle('noAprobado',!aprobado);
-  $('porcentajeResultado').textContent='0%'; $('anilloResultadoProgreso').style.strokeDasharray=String(circ); $('anilloResultadoProgreso').style.strokeDashoffset=String(circ);
-  $('marcaUmbralAnillo').style.transform='translate(-50%,-50%) rotate('+ (umbral*3.6) +'deg) translateY(-62px)';
-  $('medallonResultado').classList.toggle('noAprobado',!aprobado); $('medallonResultado').innerHTML='<svg class="icon icon20" aria-hidden="true"><use href="#i-'+(aprobado?'award':'repeat')+'"></use></svg>';
-  $('tituloResultado').textContent=aprobado?'¡Aprobaste!':'¡Casi lo logras!'; $('tituloResultado').classList.toggle('noAprobado',!aprobado);
-  $('mensajeResultado').textContent=aprobado?'Hiciste '+correctas+' de '+total+' letras correctas. Necesitabas '+umbral+'% y lo superaste.':'Hiciste '+correctas+' de '+total+' letras. Necesitas '+umbral+'% para aprobar, pero puedes intentarlo de nuevo cuando quieras.';
-  $('anuncioResultado').textContent='';
-  $('datoCorrectas').textContent='0 de '+total; $('datoTiempoPromedio').textContent=tiempos.length?'0.0 s':'—'; $('datoUmbral').textContent='0%';
-  const cols=total%5===0?5:total%4===0?4:3; $('detalleLetras').style.setProperty('--cols',cols);
-  $('detalleLetras').innerHTML=intentos.map((item)=>{const ok=Boolean(item.acerto),timeout=!ok&&Number(item.tiempo_ms)>=LIMITE_MS,label=ok?Math.max(1,Math.round(Number(item.tiempo_ms)/1000))+' s':timeout?'Tiempo agotado':'Fallo';return '<article class="resultadoLetra '+(ok?'correcta':'fallida')+'"><strong>'+esc(item.letra_objetivo)+'</strong><span><svg class="icon icon16" aria-hidden="true"><use href="#i-'+(ok?'check':'x')+'"></use></svg>'+label+'</span></article>';}).join('');
-  const cssMillis=(name,fallback)=>{const n=parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));return Number.isFinite(n)?n:fallback;};
-  const inicioLetras=cssMillis('--resultado-entrada-letras',1800),separacionLetras=cssMillis('--resultado-stagger-letras',90),popMs=cssMillis('--resultado-pop',550),despuesMs=cssMillis('--resultado-despues-letras',700);
-  [...$('detalleLetras').children].forEach((el,i)=>el.style.setProperty('--delay',((inicioLetras+i*separacionLetras)/1000)+'s'));
-  const postDelay=((inicioLetras+Math.max(0,total-1)*separacionLetras+popMs+despuesMs)/1000).toFixed(2)+'s'; ['insigniaDesbloqueada','bloquePracticar','accionesResultado','estadoGuardado'].forEach((id)=>$(id).style.setProperty('--postletters-delay',postDelay));
-  $('bloquePracticar').hidden=!falladas.length; $('letrasPracticar').innerHTML=falladas.map((i)=>'<span>'+esc(i.letra_objetivo)+'</span>').join(''); $('enlaceDiccionario').href='diccionario.html?curso='+encodeURIComponent(slugCurso);
-  const nueva=Boolean(oficial&&(oficial.insignia_nueva||oficial.nueva_insignia||(oficial.insignia&&oficial.insignia.nueva))); $('insigniaDesbloqueada').hidden=!(aprobado&&nueva); $('insigniaPerfecta').hidden=!(aprobado&&nueva&&porcentaje===100);
-  $('btnRepetir').className=aprobado?'botonResultadoSecundario':'botonResultadoPrincipal'; $('enlaceVolverCurso').className=aprobado?'botonResultadoPrincipal':'botonResultadoSecundario';
-  datosFinalesAnimacion={porcentaje,umbral,correctas,total,promedioMs,promedioTexto,aprobado};
-  iniciarAnimacionResultado();
+  const falladas = intentos.filter(i => !i.acerto);
+  const tiempos = intentos.filter(i => i.acerto && Number.isFinite(i.tiempo_ms)).map(i => i.tiempo_ms);
+  const promedio = tiempos.length ? (tiempos.reduce((s,t)=>s+t,0)/tiempos.length/1000).toFixed(1)+' s' : '—';
+  const items = intentos.map(i => { const ok=Boolean(i.acerto), agotado=!ok&&Number(i.tiempo_ms)>=LIMITE_MS; return { etiqueta:i.letra_objetivo, acierto:ok, detalle:ok?Math.max(1,Math.round(Number(i.tiempo_ms)/1000))+' s':agotado?'Tiempo agotado':'Fallo' }; });
+  const slugSeguro=encodeURIComponent(slugCurso), cursoUrl=`curso.html?curso=${slugSeguro}&plantilla=15`, repetirUrl=`evaluacion-camara.html?curso=${slugSeguro}`;
+  renderResultados({ curso:datosCursoResultado, modo:'camara', total, correctas, porcentaje, umbral, items, estadistica2:{valor:promedio,etiqueta:'Promedio por letra acertada'}, repasar:falladas.map(i=>i.letra_objetivo), insignia:{nueva:Boolean(oficial&&(oficial.insignia_nueva||oficial.nueva_insignia||(oficial.insignia&&oficial.insignia.nueva))),id:'curso-completado'}, slug:slugCurso, cursoUrl, repetirUrl, iconoCurso:datosCursoResultado.icono }, $('resumenLocal'), {onClose:()=>salir(cursoUrl)});
+  datosFinalesAnimacion={porcentaje,umbral,correctas,total,promedioTexto:promedio,aprobado};
 }
 
 function limpiarAnimacionResultado(){ if(resultAnimFrame!==null) cancelAnimationFrame(resultAnimFrame); resultAnimFrame=null; resultTimers.forEach(clearTimeout); resultTimers=[]; resultAnimacionActiva=false; }
-function iniciarAnimacionResultado(){
-  limpiarAnimacionResultado(); const d=datosFinalesAnimacion; const wrapper=$('resumenLocal'); wrapper.classList.remove('animacionFinalizada','resultadoAnimando'); void wrapper.offsetWidth;
-  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const circ=2*Math.PI*62; const arc=$('anilloResultadoProgreso'); const anillo=$('anilloResultadoCamara');
-  if(reduce){ terminarAnimacionResultado(); return; }
-  resultAnimacionActiva=true; wrapper.classList.add('resultadoAnimando'); $('puntosCelebracion').classList.toggle('mostrar',d.aprobado);
-  const rafBurst=()=>{const box=$('rafagaResultado');box.innerHTML='';if(!d.aprobado)return;for(let i=0;i<14;i++){const el=document.createElement('i'),angle=(Math.PI*2*i/14),radius=[70,88,106][i%3];el.style.setProperty('--x',Math.cos(angle)*radius+'px');el.style.setProperty('--y',Math.sin(angle)*radius+'px');el.style.setProperty('--delay',(1.5+i*.018)+'s');box.appendChild(el);}}; rafBurst();
-  const dur=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--resultado-anillo'))||1500; const inicio=performance.now();
-  const step=(now)=>{if(!resultAnimacionActiva)return;const t=Math.min(1,(now-inicio)/dur),ease=1-Math.pow(1-t,3),value=Math.round(d.porcentaje*ease);arc.style.strokeDashoffset=String(circ*(1-d.porcentaje*ease/100));$('porcentajeResultado').textContent=value+'%';const met=value>=d.umbral;anillo.classList.toggle('alcanzoMeta',met);$('porcentajeResultado').classList.toggle('superaUmbral',met);if(t<1){resultAnimFrame=requestAnimationFrame(step);}else{resultAnimFrame=null;const chip=$('medallonResultado');chip.classList.add('chipAparece'); $('anuncioResultado').textContent=(d.aprobado?'Aprobaste':'No aprobaste')+' con '+d.porcentaje+'%. '+d.correctas+' de '+d.total+' letras correctas.'; animarDatosClave(d); if(d.aprobado) $('rafagaResultado').classList.add('rafagaActiva'); }};
-  arc.style.strokeDasharray=String(circ);arc.style.strokeDashoffset=String(circ);resultAnimFrame=requestAnimationFrame(step);
-}
-function animarDatosClave(d){const inicio=performance.now(),dur=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--resultado-datos'))||800;const tick=(now)=>{if(!resultAnimacionActiva)return;const t=Math.min(1,(now-inicio)/dur),e=1-Math.pow(1-t,3);$('datoCorrectas').textContent=Math.round(d.correctas*e)+' de '+d.total;$('datoUmbral').textContent=Math.round(d.umbral*e)+'%';$('datoTiempoPromedio').textContent=d.promedioMs?(d.promedioMs*e/1000).toFixed(1)+' s':'—';if(t<1)resultAnimFrame=requestAnimationFrame(tick);else{resultAnimFrame=null;$('datoCorrectas').textContent=d.correctas+' de '+d.total;$('datoUmbral').textContent=d.umbral+'%';$('datoTiempoPromedio').textContent=d.promedioTexto;}};resultAnimFrame=requestAnimationFrame(tick);}
-function terminarAnimacionResultado(){const d=datosFinalesAnimacion;if(!d)return;limpiarAnimacionResultado();const wrap=$('resumenLocal'),circ=2*Math.PI*62,arc=$('anilloResultadoProgreso');wrap.classList.remove('resultadoAnimando');wrap.classList.add('animacionFinalizada');arc.style.strokeDasharray=String(circ);arc.style.strokeDashoffset=String(circ*(1-d.porcentaje/100));$('porcentajeResultado').textContent=d.porcentaje+'%';$('anilloResultadoCamara').classList.toggle('alcanzoMeta',d.porcentaje>=d.umbral);$('porcentajeResultado').classList.toggle('superaUmbral',d.porcentaje>=d.umbral);$('datoCorrectas').textContent=d.correctas+' de '+d.total;$('datoTiempoPromedio').textContent=d.promedioTexto;$('datoUmbral').textContent=d.umbral+'%';$('medallonResultado').classList.add('chipAparece');$('puntosCelebracion').classList.toggle('mostrar',d.aprobado);$('anuncioResultado').textContent=(d.aprobado?'Aprobaste':'No aprobaste')+' con '+d.porcentaje+'%. '+d.correctas+' de '+d.total+' letras correctas.';}
-function saltarAnimacionResultado(){if(resultAnimacionActiva)terminarAnimacionResultado();}
-async function enviarResultado(intentos) {
-  if (enviando) return; enviando=true; limpiarError(); $('btnRepetir').disabled=true;
-  const estado=$('estadoGuardado'); estado.hidden=false; estado.className='estadoGuardado guardando'; $('textoEstadoGuardado').textContent='Guardando tu resultado...'; $('btnReintentarError').hidden=true;
+function iniciarAnimacionResultado(){}
+function terminarAnimacionResultado(){}
+function saltarAnimacionResultado(){}async function enviarResultado(intentos) {
+  if (enviando) return; enviando=true; limpiarError(); if($('btnRepetir')) $('btnRepetir').disabled=true;
+  const estado=$('resumenLocal').querySelector('[data-saved]'); if(estado){estado.className='estadoGuardado guardando';estado.textContent='Guardando tu resultado...';}
   try { const datos=await api(RUTA_RESULTADO,{metodo:'POST',cuerpo:{intentos}}); pintarResumen(intentos,datos); pintarRespuestaServidor(); }
   catch(error) { console.error('Envio:',error); mostrarError(mensajeErrorEnvio(error),()=>enviarResultado(intentos)); }
-  finally { enviando=false; $('btnRepetir').disabled=false; }
+  finally { enviando=false; if($('btnRepetir')) $('btnRepetir').disabled=false; }
 }
 
-function pintarRespuestaServidor() { const estado=$('estadoGuardado'); estado.hidden=false; estado.className='estadoGuardado correcto'; $('textoEstadoGuardado').innerHTML='<svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> Resultado guardado en tu perfil'; $('btnReintentarError').hidden=true; }
+function pintarRespuestaServidor() { /* El componente compartido renderiza el estado de guardado. */ }
 
 function mensajeErrorEnvio(error) {
   if (error instanceof TypeError) return "No se pudo conectar con el servidor para guardar tu resultado. Revisa tu conexión y pulsa «Reintentar».";
@@ -486,13 +459,13 @@ function mensajeErrorEnvio(error) {
 function mostrarPantalla(id) {
   ['pantallaInicio','pantallaEvaluacion','pantallaResumen'].forEach((p)=>{ $(p).hidden=p!==id; });
   const resultado=id==='pantallaResumen'; $('tarjetaCamaraNueva').classList.toggle('tarjetaResultadoActiva',resultado); $('textoBotonSalir').textContent=resultado?'Cerrar':'Salir'; $('btnSalirEvaluacion').querySelector('use').setAttribute('href',resultado?'#i-x':'#i-arrow-left');
-  if(resultado) $('tituloResultado').focus(); else if(resultAnimacionActiva) limpiarAnimacionResultado();
+  if(resultado) $('resumenLocal').querySelector('.resultadoCerrar')?.focus(); else if(resultAnimacionActiva) limpiarAnimacionResultado();
 }
 
 function mostrarError(texto,reintento) {
   const inicio=!$('pantallaInicio').hidden; accionReintento=reintento;
   if(inicio){ $('mensaje').hidden=false; mostrarMensaje('mensaje',texto); $('btnComenzar').hidden=Boolean(reintento); $('btnReintentar').hidden=!reintento; }
-  else { const estado=$('estadoGuardado'); estado.hidden=false; estado.className='estadoGuardado incorrecto'; $('textoEstadoGuardado').textContent='No pudimos guardar tu resultado.'; $('btnReintentarError').hidden=!reintento; }
+  else { const estado=$('resumenLocal').querySelector('[data-saved]'); if(estado){estado.className='estadoGuardado incorrecto';estado.innerHTML=`<span>No pudimos guardar tu resultado.</span><button type="button" class="btnReintentarGuardado">Reintentar</button>`;estado.querySelector('button').addEventListener('click',()=>reintento&&reintento());} }
 }
 
 function limpiarError() {

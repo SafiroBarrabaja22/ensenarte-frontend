@@ -189,6 +189,8 @@
 .panelBtn.secundario { background: #728589; }
 .panelBtn.peligro { background: #d85b50; }
 .panelBtn.peligro:hover { background: #b9473d; }
+.panelBtnPequeno { display:inline-flex;align-items:center;min-height:28px;margin:0 0 10px;padding:4px 10px;border:1px solid #cbdcd7;border-radius:6px;background:#fff;color:#086f6d;font-size:.78rem;font-weight:600;line-height:1.2;text-decoration:none; }
+.panelBtnPequeno:hover { background:#e2f2ed;color:#075e5c; }
 
 @media (max-width: 800px) {
     .panelHeader { padding: 16px; }
