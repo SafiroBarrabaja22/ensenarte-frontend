@@ -6,13 +6,16 @@ async function montarPanel() {
     return false;
   }
 
-  let usuario;
-  try {
-    usuario = await api("/auth/perfil/");
-    Sesion.actualizarUsuario(usuario);
-  } catch (error) {
-    console.error("No se pudo validar el acceso al panel.", error);
-    return false;
+  let usuario = Sesion.usuario();
+  if (!usuario || (!usuario.es_creador && !usuario.es_profesor)) {
+    try {
+      usuario = await apiPanel("/auth/perfil/");
+      Sesion.actualizarUsuario(usuario);
+    } catch (error) {
+      console.error("No se pudo validar el acceso al panel.", error);
+      mostrarErrorCargaPanel("No se pudo validar el acceso al panel: " + (error.message || "Error de conexión."));
+      return false;
+    }
   }
 
   if (usuario && !usuario.es_creador && !usuario.es_profesor) {
@@ -28,9 +31,8 @@ async function montarPanel() {
     <header class="panelHeader">
       <h1>Panel administrativo - enSEÑArte</h1>
       <nav>
-        <a href="index.html">Cursos</a>
+        <a href="../cursos-usuario.html">Cursos</a>
         ${enlaceBiblioteca}
-        <a href="../inicio-usuario.html">Volver al sitio</a>
         <a href="#" id="salirPanel">Cerrar sesión</a>
       </nav>
     </header>`;
@@ -42,6 +44,18 @@ async function montarPanel() {
   });
 
   return true;
+}
+
+function apiPanel(ruta, opciones = {}) {
+  let temporizador;
+  const demora = new Promise((_, rechazar) => { temporizador = setTimeout(() => rechazar(new Error("El servidor tardó demasiado en responder.")), 12000); });
+  return Promise.race([api(ruta, opciones), demora]).finally(() => clearTimeout(temporizador));
+}
+
+function mostrarErrorCargaPanel(texto) {
+  const mensaje = document.getElementById("mensaje");
+  if (mensaje) { mensaje.textContent = texto; mensaje.className = "mensajeError"; }
+  document.querySelectorAll(".cargando").forEach((elemento) => { elemento.textContent = texto; });
 }
 
 /** Escapa texto antes de inyectarlo en el HTML del panel. */

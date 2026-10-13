@@ -39,7 +39,8 @@
         const insignia = p.curso_insignia
           ? `<img class="insigniaCursoPerfil" src="${rutaImagen(p.curso_insignia)}" alt="Insignia de ${esc(p.curso_titulo)}">`
           : '<span class="insigniaSinImagen">Sin insignia</span>';
-        return `<article class="tarjetaCursoPerfil" tabindex="0">
+        const destino = `curso.html?curso=${encodeURIComponent(p.curso)}&plantilla=15`;
+        return `<a class="tarjetaCursoPerfil" href="${destino}" aria-label="Entrar al curso ${esc(p.curso_titulo)}">
           <div class="portadaCursoPerfilMarco">${portada}</div>
           <div class="cabeceraCursoPerfil">
             <span class="iconoCursoPerfil" aria-hidden="true">${iconoSvg(temaIcono(p.curso_titulo), "icon icon26")}</span>
@@ -48,7 +49,7 @@
           <h3>${esc(p.curso_titulo)}</h3>
           <div class="barraProgreso" role="progressbar" aria-label="Progreso de ${esc(p.curso_titulo)}" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" style="--progreso: ${porcentaje}%"><span></span></div>
           <div class="detalleProgreso"><span>Completado</span><strong>${porcentaje}%</strong></div>
-        </article>`;
+        </a>`;
       })
       .join("")}</div>`;
     requestAnimationFrame(() => {

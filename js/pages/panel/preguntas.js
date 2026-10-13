@@ -11,7 +11,7 @@ const cursoId = new URLSearchParams(window.location.search).get("curso");
   }
 
   try {
-    const curso = await api(`/panel/cursos/${cursoId}/`);
+    const curso = await apiPanel(`/panel/cursos/${cursoId}/`);
     document.getElementById("tituloCurso").textContent = `Preguntas de: ${curso.titulo}`;
   } catch (error) {
     mostrarMensaje("mensaje", error.message);
@@ -24,7 +24,7 @@ async function cargarPreguntas() {
   const contenedor = document.getElementById("listaPreguntas");
 
   try {
-    const preguntas = comoLista(await api(`/panel/preguntas/?curso=${cursoId}`));
+    const preguntas = comoLista(await apiPanel(`/panel/preguntas/?curso=${cursoId}`));
 
     if (!preguntas.length) {
       contenedor.innerHTML = '<p class="vacio">Este curso todavía no tiene preguntas.</p>';
@@ -93,7 +93,7 @@ function conectarEventos() {
     boton.addEventListener("click", async () => {
       if (!confirm("¿Eliminar esta pregunta y sus opciones?")) return;
       await ejecutar(() =>
-        api(`/panel/preguntas/${boton.dataset.borrarPregunta}/`, { metodo: "DELETE" })
+        apiPanel(`/panel/preguntas/${boton.dataset.borrarPregunta}/`, { metodo: "DELETE" })
       );
     })
   );
@@ -101,7 +101,7 @@ function conectarEventos() {
   document.querySelectorAll("[data-borrar-opcion]").forEach((boton) =>
     boton.addEventListener("click", async () => {
       await ejecutar(() =>
-        api(`/panel/opciones/${boton.dataset.borrarOpcion}/`, { metodo: "DELETE" })
+        apiPanel(`/panel/opciones/${boton.dataset.borrarOpcion}/`, { metodo: "DELETE" })
       );
     })
   );
@@ -109,7 +109,7 @@ function conectarEventos() {
   document.querySelectorAll("[data-correcta]").forEach((boton) =>
     boton.addEventListener("click", async () => {
       await ejecutar(() =>
-        api(`/panel/opciones/${boton.dataset.correcta}/`, {
+        apiPanel(`/panel/opciones/${boton.dataset.correcta}/`, {
           metodo: "PATCH",
           cuerpo: { es_correcta: true },
         })
@@ -129,7 +129,7 @@ function conectarEventos() {
       }
 
       await ejecutar(() =>
-        api("/panel/opciones/", {
+        apiPanel("/panel/opciones/", {
           metodo: "POST",
           cuerpo: { pregunta: Number(id), texto, es_correcta: esCorrecta },
         })
@@ -159,7 +159,7 @@ document.getElementById("btnCrearPregunta").addEventListener("click", async () =
 
   mostrarMensaje("mensaje", "");
   try {
-    await api("/panel/preguntas/", {
+    await apiPanel("/panel/preguntas/", {
       metodo: "POST",
       cuerpo: { curso: Number(cursoId), texto, video },
     });

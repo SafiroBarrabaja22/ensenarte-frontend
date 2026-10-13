@@ -11,7 +11,7 @@ const cursoIdDiccionario = new URLSearchParams(window.location.search).get("curs
   }
 
   try {
-    const curso = await api(`/panel/cursos/${cursoIdDiccionario}/`);
+    const curso = await apiPanel(`/panel/cursos/${cursoIdDiccionario}/`);
     document.getElementById("tituloCurso").textContent = `Diccionario de: ${curso.titulo}`;
   } catch (error) {
     mostrarMensaje("mensaje", error.message);
@@ -25,7 +25,7 @@ async function cargarPalabras() {
 
   try {
     const palabras = comoLista(
-      await api(`/panel/diccionario/?curso=${cursoIdDiccionario}`)
+      await apiPanel(`/panel/diccionario/?curso=${cursoIdDiccionario}`)
     );
 
     if (!palabras.length) {
@@ -52,7 +52,7 @@ async function cargarPalabras() {
         if (!confirm("¿Eliminar esta palabra?")) return;
         mostrarMensaje("mensaje", "");
         try {
-          await api(`/panel/diccionario/${boton.dataset.borrar}/`, { metodo: "DELETE" });
+          await apiPanel(`/panel/diccionario/${boton.dataset.borrar}/`, { metodo: "DELETE" });
           await cargarPalabras();
         } catch (error) {
           mostrarMensaje("mensaje", error.message);
@@ -76,7 +76,7 @@ document.getElementById("btnCrearPalabra").addEventListener("click", async () =>
 
   mostrarMensaje("mensaje", "");
   try {
-    await api("/panel/diccionario/", {
+    await apiPanel("/panel/diccionario/", {
       metodo: "POST",
       cuerpo: {
         curso: Number(cursoIdDiccionario),

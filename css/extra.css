@@ -73,3 +73,400 @@ button.botonResultadoSecundario { background: #fff; font: inherit; font-size: 14
 @media (max-width: 639px) {
     .letraObjetivoCamara { width: 64px; height: 64px; flex-basis: 64px; font-size: 36px; }
 }
+
+/* Evaluaciones de Abecedario: estilos de interfaz */
+:root { --eval-teal:#0F7F7A; --eval-mint:#E8F2EE; --eval-coral:#F26B5E; --eval-coral-pale:#FCE4E0; --eval-amber:#FDF1DA; --eval-amber-ink:#6B4308; --eval-ink:#1B2F36; --eval-page:#F6FAF8; --eval-muted:#5C6F75; --eval-line:#DCE8E4; --eval-r16:16px; --eval-r14:14px; --eval-r12:12px; --eval-r8:8px; --eval-space:16px; }
+.bodyEvaluationView { background:var(--eval-page); }
+.evaluacionNueva.selectorEvaluacionesPagina { width:min(calc(100% - 32px),760px); padding:48px 0 56px; }
+.evaluacionNueva.evaluacionCamaraPagina { width:min(calc(100% - 32px),860px); padding:48px 0 56px; }
+.tarjetaEvaluacionNueva.selectorEvaluacionesTarjeta { padding:24px; border-radius:var(--eval-r16); }
+.tarjetaEvaluacionNueva.tarjetaCamaraNueva { padding:24px; border-radius:var(--eval-r16); }
+.decoracionEvaluacion { z-index:0; width:112px; height:112px; top:-76px; right:-72px; border-width:16px; }
+.tarjetaEvaluacionNueva > :not(.decoracionEvaluacion) { position:relative; z-index:1; }
+.cabeceraEvaluacionNueva { z-index:2!important; }
+.tituloEvaluacionNueva h1 { white-space:normal; font-size:16px; }
+.botonSalirEvaluacion { text-decoration:none; white-space:nowrap; }
+.tarjetaEvaluacionNueva > h2 { margin:28px 0 4px; font-size:24px; }
+.subtituloSelector,.subtituloCamara { margin:0 0 18px; color:var(--eval-muted); font-size:14px; }
+.opcionesEvaluacionNueva.selectorTarjetas { grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+.tarjetaTipoEvaluacion { position:relative; display:flex; min-height:288px; flex-direction:column; align-items:flex-start; gap:10px; box-sizing:border-box; padding:18px; border:1.5px solid var(--eval-line); border-radius:var(--eval-r14); background:var(--eval-page); color:var(--eval-ink); text-align:left; text-decoration:none; transition:transform .18s ease,border-color .18s ease; }
+.tarjetaTipoEvaluacion:hover { border-color:var(--eval-teal); transform:translateY(-4px); }
+.tarjetaTipoEvaluacion:focus-visible { outline:3px solid #0F7F7A55; outline-offset:2px; }
+.tarjetaTipoEvaluacion[aria-disabled="true"] { opacity:.52; pointer-events:none; }
+.tipoIcono { display:grid; width:52px; height:52px; place-items:center; border-radius:12px; background:var(--eval-mint); color:var(--eval-teal); }
+.tarjetaTipoEvaluacion.camara .tipoIcono { background:var(--eval-coral-pale); color:#8A2E24; }
+.tarjetaTipoEvaluacion strong { font-size:18px; }
+.tarjetaTipoEvaluacion small { color:var(--eval-muted); font-size:14px; line-height:1.45; }
+.tipoEtiqueta { position:absolute; top:18px; right:18px; padding:5px 9px; border-radius:999px; background:var(--eval-amber); color:var(--eval-amber-ink); font-size:12px; font-weight:700; }
+.chipsTipo { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+.chipsTipo > span { display:inline-flex; align-items:center; gap:5px; padding:6px 9px; border-radius:999px; background:#fff; color:var(--eval-muted); font-size:12px; }
+.botonTipo { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; min-height:42px; box-sizing:border-box; margin-top:auto; padding:0 12px; border-radius:var(--eval-r8); background:var(--eval-teal); color:#fff; font-size:14px; font-weight:700; }
+.avisoSinCamara { color:#8A2E24; font-size:12px; }
+.evaluacionCamaraPagina { max-width:680px!important; }
+.tarjetaCamaraNueva > h2 { margin-top:24px; }
+.datosCamara { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:18px 0; }
+.datosCamara article { display:flex; min-height:122px; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:12px 8px; border:1px solid var(--eval-line); border-radius:var(--eval-r12); background:var(--eval-page); color:var(--eval-teal); text-align:center; }
+.datosCamara strong { color:var(--eval-ink); font-size:26px; }
+.datosCamara span { color:var(--eval-muted); font-size:13px; }
+.consejosCamara { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.consejosCamara span { display:inline-flex; align-items:center; gap:6px; padding:8px 10px; border-radius:999px; background:var(--eval-amber); color:var(--eval-amber-ink); font-size:13px; }
+.privacidadCamara { display:flex; align-items:flex-start; gap:10px; padding:13px; border-radius:var(--eval-r12); background:var(--eval-mint); color:var(--eval-teal); }
+.privacidadCamara p { margin:0; color:var(--eval-ink); font-size:13px; line-height:1.55; }
+.estadoCargaCamara { color:var(--eval-muted); font-size:14px; }
+.accionesInicioCamara { display:flex; gap:10px; margin-top:18px; }
+.accionesInicioCamara .botonComprobar { flex:1; }
+.notaPermisoCamara { margin:10px 0 0; color:var(--eval-muted); font-size:12px; text-align:center; }
+.botonReintentarPermiso { min-height:42px; padding:0 14px; border:1px solid var(--eval-coral); border-radius:var(--eval-r8); background:#fff; color:#8A2E24; font:inherit; font-weight:700; cursor:pointer; }
+.progresoLetras { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:24px 0 14px; color:var(--eval-muted); font-size:14px; }
+.puntosLetras { display:flex; align-items:center; gap:7px; }
+.puntoLetra { display:grid; width:14px; height:14px; place-items:center; border-radius:50%; background:#DCE8E4; color:#fff; font-size:10px; font-weight:800; }
+.puntoLetra.actual { box-sizing:border-box; border:3px solid var(--eval-teal); background:#fff; }
+.puntoLetra.acertada { background:var(--eval-teal); }
+.puntoLetra.fallada { background:var(--eval-coral); }
+.sesionCamaraGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
+.videoCamara { position:relative; overflow:hidden; aspect-ratio:4/3; border-radius:var(--eval-r14); background:var(--eval-ink); }
+.videoCamara video,.videoCamara canvas { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scaleX(-1); }
+.videoCamara canvas { pointer-events:none; }
+.esquinasEncuadre { position:absolute; inset:12%; pointer-events:none; }
+.esquinasEncuadre i { position:absolute; width:24px; height:24px; border-color:var(--eval-amber); border-style:solid; }
+.esquinasEncuadre i:nth-child(1) { top:0;left:0;border-width:5px 0 0 5px;border-radius:8px 0 0; }
+.esquinasEncuadre i:nth-child(2) { top:0;right:0;border-width:5px 5px 0 0;border-radius:0 8px 0 0; }
+.esquinasEncuadre i:nth-child(3) { bottom:0;left:0;border-width:0 0 5px 5px;border-radius:0 0 0 8px; }
+.esquinasEncuadre i:nth-child(4) { bottom:0;right:0;border-width:0 5px 5px 0;border-radius:0 0 8px; }
+.videoCamara.estadoAcertado .esquinasEncuadre i,.videoCamara.estadoSosteniendo .esquinasEncuadre i { border-color:#69C5A3; }
+.videoCamara.estadoIncorrecto .esquinasEncuadre i,.videoCamara.estadoFallo .esquinasEncuadre i { border-color:var(--eval-coral); }
+.chipCamaraActiva,.tiempoCamara { position:absolute; top:12px; display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border-radius:999px; background:#fff; color:var(--eval-ink); font-size:12px; font-weight:700; }
+.chipCamaraActiva { left:12px; }
+.chipCamaraActiva i { width:8px;height:8px;border-radius:50%;background:var(--eval-coral); }
+.tiempoCamara { right:12px; }
+.tiempoCamara.poco { background:var(--eval-coral-pale); color:#8A2E24; }
+.estadoVideo { position:absolute; bottom:12px; left:50%; display:flex; align-items:center; gap:6px; max-width:90%; padding:8px 12px; border-radius:999px; background:var(--eval-amber); color:var(--eval-amber-ink); font-size:13px; font-weight:700; transform:translateX(-50%); white-space:nowrap; }
+.estadoVideo.incorrecta,.estadoVideo.fallo { background:var(--eval-coral-pale); color:#8A2E24; }
+.estadoVideo.sosteniendo { background:var(--eval-mint); color:#176B58; }
+.estadoVideo.acierto { background:#D8F1E5; color:#176B58; }
+.panelLetraCamara { display:flex; flex-direction:column; gap:12px; padding:16px; border:.5px solid var(--eval-line); border-radius:var(--eval-r14); background:var(--eval-page); }
+.objetivoPanel { display:flex; align-items:center; gap:12px; }
+.letraObjetivoCamara { display:grid; width:84px; height:84px; flex:0 0 84px; place-items:center; border-radius:var(--eval-r12); background:var(--eval-mint); color:#0B5F5B; font-size:48px; font-weight:700; }
+.objetivoPanel p { margin:0; color:var(--eval-ink); font-size:14px; line-height:1.5; }
+.deteccionPanel { display:flex; align-items:center; gap:12px; min-height:84px; padding:10px; border-radius:var(--eval-r12); background:#fff; }
+.anilloDeteccion { position:relative; width:64px; height:64px; flex:0 0 64px; }
+.anilloDeteccion svg { width:100%;height:100%;transform:rotate(-90deg); }
+.anilloDeteccion circle { fill:none;stroke-width:6; }
+.anilloFondo { stroke:var(--eval-mint); }
+.anilloValor { stroke:var(--eval-teal);stroke-linecap:round;stroke-dasharray:169.65;stroke-dashoffset:169.65;transition:stroke-dashoffset .08s linear; }
+.anilloDeteccion span { position:absolute;inset:0;display:grid;place-items:center;color:var(--eval-teal);font-size:12px;font-weight:700; }
+.detectadoCamara { margin:0 0 4px;color:var(--eval-ink);font-size:14px;font-weight:500; }
+.deteccionPanel small { color:var(--eval-muted);font-size:12px; }
+.saltarLetra { display:flex;align-items:center;gap:6px;align-self:flex-start;padding:5px 0;border:0;background:transparent;color:#607875;font:inherit;font-size:13px;cursor:pointer; }
+.saltarLetra:focus-visible,.botonReintentarPermiso:focus-visible { outline:3px solid #0F7F7A55;outline-offset:2px; }
+[hidden] { display:none!important; }
+@media(max-width:639px) { .evaluacionNueva.selectorEvaluacionesPagina,.evaluacionNueva.evaluacionCamaraPagina { width:calc(100% - 20px);padding-top:28px; } .tarjetaEvaluacionNueva.selectorEvaluacionesTarjeta,.tarjetaEvaluacionNueva.tarjetaCamaraNueva { padding:18px; } .cabeceraEvaluacionNueva { align-items:center;flex-direction:row; } .botonSalirEvaluacion { align-self:auto; } .accionesInicioCamara { flex-direction:column; } .accionesInicioCamara > * { width:100%; } .sesionCamaraGrid { grid-template-columns:1fr; } .progresoLetras { align-items:flex-start;flex-direction:column; } .puntosLetras { gap:6px; } }
+@media(prefers-reduced-motion:reduce) { .tarjetaTipoEvaluacion,.botonTipo,.anilloValor { transition:none!important; } .tarjetaTipoEvaluacion:hover { transform:none; } }
+
+.iconoEvaluacionMini svg { width:24px;height:24px; }
+
+/* Ajuste amplio para la prueba con cámara */
+.evaluacionNueva.evaluacionCamaraPagina {
+  width: min(94%, 1120px);
+  max-width: none !important;
+  margin: 40px auto 32px;
+  padding: 0;
+  box-sizing: border-box;
+}
+.tarjetaEvaluacionNueva.tarjetaCamaraNueva {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.tarjetaEvaluacionNueva.tarjetaCamaraNueva > .decoracionEvaluacion {
+  top: -58px;
+  right: -58px;
+}
+.tarjetaCamaraNueva .tituloEvaluacionNueva h1 { font-size: 16px; }
+.tarjetaCamaraNueva .iconoEvaluacionMini { width: 36px; height: 36px; flex-basis: 36px; }
+.tarjetaCamaraNueva .iconoEvaluacionMini svg { width: 28px; height: 28px; }
+.tarjetaCamaraNueva .botonSalirEvaluacion { min-height: 40px; }
+.progresoLetras { font-size: 15px; }
+.puntosLetras { gap: 6px; }
+.puntoLetra { width: 18px; height: 18px; flex: 0 0 18px; font-size: 12px; }
+.sesionCamaraGrid {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 24px;
+}
+.videoCamara {
+  width: 100%;
+  max-height: calc(100vh - 300px);
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+}
+.esquinasEncuadre { inset: 10%; }
+.esquinasEncuadre i { width: 48px; height: 48px; }
+.esquinasEncuadre i:nth-child(1) { border-width: 6px 0 0 6px; }
+.esquinasEncuadre i:nth-child(2) { border-width: 6px 6px 0 0; }
+.esquinasEncuadre i:nth-child(3) { border-width: 0 0 6px 6px; }
+.esquinasEncuadre i:nth-child(4) { border-width: 0 6px 6px 0; }
+.chipCamaraActiva,.tiempoCamara { padding: 6px 14px; font-size: 14px; }
+.tiempoCamara { font-size: 16px; font-weight: 500; }
+.estadoVideo { padding: 8px 18px; font-size: 15px; }
+.panelLetraCamara {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+.objetivoPanel { gap: 16px; }
+.letraObjetivoCamara {
+  width: 120px;
+  height: 120px;
+  flex-basis: 120px;
+  font-size: 64px;
+  font-weight: 500;
+}
+.objetivoPanel p { font-size: 17px; }
+.anilloDeteccion { width: 88px; height: 88px; flex-basis: 88px; }
+.anilloDeteccion span { font-size: 16px; }
+.detectadoCamara { font-size: 17px; }
+.deteccionPanel small { font-size: 14px; }
+.saltarLetra { margin-top: auto; font-size: 14px; }
+@media (max-width: 899px) {
+  .evaluacionNueva.evaluacionCamaraPagina { width: min(94%, 1120px); }
+  .sesionCamaraGrid { grid-template-columns: minmax(0, 1fr); }
+  .videoCamara { max-height: none; }
+}
+@media (max-width: 639px) {
+  .evaluacionNueva.evaluacionCamaraPagina { width: min(94%, 1120px); margin-top: 40px; padding: 0; }
+  .tarjetaEvaluacionNueva.tarjetaCamaraNueva { padding: 24px; }
+  .sesionCamaraGrid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
+@media (max-width: 479px) {
+  .evaluacionNueva.evaluacionCamaraPagina { width: calc(100% - 20px); margin: 40px auto 32px; }
+  .tarjetaEvaluacionNueva.tarjetaCamaraNueva { padding: 20px; }
+  .letraObjetivoCamara { width: 88px; height: 88px; flex-basis: 88px; }
+}
+
+/* Base compartida y despeje del encabezado fijo en las evaluaciones. */
+:root { --nav-h: 76px; }
+.header { z-index: 100 !important; }
+body.bodyBase.bodyEvaluationView { background: var(--eval-page); }
+.evaluacionNueva.bodyCursos {
+  width: min(94%, 1120px);
+  max-width: none;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + 40px) 0 32px;
+  position: relative;
+  z-index: 1;
+}
+.tarjetaEvaluacionNueva {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.selectorEvaluacionesTarjeta { width: min(100%, 760px); margin: 0 auto; }
+.tarjetaEvaluacionNueva.tarjetaCamaraNueva { width: 100%; }
+.cabeceraEvaluacionNueva { position: relative; z-index: 2; }
+.tarjetaCamaraNueva > #pantallaInicio > h2 { margin-top: 16px; margin-bottom: 6px; }
+.tarjetaCamaraNueva .subtituloCamara { margin-bottom: 18px; }
+.opcionesEvaluacionNueva.selectorTarjetas { gap: 12px; }
+.tarjetaTipoEvaluacion { gap: 8px; }
+.tarjetaTipoEvaluacion .chipsTipo { margin-top: 0; }
+.botonTipo { margin-top: auto; }
+.deteccionPanel .detectadoCamara { white-space: nowrap; }
+.tiempoPanel { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; row-gap: 8px; }
+.etiquetaTiempoPanel { color: var(--eval-muted); font-size: 13px; }
+.barraTiempoPanel { grid-column: 1; height: 7px; overflow: hidden; border-radius: 999px; background: #DCE8E4; }
+.barraTiempoPanel > span { display: block; width: 100%; height: 100%; border-radius: inherit; background: var(--eval-teal); transition: width .08s linear, background-color .12s ease; }
+.barraTiempoPanel.poco > span { background: var(--eval-coral); }
+.tiempoPanel strong { grid-column: 2; grid-row: 2; color: var(--eval-ink); font-size: 14px; font-weight: 600; }
+.barraTiempoPanel.poco + strong { color: #8A2E24; }
+.consejoPanel { display: flex; align-items: flex-start; gap: 9px; padding: 12px; border-radius: var(--eval-r12); background: #FDF1DA; color: #6B4308; }
+.consejoPanel p { margin: 0; font-size: 13px; line-height: 1.5; }
+.consejoPanel svg { flex: 0 0 auto; }
+.panelLetraCamara { gap: 14px; }
+.saltarLetra { margin-top: auto; }
+#mensaje[hidden], [hidden] { display: none !important; }
+@media (max-width: 720px) { :root { --nav-h: 68px; } }
+@media (max-width: 899px) {
+  .sesionCamaraGrid { grid-template-columns: minmax(0, 1fr); }
+  .panelLetraCamara { gap: 14px; }
+}
+@media (max-width: 639px) {
+  .evaluacionNueva.bodyCursos { padding-top: calc(var(--nav-h) + 40px); padding-bottom: 32px; }
+  .selectorEvaluacionesTarjeta { width: 100%; }
+}
+
+.tarjetaTipoEvaluacion { min-height: 248px; }
+
+
+/* Resultado de la evaluación con cámara */
+.tarjetaEvaluacionNueva.tarjetaCamaraNueva.tarjetaResultadoActiva {
+  width: min(94%, 720px); max-width: 720px; margin: 0 auto; padding: 28px;
+  border-radius: 16px; overflow: hidden; position: relative; z-index: 1;
+}
+.resumenCamara { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; color: #1B2F36; }
+.heroResultadoCamara { display: flex; align-items: center; justify-content: center; gap: 28px; min-height: 150px; }
+.anilloResultadoCamara { width: 150px; height: 150px; flex: 0 0 150px; position: relative; color: #0F7F7A; }
+.anilloResultadoCamara > svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+.anilloResultadoFondo, .anilloResultadoProgreso { fill: none; stroke-width: 12; }
+.anilloResultadoFondo { stroke: #E8F2EE; }
+.anilloResultadoProgreso { stroke: #0F7F7A; stroke-linecap: round; transition: stroke-dashoffset 1s ease, stroke .2s ease; }
+.anilloResultadoCamara.noAprobado { color: #F26B5E; }
+.anilloResultadoCamara.noAprobado .anilloResultadoProgreso { stroke: #F26B5E; }
+.valorAnilloResultado { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.valorAnilloResultado strong { font-size: 34px; line-height: 1.05; color: currentColor; }
+.valorAnilloResultado span { margin-top: 4px; color: #60747A; font-size: 13px; }
+.medallonResultado { position: absolute; right: -2px; bottom: 2px; width: 38px; height: 38px; display: grid; place-items: center; border: 4px solid white; border-radius: 50%; background: #FDF1DA; color: #6B4308; }
+.medallonResultado.noAprobado { background: #FCE7E4; color: #B64439; }
+.textoResultado { max-width: 440px; }
+.textoResultado h1 { margin: 0 0 7px; color: #1B2F36; font-size: 28px; line-height: 1.2; }
+.textoResultado h1.noAprobado { color: #B64439; }
+.textoResultado p { margin: 0; color: #50666D; font-size: 15px; line-height: 1.55; }
+.datosClaveResultado { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.datosClaveResultado article { min-height: 76px; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 12px 14px; border: 1px solid #D8E5E0; border-radius: 12px; background: #F6FAF8; }
+.datosClaveResultado strong { color: #1B2F36; font-size: 20px; line-height: 1.1; }
+.datosClaveResultado span { color: #60747A; font-size: 12px; }
+.detalleResultado h2 { margin: 0 0 10px; color: #1B2F36; font-size: 17px; }
+.cuadriculaLetrasResultado { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.resultadoLetra { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 5px; padding: 8px 10px; border: 1px solid #D8E5E0; border-radius: 8px; background: #F6FAF8; }
+.resultadoLetra > strong { font-size: 18px; color: #1B2F36; }
+.resultadoLetra > span { display: flex; align-items: center; gap: 3px; color: #0B5F5B; font-size: 11px; }
+.resultadoLetra.fallida { border-color: #F4D3CE; background: #FFF7F6; }
+.resultadoLetra.fallida > span { color: #B64439; }
+.insigniaDesbloqueada { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: #FDF1DA; color: #6B4308; }
+.insigniaDesbloqueada > div { flex: 1; }
+.insigniaDesbloqueada p { margin: 3px 0 0; font-size: 13px; }
+.insigniaPerfecta { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 999px; background: #fff; font-size: 12px; white-space: nowrap; }
+.bloquePracticar { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: #FDF1DA; color: #6B4308; }
+.letrasPracticar { display: flex; flex-wrap: wrap; gap: 6px; }
+.letrasPracticar span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #fff; font-size: 15px; font-weight: 700; }
+.textoPracticar { display: flex; flex-direction: column; gap: 3px; }
+.textoPracticar a { display: inline-flex; align-items: center; gap: 5px; color: #0B5F5B; font-size: 13px; font-weight: 600; }
+.accionesResultado { display: flex; gap: 10px; }
+.accionesResultado > * { min-height: 44px; flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 16px; border: 1px solid #0F7F7A; border-radius: 10px; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.botonResultadoPrincipal { background: #0F7F7A; color: #fff; }
+.botonResultadoPrincipal:hover { background: #0B5F5B; }
+.botonResultadoSecundario { background: #fff; color: #0B5F5B; }
+.botonResultadoSecundario:hover { background: #E8F2EE; }
+.accionesResultado button:disabled { opacity: .55; cursor: wait; }
+.estadoGuardado { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 20px; font-size: 13px; text-align: center; }
+.estadoGuardado.correcto { color: #0B5F5B; }
+.estadoGuardado.incorrecto { color: #B64439; }
+.estadoGuardado.guardando { color: #60747A; }
+.estadoGuardado > span { display: inline-flex; align-items: center; gap: 6px; }
+.btnReintentarGuardado { border: 0; padding: 0; background: none; color: #B64439; font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+@media (max-width: 639px) {
+ .tarjetaEvaluacionNueva.tarjetaCamaraNueva.tarjetaResultadoActiva { width: 100%; padding: 22px; }
+ .heroResultadoCamara { flex-direction: column; gap: 14px; text-align: center; }
+ .anilloResultadoCamara { width: 130px; height: 130px; flex-basis: 130px; }
+ .valorAnilloResultado strong { font-size: 30px; }
+ .accionesResultado { flex-direction: column; }
+ .accionesResultado > * { width: 100%; box-sizing: border-box; }
+ .insigniaDesbloqueada { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { .anilloResultadoProgreso { transition: none; } }
+
+
+/* Resultado: estado final sólido y animaciones didácticas progresivas */
+.evaluacionCamaraPagina, .evaluacionCamaraPagina * { font-family: inherit; }
+body.bodyEvaluationView .barraCategorias, body.bodyEvaluationView .pestanasCurso, body.bodyEvaluationView .tabsCurso, body.bodyEvaluationView #tabsCurso { display:none !important; }
+.tarjetaEvaluacionNueva.tarjetaCamaraNueva.tarjetaResultadoActiva { width:min(94%,720px); max-width:720px; padding:28px; margin:0 auto; opacity:1 !important; color:#1B2F36; background:#fff; }
+.resumenCamara { gap:18px; opacity:1 !important; color:#1B2F36; font-family:inherit; }
+.heroResultadoCamara { position:relative; display:grid; grid-template-columns:150px minmax(0,440px); align-items:center; justify-content:center; column-gap:28px; min-height:190px; padding-bottom:18px; }
+.anilloResultadoCamara { width:150px;height:150px;flex:none;position:relative;z-index:1;color:#F26B5E; }
+.anilloResultadoCamara>svg { position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible;transform:rotate(-90deg); }
+.anilloResultadoFondo,.anilloResultadoProgreso { fill:none;stroke-width:12; }
+.anilloResultadoFondo { stroke:#E8F2EE; }
+.anilloResultadoProgreso { stroke:#F26B5E;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.22,1,.36,1),stroke 180ms ease; }
+.anilloResultadoCamara.alcanzoMeta .anilloResultadoProgreso,.anilloResultadoCamara.aprobado.alcanzoMeta .anilloResultadoProgreso { stroke:#0F7F7A; }
+.valorAnilloResultado { position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2; }
+.valorAnilloResultado strong { color:#8A2E24;font-size:34px;font-weight:500;line-height:1.05;transition:color 180ms ease; }
+.valorAnilloResultado strong.superaUmbral { color:#0B5F5B; }
+.valorAnilloResultado span { margin-top:4px;color:#5C6F75;font-size:13px;font-weight:400; }
+.marcaUmbralAnillo { position:absolute;left:50%;top:50%;z-index:3;width:3px;height:12px;border-radius:2px;background:rgba(27,47,54,.5);transform-origin:center; }
+.leyendaUmbral { position:absolute;top:166px;left:0;right:0;margin:0;text-align:center;color:#5C6F75;font-size:12px;font-weight:400; }
+.medallonResultado { position:absolute;right:-2px;bottom:1px;z-index:4;width:38px;height:38px;display:grid;place-items:center;border:4px solid #fff;border-radius:50%;background:#F0A52B;color:#fff;transform:scale(1);opacity:1; }
+.medallonResultado.noAprobado { background:#F26B5E; }
+.medallonResultado.chipAparece { animation:popChip .55s cubic-bezier(.3,1.6,.5,1) both; }
+.textoResultado { max-width:440px;opacity:1;color:#1B2F36; }
+.textoResultado h1 { margin:0 0 7px;color:#1B2F36 !important;font-size:28px;font-weight:500;line-height:1.2;opacity:1 !important; }
+.textoResultado h1.noAprobado { color:#8A2E24 !important; }
+.textoResultado p { margin:0;color:#5C6F75 !important;font-size:15px;font-weight:400;line-height:1.55;opacity:1 !important; }
+.puntosCelebracion,.rafagaResultado { position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0; }
+.puntosCelebracion.mostrar { opacity:1; }
+.puntosCelebracion i { position:absolute;left:calc(50% + var(--dx));top:calc(50% + var(--dy));width:var(--size);height:var(--size);border-radius:50%;background:var(--color);opacity:0;transform:scale(.2); }
+.puntosCelebracion i:nth-child(2n) { border-radius:4px; }
+.puntosCelebracion.mostrar i { animation:popChip .55s cubic-bezier(.3,1.6,.5,1) var(--delay) both,flotarPunto var(--dur) ease-in-out calc(var(--delay) + .55s + var(--offset)) infinite; }
+.puntosCelebracion i:nth-child(1){--dx:-83px;--dy:-73px;--size:12px;--color:#F26B5E;--delay:0ms;--dur:3.1s;--offset:-1.3s;}
+.puntosCelebracion i:nth-child(2){--dx:82px;--dy:-60px;--size:10px;--color:#7CC9BD;--delay:90ms;--dur:4s;--offset:-2.2s;}
+.puntosCelebracion i:nth-child(3){--dx:-92px;--dy:34px;--size:14px;--color:#F0A52B;--delay:180ms;--dur:4.6s;--offset:-3s;}
+.puntosCelebracion i:nth-child(4){--dx:91px;--dy:46px;--size:12px;--color:#0F7F7A;--delay:270ms;--dur:3.6s;--offset:-1.8s;}
+.puntosCelebracion i:nth-child(5){--dx:-34px;--dy:86px;--size:9px;--color:#7CC9BD;--delay:360ms;--dur:4.2s;--offset:-2.6s;}
+.puntosCelebracion i:nth-child(6){--dx:45px;--dy:-91px;--size:11px;--color:#F26B5E;--delay:450ms;--dur:3.4s;--offset:-.8s;}
+.rafagaResultado { display:none;left:75px;top:75px;right:auto;bottom:auto;width:1px;height:1px;z-index:2; }
+.rafagaResultado.rafagaActiva { display:block;opacity:1; }
+.rafagaResultado i { position:absolute;left:0;top:0;width:9px;height:9px;border-radius:50%;background:var(--color);animation:rafaga 1s ease-out var(--delay) both; }
+.rafagaResultado i:nth-child(4n){--color:#F26B5E}.rafagaResultado i:nth-child(4n+1){--color:#F0A52B}.rafagaResultado i:nth-child(4n+2){--color:#7CC9BD}.rafagaResultado i:nth-child(4n+3){--color:#0F7F7A}
+.datosClaveResultado { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px; }
+.datosClaveResultado article { min-height:76px;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:12px 14px;border:1px solid #D8E5E0;border-radius:12px;background:#F6FAF8;opacity:1; }
+.datosClaveResultado strong { color:#1B2F36;font-size:20px;font-weight:500;line-height:1.1; }
+.datosClaveResultado span { color:#5C6F75;font-size:12px;font-weight:400; }
+.detalleResultado h2 { margin:0 0 10px;color:#1B2F36;font-size:17px;font-weight:500; }
+.cuadriculaLetrasResultado { display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:8px; }
+.resultadoLetra { min-width:0;min-height:96px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 5px;border:1.5px solid #BFE6D8;border-radius:14px;background:#E1F5EE;color:#085041;opacity:1; }
+.resultadoLetra>strong { color:#085041;font-size:26px;font-weight:500;line-height:1.1; }
+.resultadoLetra>span { display:flex;align-items:center;justify-content:center;gap:4px;color:#085041;font-size:12px;font-weight:400;line-height:1.2;white-space:nowrap; }
+.resultadoLetra.fallida { border-color:#F4B9B1;background:#FCE4E0;color:#8A2E24; }
+.resultadoLetra.fallida>strong,.resultadoLetra.fallida>span { color:#8A2E24; }
+.insigniaDesbloqueada { display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:#FDF1DA;color:#6B4308;opacity:1; }
+.insigniaDesbloqueada>div { flex:1; }.insigniaDesbloqueada p { margin:3px 0 0;font-size:13px; }
+.insigniaPerfecta { display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;background:#fff;font-size:12px;white-space:nowrap; }
+.bloquePracticar { display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #D8E5E0;border-radius:14px;background:#F6FAF8;color:#1B2F36;opacity:1; }
+.letrasPracticar { display:flex;flex-wrap:wrap;gap:6px; }.letrasPracticar span { width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#FCE4E0;color:#8A2E24;font-size:15px;font-weight:500; }
+.textoPracticar { display:flex;flex-direction:column;gap:3px; }.textoPracticar>strong { font-weight:500; }.textoPracticar a { display:inline-flex;align-items:center;gap:5px;color:#0B5F5B !important;font-size:13px;font-weight:500;text-decoration:underline;opacity:1 !important; }
+.accionesResultado { display:flex;gap:10px;opacity:1; }
+.accionesResultado>.botonResultadoPrincipal,.accionesResultado>.botonResultadoSecundario { min-height:44px;flex:1;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border:1.5px solid #0F7F7A;border-radius:10px;font:inherit;font-size:14px;font-weight:500;text-decoration:none;text-align:center;cursor:pointer;opacity:1 !important; }
+.accionesResultado>.botonResultadoPrincipal { background:#0F7F7A !important;color:#fff !important; }.accionesResultado>.botonResultadoPrincipal:hover { background:#0B5F5B !important; }
+.accionesResultado>.botonResultadoSecundario { background:#fff !important;color:#0B5F5B !important; }.accionesResultado>.botonResultadoSecundario:hover { background:#E8F2EE !important; }
+.botonSalirEvaluacion { background:#fff !important;color:#0B5F5B !important;opacity:1 !important; }
+.estadoGuardado { display:flex;align-items:center;justify-content:center;gap:8px;min-height:20px;color:#0B5F5B;font-size:13px;text-align:center;opacity:1 !important; }
+.soloLectores { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+@keyframes popChip { 0%{opacity:0;transform:scale(.2)} 75%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }
+@keyframes flotarPunto { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(0,-8px) rotate(25deg)} }
+@keyframes rafaga { 0%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.2)} }
+@keyframes fadeUpFinal { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes popFicha { 0%{opacity:0;transform:scale(.5)} 75%{opacity:1;transform:scale(1.08)} 100%{opacity:1;transform:scale(1)} }
+@keyframes sacudirFicha { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+@keyframes balancearInsignia { 0%,100%{transform:rotate(0)} 35%{transform:rotate(-8deg)} 70%{transform:rotate(8deg)} }
+.resumenCamara.resultadoAnimando .textoResultado { animation:fadeUpFinal .45s ease 1.5s both; }
+.resumenCamara.resultadoAnimando .datosClaveResultado article { animation:fadeUpFinal .4s ease calc(1.5s + var(--n,0)*80ms) both; }
+.datosClaveResultado article:nth-child(1){--n:0}.datosClaveResultado article:nth-child(2){--n:1}.datosClaveResultado article:nth-child(3){--n:2}
+.resumenCamara.resultadoAnimando .resultadoLetra { animation:popFicha .55s cubic-bezier(.3,1.6,.5,1) var(--delay) both; }
+.resumenCamara.resultadoAnimando .resultadoLetra.fallida { animation:popFicha .55s cubic-bezier(.3,1.6,.5,1) var(--delay) both,sacudirFicha .5s ease calc(var(--delay) + .55s) both; }
+.resumenCamara.resultadoAnimando .insigniaDesbloqueada,.resumenCamara.resultadoAnimando .bloquePracticar,.resumenCamara.resultadoAnimando .accionesResultado,.resumenCamara.resultadoAnimando .estadoGuardado { animation:fadeUpFinal .45s ease var(--postletters-delay,2.8s) both; }
+.resumenCamara.resultadoAnimando .insigniaDesbloqueada>svg { animation:balancearInsignia .65s ease calc(var(--postletters-delay,2.8s) + .3s) both; }
+.resumenCamara.animacionFinalizada .textoResultado,.resumenCamara.animacionFinalizada .datosClaveResultado article,.resumenCamara.animacionFinalizada .resultadoLetra,.resumenCamara.animacionFinalizada .insigniaDesbloqueada,.resumenCamara.animacionFinalizada .bloquePracticar,.resumenCamara.animacionFinalizada .accionesResultado,.resumenCamara.animacionFinalizada .estadoGuardado { opacity:1 !important;transform:none !important;animation:none !important; }
+@media(max-width:639px){.tarjetaEvaluacionNueva.tarjetaCamaraNueva.tarjetaResultadoActiva{width:100%;padding:20px}.heroResultadoCamara{grid-template-columns:130px minmax(0,1fr);column-gap:14px;min-height:170px}.anilloResultadoCamara{width:130px;height:130px}.leyendaUmbral{top:145px}.textoResultado h1{font-size:24px}.datosClaveResultado{grid-template-columns:1fr;gap:8px}.datosClaveResultado article{min-height:62px}.resultadoLetra{min-height:84px}.resultadoLetra>strong{font-size:22px}.resultadoLetra>span{font-size:11px}.accionesResultado{flex-direction:column}.accionesResultado>*{width:100%}}
+@media(max-width:479px){.heroResultadoCamara{grid-template-columns:1fr;justify-items:center;gap:30px;min-height:300px}.textoResultado{text-align:center}.leyendaUmbral{top:148px}.resultadoLetra>strong{font-size:22px}.resultadoLetra>span{font-size:11px}.resumenCamara{gap:16px}}
+@media(prefers-reduced-motion:reduce){.resumenCamara *, .resumenCamara *::before,.resumenCamara *::after{animation:none !important;transition:none !important}.puntosCelebracion,.rafagaResultado{display:none!important}}
+
+.resumenCamara.animacionFinalizada .medallonResultado,.resumenCamara.animacionFinalizada .puntosCelebracion i { animation:none !important;opacity:1;transform:none; }
+.resumenCamara.animacionFinalizada .rafagaResultado { display:none !important; }
+.resumenCamara.animacionFinalizada .puntosCelebracion { opacity:1; }
+
+:root { --resultado-anillo:1500ms; --resultado-chip:550ms; --resultado-fade:450ms; --resultado-pop:550ms; --resultado-rafaga:1000ms; --resultado-entrada-contenido:1500ms; --resultado-stagger-datos:80ms; --resultado-entrada-letras:1800ms; --resultado-stagger-letras:90ms; --resultado-sacudida:500ms; --resultado-despues-letras:700ms; --resultado-datos:800ms; }
+.anilloResultadoProgreso { transition-duration:var(--resultado-anillo,1500ms),180ms; }
+.medallonResultado.chipAparece { animation-duration:var(--resultado-chip,550ms); }
+.puntosCelebracion.mostrar i { animation-duration:var(--resultado-pop,550ms),var(--dur); }
+.rafagaResultado i { animation-duration:var(--resultado-rafaga,1000ms); }
+.resumenCamara.resultadoAnimando .textoResultado { animation-duration:var(--resultado-fade,450ms);animation-delay:var(--resultado-entrada-contenido,1500ms); }
+.resumenCamara.resultadoAnimando .datosClaveResultado article { animation-duration:var(--resultado-fade,450ms);animation-delay:calc(var(--resultado-entrada-contenido,1500ms) + var(--n,0)*var(--resultado-stagger-datos,80ms)); }
+.resumenCamara.resultadoAnimando .resultadoLetra { animation-duration:var(--resultado-pop,550ms); }
+.resumenCamara.resultadoAnimando .resultadoLetra.fallida { animation-duration:var(--resultado-pop,550ms),var(--resultado-sacudida,500ms);animation-delay:var(--delay),calc(var(--delay) + var(--resultado-pop,550ms)); }
+.resumenCamara.resultadoAnimando .insigniaDesbloqueada,.resumenCamara.resultadoAnimando .bloquePracticar,.resumenCamara.resultadoAnimando .accionesResultado,.resumenCamara.resultadoAnimando .estadoGuardado { animation-duration:var(--resultado-fade,450ms); }
+
+body.bodyEvaluationView .pestanas,body.bodyEvaluationView .tabs,body.bodyEvaluationView .tabs-container,body.bodyEvaluationView .course-tabs,body.bodyEvaluationView .barraFiltrosCursos { display:none !important; }
+.puntosCelebracion.mostrar i { animation-delay:var(--delay),calc(var(--delay) + var(--resultado-chip,550ms) + var(--offset)); }

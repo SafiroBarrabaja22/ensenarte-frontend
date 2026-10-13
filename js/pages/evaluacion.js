@@ -23,7 +23,8 @@ let ultimoIntento = null;
 
   try {
     const curso = await api(`/cursos/${slugCurso}/`, { autenticado: false });
-    document.getElementById("tituloEvaluacion").textContent = `${curso.titulo} · Evaluación`;
+    document.getElementById("tituloEvaluacion").textContent = `${nombreCursoParaEvaluacion(curso, slugCurso)} · Evaluación`;
+    document.querySelector(".tituloEvaluacionNueva .icon").innerHTML = `<use href="#i-${/abecedario|letra|abc/i.test(`${curso.titulo} ${slugCurso}`) ? "abc" : "books"}"></use>`;
     let intento;
     try {
       intento = await api(`/cursos/${slugCurso}/evaluacion/actual/`);

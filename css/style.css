@@ -1751,7 +1751,7 @@
     .iconoRacha { background: #ffe5e1; color: #cc5148; }
     .seccionCursosPerfil h2 { margin-bottom: 16px; color: var(--ink); font-size: 22px; }
     .cuadriculaCursosPerfil { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-    .tarjetaCursoPerfil { min-width: 0; padding: 22px; border: 1px solid var(--line); border-radius: var(--perfil-radio); background: #fff; color: var(--ink); outline: none; transition: transform .2s ease, border-color .2s ease; }
+    .tarjetaCursoPerfil { display: block; text-decoration: none; min-width: 0; padding: 22px; border: 1px solid var(--line); border-radius: var(--perfil-radio); background: #fff; color: var(--ink); outline: none; transition: transform .2s ease, border-color .2s ease; }
     .tarjetaCursoPerfil:hover, .tarjetaCursoPerfil:focus-visible { border-color: var(--teal); transform: translateY(-3px); }
     .tarjetaCursoPerfil:focus-visible { box-shadow: 0 0 0 3px rgba(15, 127, 122, .18); }
     .cabeceraCursoPerfil { display: flex; align-items: center; justify-content: space-between; gap: 8px; }

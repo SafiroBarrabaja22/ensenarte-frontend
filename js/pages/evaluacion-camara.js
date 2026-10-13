@@ -24,7 +24,7 @@ const LIMITE_MS = 20000;            // tiempo maximo por letra; si se acaba, es 
 const SOSTENER_MS = 1000;           // tiempo que hay que mantener la seña
 const UMBRAL_CONFIANZA = 0.6;       // fraccion de vecinos del KNN que deben coincidir
 const PORCENTAJE_APROBADO = 70;     // aprobado si correctas * 100 >= 70 * total
-const PAUSA_ENTRE_LETRAS_MS = 1500; // muestra "correcto / se acabo el tiempo" (no cuenta en el limite)
+const PAUSA_ENTRE_LETRAS_MS = 800; // muestra "correcto / se acabo el tiempo" (no cuenta en el limite)
 
 // La evaluacion con camara es del abecedario y no depende del curso desde el que se entra.
 const RUTA_RESULTADO = "/evaluacion-camara/";
@@ -47,6 +47,10 @@ let idPausa = null;
 let ocultaDesde = null;
 let accionReintento = null;
 let enviando = false;
+let resultAnimFrame = null;
+let resultTimers = [];
+let resultAnimacionActiva = false;
+let datosFinalesAnimacion = null;
 
 /**
  * Sesion en curso. `null` si no hay una activa.
@@ -67,7 +71,11 @@ let sesion = null;
   const enlaceCurso = `curso.html?curso=${slugSeguro}&plantilla=15`;
   $("enlaceVolverCurso").href = enlaceCurso;
   $("textoCantidadLetras").textContent = LETRAS_POR_SESION;
-  $("textoPorcentajeAprobado").textContent = `${PORCENTAJE_APROBADO} %`;
+  $("textoSostener").textContent = `${SOSTENER_MS / 1000} s`;
+  $("textoLimite").textContent = `${LIMITE_MS / 1000} s`;
+  $("textoPorcentajeAprobado").textContent = `${PORCENTAJE_APROBADO}%`;
+  $("btnVolver").addEventListener("click", () => salir(enlaceCurso));
+  $("btnSaltar").addEventListener("click", () => { if (sesion && !sesion.bloqueada) registrarIntento(false, sesion.mejorConfianza, performance.now(), true); });
 
   $("btnSalirEvaluacion").addEventListener("click", () => {
     if (sesion && !sesion.terminada) $("dialogSalir").showModal();
@@ -78,11 +86,13 @@ let sesion = null;
   $("btnComenzar").addEventListener("click", comenzar);
   $("btnRepetir").addEventListener("click", comenzar);
   $("btnReintentar").addEventListener("click", () => accionReintento && accionReintento());
+  $("btnReintentarError").addEventListener("click", () => accionReintento && accionReintento());
   document.addEventListener("visibilitychange", pausarAlOcultar);
   // Al cerrar o cambiar de pagina se apaga la camara; la sesion a medias se descarta.
-  window.addEventListener("pagehide", detenerCamara);
+  window.addEventListener("pagehide", () => { detenerCamara(); limpiarAnimacionResultado(); });
   // Si el navegador restaura la pagina desde su cache (boton atras), se empieza de cero.
   window.addEventListener("pageshow", (evento) => { if (evento.persisted) window.location.reload(); });
+  document.addEventListener("keydown", (evento) => { if (evento.key === "Escape") saltarAnimacionResultado(); });
 
   if (!cursoTieneEvaluacionCamara(slugCurso)) {
     $("pantallaInicio").hidden = true;
@@ -91,7 +101,7 @@ let sesion = null;
   }
 
   api(`/cursos/${slugCurso}/`, { autenticado: false })
-    .then((curso) => { $("tituloEvaluacion").textContent = `${curso.titulo} · Evaluación con cámara`; })
+    .then((curso) => { const nombreCurso = nombreCursoParaEvaluacion(curso, slugCurso); $("tituloEvaluacion").textContent = `${nombreCurso} · Evaluación con cámara`; $("iconoCursoEvaluacion").innerHTML = `<svg class="icon icon20" aria-hidden="true"><use href="#i-${/abecedario|letra|abc/i.test(`${nombreCurso} ${slugCurso}`) ? "abc" : "books"}"></use></svg>`; })
     .catch(() => {});
 })();
 
@@ -106,7 +116,7 @@ async function comenzar() {
   } catch (error) {
     console.error(error);
     detenerCamara();
-    mostrarError(error.message, comenzar);
+    mostrarError("No pudimos acceder a tu cámara. Revisa los permisos del navegador y vuelve a intentarlo", comenzar);
     $("btnComenzar").disabled = false;
     $("estadoCarga").textContent = "";
     return;
@@ -232,7 +242,8 @@ function iniciarSesion() {
     mostrarError("No hay letras para evaluar: revisa LETRAS_EXCLUIDAS.", null);
     return;
   }
-  sesion = { letras, indice: -1, intentos: [], objetivo: null, inicio: 0, mejorConfianza: 0, bloqueada: true, terminada: false };
+  sesion = { letras, indice: -1, intentos: [], estados: letras.map(() => "pendiente"), objetivo: null, inicio: 0, mejorConfianza: 0, bloqueada: true, terminada: false };
+  pintarPuntos();
   mostrarPantalla("pantallaEvaluacion");
   siguienteLetra();
   if (idAnimacion === null) idAnimacion = requestAnimationFrame(bucle);
@@ -253,22 +264,26 @@ function siguienteLetra() {
   sesion.bloqueada = false;
   control.reiniciar();
 
-  const porcentaje = Math.round((sesion.indice / total) * 100);
   $("contador").textContent = `Letra ${sesion.indice + 1} de ${total}`;
-  $("porcentajeEvaluacion").textContent = `${porcentaje}%`;
-  const barra = $("barraEvaluacion");
-  barra.style.setProperty("--progreso-evaluacion", `${porcentaje}%`);
-  barra.classList.add("visible");
+  pintarPuntos();
   $("letraObjetivo").textContent = letra;
   $("instruccionLetra").textContent = `Haz la letra ${letra} y mantenla un segundo.`;
-  $("tiempoRestante").textContent = `${Math.ceil(LIMITE_MS / 1000)} s`;
+  $("tiempoRestante").innerHTML = `<svg class="icon icon16" aria-hidden="true"><use href="#i-clock"></use></svg> ${Math.ceil(LIMITE_MS / 1000)} s`;
+  $("barraTiempoPanel").style.width = "100%";
+  $("barraTiempoPanel").parentElement.setAttribute("aria-valuenow", Math.ceil(LIMITE_MS / 1000));
+  $("tiempoPanelValor").textContent = `${Math.ceil(LIMITE_MS / 1000)} s`;
+  $("barraTiempoPanel").parentElement.classList.remove("poco");
   $("tiempoRestante").classList.remove("poco");
+  $("barraTiempoPanel").style.width = "100%";
+  $("barraTiempoPanel").parentElement.setAttribute("aria-valuenow", Math.ceil(LIMITE_MS / 1000));
+  $("tiempoPanelValor").textContent = `${Math.ceil(LIMITE_MS / 1000)} s`;
+  $("barraTiempoPanel").parentElement.classList.remove("poco");
   pintarSostener(0);
-  $("feedback").className = "feedbackEvaluacion";
-  $("feedback").textContent = "";
+  $("estadoVideo").dataset.estado = "";
+  actualizarEstadoVideo("sinMano");
 }
 
-function registrarIntento(acerto, confianza, ahora) {
+function registrarIntento(acerto, confianza, ahora, omitida = false) {
   sesion.bloqueada = true;
   sesion.intentos.push({
     letra_objetivo: sesion.objetivo,
@@ -276,13 +291,11 @@ function registrarIntento(acerto, confianza, ahora) {
     tiempo_ms: Math.round(ahora - sesion.inicio),
     confianza: Math.round(confianza * 100) / 100,
   });
+  sesion.estados[sesion.indice] = acerto ? "acertada" : "fallada";
+  pintarPuntos();
   pintarSostener(acerto ? 1 : 0);
-  const feedback = $("feedback");
-  feedback.className = `feedbackEvaluacion ${acerto ? "correcto" : "incorrecto"}`;
-  feedback.innerHTML = acerto
-    ? `${iconoSvg("check", "icon icon16")} ¡Muy bien! Hiciste la letra ${sesion.objetivo}.`
-    : `${iconoSvg("clock", "icon icon16")} Se acabó el tiempo para la letra ${sesion.objetivo}.`;
-  idPausa = setTimeout(siguienteLetra, PAUSA_ENTRE_LETRAS_MS);
+  actualizarEstadoVideo(acerto ? "acierto" : omitida ? "omitida" : "fallo", sesion.objetivo);
+  idPausa = setTimeout(siguienteLetra, acerto ? 800 : PAUSA_ENTRE_LETRAS_MS);
 }
 
 function terminarSesion() {
@@ -349,18 +362,27 @@ function bucle() {
 
   $("detectado").textContent = prediccion
     ? `Detectado: ${prediccion.letra} (${Math.round(prediccion.confianza * 100)} %)`
-    : "Detectado: — (no veo tu mano)";
+    : "Detectado: —";
   if (!sesion || sesion.bloqueada) return;
+  if (!prediccion) actualizarEstadoVideo("sinMano");
+  else if (prediccion.letra !== sesion.objetivo) actualizarEstadoVideo("incorrecta", sesion.objetivo);
 
   if (prediccion && prediccion.letra === sesion.objetivo) {
     sesion.mejorConfianza = Math.max(sesion.mejorConfianza, prediccion.confianza);
   }
   const { progreso, logrado } = control.actualizar(sesion.objetivo, prediccion, ahora);
   pintarSostener(progreso);
+  if (progreso > 0 && !logrado) actualizarEstadoVideo("sosteniendo");
 
   const restante = LIMITE_MS - (ahora - sesion.inicio);
-  $("tiempoRestante").textContent = `${Math.max(0, Math.ceil(restante / 1000))} s`;
+  $("tiempoRestante").innerHTML = `<svg class="icon icon16" aria-hidden="true"><use href="#i-clock"></use></svg> ${Math.max(0, Math.ceil(restante / 1000))} s`;
   $("tiempoRestante").classList.toggle("poco", restante <= 5000);
+
+  const segundosRestantes = Math.max(0, Math.ceil(restante / 1000));
+  $("tiempoPanelValor").textContent = `${segundosRestantes} s`;
+  $("barraTiempoPanel").style.width = `${Math.max(0, Math.min(100, (restante / LIMITE_MS) * 100))}%`;
+  $("barraTiempoPanel").parentElement.setAttribute("aria-valuenow", segundosRestantes);
+  $("barraTiempoPanel").parentElement.classList.toggle("poco", restante <= 5000);
 
   // Al acertar se envia la confianza del fotograma; al fallar, la mejor que logro la letra pedida.
   if (logrado) registrarIntento(true, prediccion.confianza, ahora);
@@ -390,63 +412,68 @@ function dibujarMano(puntos) {
 
 function pintarSostener(progreso) {
   const valor = Math.round(progreso * 100);
-  $("barraSostener").style.width = `${valor}%`;
-  $("barraSostener").parentElement.setAttribute("aria-valuenow", valor);
+  $("anilloValor").style.strokeDashoffset = `${169.65 * (1 - progreso)}`;
+  $("porcentajeSostener").textContent = `${valor}%`;
+  $("anilloDeteccion").setAttribute("aria-valuenow", valor);
 }
 
 // ---------------------------------------------------------------- resumen y envio
-function pintarResumen(intentos) {
-  const total = intentos.length;
-  const correctas = intentos.filter((i) => i.acerto).length;
-  // Enteros, igual que el servidor: sin redondeos en el borde del 70 %.
-  const porcentaje = Math.floor((correctas * 100) / total);
-  const aprobado = correctas * 100 >= PORCENTAJE_APROBADO * total;
-  const falladas = intentos.filter((i) => !i.acerto).map((i) => i.letra_objetivo);
-
-  $("resumenLocal").innerHTML = `
-    <span class="iconoPremioResultado" aria-hidden="true">${iconoSvg(aprobado ? "award" : "hand", "icon icon26")}</span>
-    <h2>${aprobado ? "¡Aprobaste!" : "Aún no apruebas"}</h2>
-    <p class="porcentajeCamara">${porcentaje}%</p>
-    <p>${correctas} de ${total} letras correctas · Se necesita ${PORCENTAJE_APROBADO} % para aprobar.</p>
-    ${falladas.length
-      ? `<p class="tituloFalladas">Letras para practicar:</p><ul class="letrasFalladas">${falladas.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`
-      : `<p class="tituloFalladas">¡No fallaste ninguna letra!</p>`}`;
+function pintarResumen(intentos, oficial = null) {
+  const total = Number(oficial?.total ?? intentos.length);
+  const correctas = Number(oficial?.correctas ?? intentos.filter((i) => i.acerto).length);
+  const porcentaje = Number(oficial?.porcentaje ?? Math.floor(correctas * 100 / Math.max(1,total)));
+  const umbral = Number(oficial?.umbral_aplicado ?? PORCENTAJE_APROBADO);
+  const aprobado = typeof oficial?.aprobado === 'boolean' ? oficial.aprobado : correctas * 100 >= umbral * total;
+  const falladas = intentos.filter((i) => !i.acerto);
+  const tiempos = intentos.filter((i) => i.acerto && Number.isFinite(i.tiempo_ms)).map((i) => i.tiempo_ms);
+  const promedioMs = tiempos.length ? tiempos.reduce((s,t)=>s+t,0)/tiempos.length : 0;
+  const promedioTexto = tiempos.length ? (promedioMs/1000).toFixed(1)+' s' : '—';
+  const circ = 2*Math.PI*62;
+  const anillo=$('anilloResultadoCamara'); anillo.classList.toggle('aprobado',aprobado); anillo.classList.toggle('noAprobado',!aprobado);
+  $('porcentajeResultado').textContent='0%'; $('anilloResultadoProgreso').style.strokeDasharray=String(circ); $('anilloResultadoProgreso').style.strokeDashoffset=String(circ);
+  $('marcaUmbralAnillo').style.transform='translate(-50%,-50%) rotate('+ (umbral*3.6) +'deg) translateY(-62px)';
+  $('medallonResultado').classList.toggle('noAprobado',!aprobado); $('medallonResultado').innerHTML='<svg class="icon icon20" aria-hidden="true"><use href="#i-'+(aprobado?'award':'repeat')+'"></use></svg>';
+  $('tituloResultado').textContent=aprobado?'¡Aprobaste!':'¡Casi lo logras!'; $('tituloResultado').classList.toggle('noAprobado',!aprobado);
+  $('mensajeResultado').textContent=aprobado?'Hiciste '+correctas+' de '+total+' letras correctas. Necesitabas '+umbral+'% y lo superaste.':'Hiciste '+correctas+' de '+total+' letras. Necesitas '+umbral+'% para aprobar, pero puedes intentarlo de nuevo cuando quieras.';
+  $('anuncioResultado').textContent='';
+  $('datoCorrectas').textContent='0 de '+total; $('datoTiempoPromedio').textContent=tiempos.length?'0.0 s':'—'; $('datoUmbral').textContent='0%';
+  const cols=total%5===0?5:total%4===0?4:3; $('detalleLetras').style.setProperty('--cols',cols);
+  $('detalleLetras').innerHTML=intentos.map((item)=>{const ok=Boolean(item.acerto),timeout=!ok&&Number(item.tiempo_ms)>=LIMITE_MS,label=ok?Math.max(1,Math.round(Number(item.tiempo_ms)/1000))+' s':timeout?'Tiempo agotado':'Fallo';return '<article class="resultadoLetra '+(ok?'correcta':'fallida')+'"><strong>'+esc(item.letra_objetivo)+'</strong><span><svg class="icon icon16" aria-hidden="true"><use href="#i-'+(ok?'check':'x')+'"></use></svg>'+label+'</span></article>';}).join('');
+  const cssMillis=(name,fallback)=>{const n=parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));return Number.isFinite(n)?n:fallback;};
+  const inicioLetras=cssMillis('--resultado-entrada-letras',1800),separacionLetras=cssMillis('--resultado-stagger-letras',90),popMs=cssMillis('--resultado-pop',550),despuesMs=cssMillis('--resultado-despues-letras',700);
+  [...$('detalleLetras').children].forEach((el,i)=>el.style.setProperty('--delay',((inicioLetras+i*separacionLetras)/1000)+'s'));
+  const postDelay=((inicioLetras+Math.max(0,total-1)*separacionLetras+popMs+despuesMs)/1000).toFixed(2)+'s'; ['insigniaDesbloqueada','bloquePracticar','accionesResultado','estadoGuardado'].forEach((id)=>$(id).style.setProperty('--postletters-delay',postDelay));
+  $('bloquePracticar').hidden=!falladas.length; $('letrasPracticar').innerHTML=falladas.map((i)=>'<span>'+esc(i.letra_objetivo)+'</span>').join(''); $('enlaceDiccionario').href='diccionario.html?curso='+encodeURIComponent(slugCurso);
+  const nueva=Boolean(oficial&&(oficial.insignia_nueva||oficial.nueva_insignia||(oficial.insignia&&oficial.insignia.nueva))); $('insigniaDesbloqueada').hidden=!(aprobado&&nueva); $('insigniaPerfecta').hidden=!(aprobado&&nueva&&porcentaje===100);
+  $('btnRepetir').className=aprobado?'botonResultadoSecundario':'botonResultadoPrincipal'; $('enlaceVolverCurso').className=aprobado?'botonResultadoPrincipal':'botonResultadoSecundario';
+  datosFinalesAnimacion={porcentaje,umbral,correctas,total,promedioMs,promedioTexto,aprobado};
+  iniciarAnimacionResultado();
 }
 
+function limpiarAnimacionResultado(){ if(resultAnimFrame!==null) cancelAnimationFrame(resultAnimFrame); resultAnimFrame=null; resultTimers.forEach(clearTimeout); resultTimers=[]; resultAnimacionActiva=false; }
+function iniciarAnimacionResultado(){
+  limpiarAnimacionResultado(); const d=datosFinalesAnimacion; const wrapper=$('resumenLocal'); wrapper.classList.remove('animacionFinalizada','resultadoAnimando'); void wrapper.offsetWidth;
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const circ=2*Math.PI*62; const arc=$('anilloResultadoProgreso'); const anillo=$('anilloResultadoCamara');
+  if(reduce){ terminarAnimacionResultado(); return; }
+  resultAnimacionActiva=true; wrapper.classList.add('resultadoAnimando'); $('puntosCelebracion').classList.toggle('mostrar',d.aprobado);
+  const rafBurst=()=>{const box=$('rafagaResultado');box.innerHTML='';if(!d.aprobado)return;for(let i=0;i<14;i++){const el=document.createElement('i'),angle=(Math.PI*2*i/14),radius=[70,88,106][i%3];el.style.setProperty('--x',Math.cos(angle)*radius+'px');el.style.setProperty('--y',Math.sin(angle)*radius+'px');el.style.setProperty('--delay',(1.5+i*.018)+'s');box.appendChild(el);}}; rafBurst();
+  const dur=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--resultado-anillo'))||1500; const inicio=performance.now();
+  const step=(now)=>{if(!resultAnimacionActiva)return;const t=Math.min(1,(now-inicio)/dur),ease=1-Math.pow(1-t,3),value=Math.round(d.porcentaje*ease);arc.style.strokeDashoffset=String(circ*(1-d.porcentaje*ease/100));$('porcentajeResultado').textContent=value+'%';const met=value>=d.umbral;anillo.classList.toggle('alcanzoMeta',met);$('porcentajeResultado').classList.toggle('superaUmbral',met);if(t<1){resultAnimFrame=requestAnimationFrame(step);}else{resultAnimFrame=null;const chip=$('medallonResultado');chip.classList.add('chipAparece'); $('anuncioResultado').textContent=(d.aprobado?'Aprobaste':'No aprobaste')+' con '+d.porcentaje+'%. '+d.correctas+' de '+d.total+' letras correctas.'; animarDatosClave(d); if(d.aprobado) $('rafagaResultado').classList.add('rafagaActiva'); }};
+  arc.style.strokeDasharray=String(circ);arc.style.strokeDashoffset=String(circ);resultAnimFrame=requestAnimationFrame(step);
+}
+function animarDatosClave(d){const inicio=performance.now(),dur=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--resultado-datos'))||800;const tick=(now)=>{if(!resultAnimacionActiva)return;const t=Math.min(1,(now-inicio)/dur),e=1-Math.pow(1-t,3);$('datoCorrectas').textContent=Math.round(d.correctas*e)+' de '+d.total;$('datoUmbral').textContent=Math.round(d.umbral*e)+'%';$('datoTiempoPromedio').textContent=d.promedioMs?(d.promedioMs*e/1000).toFixed(1)+' s':'—';if(t<1)resultAnimFrame=requestAnimationFrame(tick);else{resultAnimFrame=null;$('datoCorrectas').textContent=d.correctas+' de '+d.total;$('datoUmbral').textContent=d.umbral+'%';$('datoTiempoPromedio').textContent=d.promedioTexto;}};resultAnimFrame=requestAnimationFrame(tick);}
+function terminarAnimacionResultado(){const d=datosFinalesAnimacion;if(!d)return;limpiarAnimacionResultado();const wrap=$('resumenLocal'),circ=2*Math.PI*62,arc=$('anilloResultadoProgreso');wrap.classList.remove('resultadoAnimando');wrap.classList.add('animacionFinalizada');arc.style.strokeDasharray=String(circ);arc.style.strokeDashoffset=String(circ*(1-d.porcentaje/100));$('porcentajeResultado').textContent=d.porcentaje+'%';$('anilloResultadoCamara').classList.toggle('alcanzoMeta',d.porcentaje>=d.umbral);$('porcentajeResultado').classList.toggle('superaUmbral',d.porcentaje>=d.umbral);$('datoCorrectas').textContent=d.correctas+' de '+d.total;$('datoTiempoPromedio').textContent=d.promedioTexto;$('datoUmbral').textContent=d.umbral+'%';$('medallonResultado').classList.add('chipAparece');$('puntosCelebracion').classList.toggle('mostrar',d.aprobado);$('anuncioResultado').textContent=(d.aprobado?'Aprobaste':'No aprobaste')+' con '+d.porcentaje+'%. '+d.correctas+' de '+d.total+' letras correctas.';}
+function saltarAnimacionResultado(){if(resultAnimacionActiva)terminarAnimacionResultado();}
 async function enviarResultado(intentos) {
-  if (enviando) return;
-  enviando = true;
-  limpiarError();
-  $("btnRepetir").disabled = true;
-  const caja = $("resultadoServidor");
-  caja.className = "feedbackEvaluacion";
-  caja.textContent = "Guardando tu resultado...";
-  try {
-    const datos = await api(RUTA_RESULTADO, { metodo: "POST", cuerpo: { intentos } });
-    pintarRespuestaServidor(datos);
-  } catch (error) {
-    console.error("Envio:", error);
-    caja.textContent = "";
-    mostrarError(mensajeErrorEnvio(error), () => enviarResultado(intentos));
-  } finally {
-    enviando = false;
-    $("btnRepetir").disabled = false;
-  }
+  if (enviando) return; enviando=true; limpiarError(); $('btnRepetir').disabled=true;
+  const estado=$('estadoGuardado'); estado.hidden=false; estado.className='estadoGuardado guardando'; $('textoEstadoGuardado').textContent='Guardando tu resultado...'; $('btnReintentarError').hidden=true;
+  try { const datos=await api(RUTA_RESULTADO,{metodo:'POST',cuerpo:{intentos}}); pintarResumen(intentos,datos); pintarRespuestaServidor(); }
+  catch(error) { console.error('Envio:',error); mostrarError(mensajeErrorEnvio(error),()=>enviarResultado(intentos)); }
+  finally { enviando=false; $('btnRepetir').disabled=false; }
 }
 
-/** El resultado oficial es el que calcula el servidor. */
-function pintarRespuestaServidor(datos) {
-  const caja = $("resultadoServidor");
-  caja.className = "feedbackEvaluacion correcto";
-  if (datos && typeof datos.correctas === "number" && typeof datos.total === "number") {
-    const estado = datos.aprobado ? "aprobado" : "no aprobado";
-    const umbral = typeof datos.umbral_aplicado === "number" ? ` (mínimo ${datos.umbral_aplicado} %)` : "";
-    const porcentaje = typeof datos.porcentaje === "number" ? ` · ${datos.porcentaje} %` : "";
-    caja.innerHTML = `${iconoSvg("check", "icon icon16")} Resultado guardado: ${datos.correctas} de ${datos.total}${porcentaje} · ${estado}${umbral}.`;
-  } else {
-    caja.innerHTML = `${iconoSvg("check", "icon icon16")} Resultado guardado.`;
-  }
-}
+function pintarRespuestaServidor() { const estado=$('estadoGuardado'); estado.hidden=false; estado.className='estadoGuardado correcto'; $('textoEstadoGuardado').innerHTML='<svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> Resultado guardado en tu perfil'; $('btnReintentarError').hidden=true; }
 
 function mensajeErrorEnvio(error) {
   if (error instanceof TypeError) return "No se pudo conectar con el servidor para guardar tu resultado. Revisa tu conexión y pulsa «Reintentar».";
@@ -457,21 +484,48 @@ function mensajeErrorEnvio(error) {
 
 // ---------------------------------------------------------------- utilidades de pantalla
 function mostrarPantalla(id) {
-  ["pantallaInicio", "pantallaEvaluacion", "pantallaResumen"].forEach((p) => { $(p).hidden = p !== id; });
+  ['pantallaInicio','pantallaEvaluacion','pantallaResumen'].forEach((p)=>{ $(p).hidden=p!==id; });
+  const resultado=id==='pantallaResumen'; $('tarjetaCamaraNueva').classList.toggle('tarjetaResultadoActiva',resultado); $('textoBotonSalir').textContent=resultado?'Cerrar':'Salir'; $('btnSalirEvaluacion').querySelector('use').setAttribute('href',resultado?'#i-x':'#i-arrow-left');
+  if(resultado) $('tituloResultado').focus(); else if(resultAnimacionActiva) limpiarAnimacionResultado();
 }
 
-function mostrarError(texto, reintento) {
-  mostrarMensaje("mensaje", texto);
-  accionReintento = reintento;
-  $("accionesError").hidden = !reintento;
+function mostrarError(texto,reintento) {
+  const inicio=!$('pantallaInicio').hidden; accionReintento=reintento;
+  if(inicio){ $('mensaje').hidden=false; mostrarMensaje('mensaje',texto); $('btnComenzar').hidden=Boolean(reintento); $('btnReintentar').hidden=!reintento; }
+  else { const estado=$('estadoGuardado'); estado.hidden=false; estado.className='estadoGuardado incorrecto'; $('textoEstadoGuardado').textContent='No pudimos guardar tu resultado.'; $('btnReintentarError').hidden=!reintento; }
 }
 
 function limpiarError() {
-  mostrarMensaje("mensaje", "");
-  accionReintento = null;
-  $("accionesError").hidden = true;
+  mostrarMensaje('mensaje',''); $('mensaje').hidden=true; accionReintento=null;
+  if($('estadoGuardado')){ $('estadoGuardado').hidden=true; $('btnReintentarError').hidden=true; }
+  if($('btnComenzar')){ $('btnComenzar').hidden=false; $('btnReintentar').hidden=true; }
 }
 
 function esc(valor) {
   return String(valor ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function pintarPuntos() {
+  if (!sesion) return;
+  $("puntosLetras").innerHTML = sesion.estados.map((estado, indice) => {
+    const actual = indice === sesion.indice && !sesion.terminada;
+    const clase = actual ? "actual" : estado;
+    return `<span class="puntoLetra ${clase}" aria-label="Letra ${indice + 1}: ${actual ? "actual" : estado === "pendiente" ? "pendiente" : estado}">${estado === "acertada" ? "✓" : estado === "fallada" ? "×" : ""}</span>`;
+  }).join("");
+}
+
+function actualizarEstadoVideo(tipo, objetivo = "") {
+  const caja = $("estadoVideo");
+  if (caja.dataset.estado === tipo && caja.dataset.objetivo === objetivo) return;
+  caja.dataset.estado = tipo;
+  caja.dataset.objetivo = objetivo;
+  const estados = { sinMano: ["info-circle", "No veo tu mano"], incorrecta: ["info-circle", `Esa no es la ${objetivo}`], sosteniendo: ["check", "¡Casi! Mantén la seña"], acierto: ["check", "¡Letra correcta!"], fallo: ["clock", "Se acabó el tiempo"], omitida: ["arrow-right", "Letra marcada como fallo"] };
+  const [icono, texto] = estados[tipo] || estados.sinMano;
+  caja.className = `estadoVideo ${tipo}`;
+  const videoCamara = caja.closest(".videoCamara");
+  videoCamara.classList.toggle("estadoAcertado", tipo === "acierto");
+  videoCamara.classList.toggle("estadoSosteniendo", tipo === "sosteniendo");
+  videoCamara.classList.toggle("estadoIncorrecto", tipo === "incorrecta");
+  videoCamara.classList.toggle("estadoFallo", tipo === "fallo" || tipo === "omitida");
+  caja.innerHTML = `<svg class="icon icon16" aria-hidden="true"><use href="#i-${icono}"></use></svg><span>${texto}</span>`;
 }

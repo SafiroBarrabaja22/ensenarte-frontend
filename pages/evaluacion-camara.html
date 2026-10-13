@@ -1,73 +1,29 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación con cámara</title>
-    <link rel="stylesheet" href="../css/style.css?v=15">
-    <link rel="stylesheet" href="../css/extra.css?v=2">
-</head>
-<body class="bodyEvaluationView">
-    <div id="layout"></div>
-    <main class="evaluacionNueva">
-        <section class="tarjetaEvaluacionNueva" aria-labelledby="tituloEvaluacion">
-            <div class="decoracionEvaluacion" aria-hidden="true"></div>
-            <header class="cabeceraEvaluacionNueva">
-                <div class="tituloEvaluacionNueva"><span class="iconoEvaluacionMini" aria-hidden="true"><svg class="icon icon20"><use href="#i-camera"></use></svg></span><h1 id="tituloEvaluacion">Evaluación con cámara</h1></div>
-                <button type="button" class="botonSalirEvaluacion" id="btnSalirEvaluacion"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Salir</button>
-            </header>
-
-            <!-- Antes de empezar -->
-            <div id="pantallaInicio">
-                <h2>Haz cada letra con tu mano</h2>
-                <ul class="instruccionesCamara">
-                    <li>Te pediremos <strong id="textoCantidadLetras">10</strong> letras del abecedario, una por una.</li>
-                    <li>Haz la seña frente a la cámara y mantenla <strong>1 segundo</strong>.</li>
-                    <li>Tienes <strong>20 segundos</strong> por letra. Si se acaba el tiempo, cuenta como fallo.</li>
-                    <li>Apruebas con <strong id="textoPorcentajeAprobado">70 %</strong> o más.</li>
-                    <li>El video no sale de tu equipo: al final solo se guarda qué letras acertaste y en cuánto tiempo.</li>
-                </ul>
-                <p class="estadoCargaCamara" id="estadoCarga" role="status" aria-live="polite"></p>
-                <div class="accionesEvaluacion"><button type="button" class="botonComprobar" id="btnComenzar"><svg class="icon icon16" aria-hidden="true"><use href="#i-play"></use></svg> Comenzar</button></div>
-            </div>
-
-            <!-- Durante la sesion -->
-            <div id="pantallaEvaluacion" hidden>
-                <div class="progresoEvaluacionNueva"><span id="contador">Letra 1 de 10</span><strong id="porcentajeEvaluacion">0%</strong><div class="barraEvaluacionNueva"><span id="barraEvaluacion"></span></div></div>
-                <div class="marcoCamara">
-                    <video id="video" playsinline muted></video>
-                    <canvas id="overlay"></canvas>
-                    <span class="tiempoCamara" id="tiempoRestante" aria-label="Tiempo restante">20 s</span>
-                </div>
-                <div class="filaObjetivoCamara">
-                    <div class="letraObjetivoCamara" id="letraObjetivo" aria-live="polite">?</div>
-                    <div class="estadoCamara">
-                        <p id="instruccionLetra">Haz la letra frente a la cámara.</p>
-                        <p class="detectadoCamara" id="detectado">Detectado: —</p>
-                        <div class="barraSostener" role="progressbar" aria-label="Tiempo manteniendo la seña" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="barraSostener"></span></div>
-                    </div>
-                </div>
-                <div class="feedbackEvaluacion" id="feedback" role="status" aria-live="polite"></div>
-            </div>
-
-            <!-- Al terminar -->
-            <div id="pantallaResumen" hidden>
-                <div class="resumenCamara" id="resumenLocal"></div>
-                <div class="feedbackEvaluacion" id="resultadoServidor" role="status" aria-live="polite"></div>
-                <div class="accionesResultado">
-                    <button type="button" class="botonResultadoSecundario" id="btnRepetir"><svg class="icon icon16" aria-hidden="true"><use href="#i-repeat"></use></svg> Repetir evaluación</button>
-                    <a class="botonResultadoPrincipal" id="enlaceVolverCurso" href="cursos-usuario.html">Volver al curso</a>
-                </div>
-            </div>
-
-            <div id="mensaje" role="alert"></div>
-            <div class="accionesEvaluacion" id="accionesError" hidden><button type="button" class="botonComprobar" id="btnReintentar"><svg class="icon icon16" aria-hidden="true"><use href="#i-repeat"></use></svg> Reintentar</button></div>
-        </section>
-    </main>
-    <dialog id="dialogSalir" class="dialogSalir"><h2>¿Salir de la evaluación?</h2><p>Perderás tu avance y no se guardará nada.</p><div><button type="button" class="botonSecundario" id="btnSeguir">Seguir aquí</button><button type="button" class="botonPeligro" id="btnConfirmarSalida">Salir</button></div></dialog>
-    <script src="../js/config.js?v=3"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/layout.js?v=7"></script>
-    <script type="module" src="../js/pages/evaluacion-camara.js?v=1"></script>
-</body>
-</html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Evaluación con cámara</title><link rel="stylesheet" href="../css/style.css?v=15"><link rel="stylesheet" href="../css/extra.css?v=4"></head><body class="bodyBase bodyEvaluationView"><div id="layout"></div><main class="bodyCursos evaluacionNueva evaluacionCamaraPagina"><section class="tarjetaEvaluacionNueva tarjetaCamaraNueva" id="tarjetaCamaraNueva" aria-labelledby="tituloEvaluacion"><div class="decoracionEvaluacion" aria-hidden="true"></div><header class="cabeceraEvaluacionNueva"><div class="tituloEvaluacionNueva"><span class="iconoEvaluacionMini" id="iconoCursoEvaluacion" aria-hidden="true"><svg class="icon icon20"><use href="#i-abc"></use></svg></span><h1 id="tituloEvaluacion">Abecedario · Evaluación con cámara</h1></div><button type="button" class="botonSalirEvaluacion" id="btnSalirEvaluacion"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> <span id="textoBotonSalir">Salir</span></button></header><div id="pantallaInicio"><h2>Haz cada letra con tu mano</h2><p class="subtituloCamara">Antes de empezar, revisa cómo funciona la prueba.</p><div class="datosCamara"><article><svg class="icon icon20" aria-hidden="true"><use href="#i-checklist"></use></svg><strong id="textoCantidadLetras">10</strong><span>letras del abecedario</span></article><article><svg class="icon icon20" aria-hidden="true"><use href="#i-clock"></use></svg><strong id="textoSostener">1 s</strong><span>mantén la seña</span></article><article><svg class="icon icon20" aria-hidden="true"><use href="#i-clock"></use></svg><strong id="textoLimite">20 s</strong><span>por letra</span></article><article><svg class="icon icon20" aria-hidden="true"><use href="#i-award"></use></svg><strong id="textoPorcentajeAprobado">70%</strong><span>para aprobar</span></article></div><div class="consejosCamara"><span><svg class="icon icon16" aria-hidden="true"><use href="#i-sun"></use></svg>Busca buena luz</span><span><svg class="icon icon16" aria-hidden="true"><use href="#i-hand"></use></svg>Muestra la mano completa</span><span><svg class="icon icon16" aria-hidden="true"><use href="#i-photo"></use></svg>Fondo despejado</span></div><div class="privacidadCamara"><svg class="icon icon20" aria-hidden="true"><use href="#i-shield-lock"></use></svg><p>Tu video no sale de tu equipo. Al final solo se guarda qué letras acertaste y en cuánto tiempo. Si se acaba el tiempo de una letra, cuenta como fallo.</p></div><p class="estadoCargaCamara" id="estadoCarga" role="status" aria-live="polite"></p><div id="mensaje" class="mensajeEvaluacion" role="alert" hidden></div><div class="accionesInicioCamara"><button type="button" class="botonSecundario" id="btnVolver"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Volver</button><button type="button" class="botonComprobar" id="btnComenzar"><svg class="icon icon16" aria-hidden="true"><use href="#i-play"></use></svg> Comenzar</button><button type="button" class="botonReintentarPermiso" id="btnReintentar" hidden>Reintentar permiso</button></div><p class="notaPermisoCamara">Tu navegador te pedirá permiso para usar la cámara.</p></div><div id="pantallaEvaluacion" hidden><div class="progresoLetras"><span id="contador" aria-live="polite">Letra 1 de 10</span><div class="puntosLetras" id="puntosLetras" aria-label="Progreso de las letras"></div></div><div class="sesionCamaraGrid"><div class="videoCamara"><video id="video" playsinline muted></video><canvas id="overlay"></canvas><div class="esquinasEncuadre" id="esquinasEncuadre" aria-hidden="true"><i></i><i></i><i></i><i></i></div><span class="chipCamaraActiva"><i></i>Cámara activa</span><span class="tiempoCamara" id="tiempoRestante"><svg class="icon icon16" aria-hidden="true"><use href="#i-clock"></use></svg> 20 s</span><div class="estadoVideo" id="estadoVideo" role="status" aria-live="polite"><svg class="icon icon16" aria-hidden="true"><use href="#i-info-circle"></use></svg><span>No veo tu mano</span></div></div><aside class="panelLetraCamara"><div class="objetivoPanel"><span class="letraObjetivoCamara" id="letraObjetivo" aria-live="polite">?</span><p id="instruccionLetra">Haz la letra frente a la cámara.</p></div><div class="deteccionPanel" role="status" aria-live="polite"><div class="anilloDeteccion" id="anilloDeteccion" role="progressbar" aria-label="Tiempo manteniendo la seña" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><svg viewBox="0 0 64 64" aria-hidden="true"><circle class="anilloFondo" cx="32" cy="32" r="27"></circle><circle class="anilloValor" id="anilloValor" cx="32" cy="32" r="27"></circle></svg><span id="porcentajeSostener">0%</span></div><div><p class="detectadoCamara" id="detectado">Detectado: —</p><small id="ayudaDeteccion">Muestra tu mano frente a la cámara</small></div></div><div class="tiempoPanel" aria-label="Tiempo restante"><span class="etiquetaTiempoPanel">Tiempo restante</span><div class="barraTiempoPanel" role="progressbar" aria-label="Tiempo de esta letra" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20"><span id="barraTiempoPanel"></span></div><strong id="tiempoPanelValor">20 s</strong></div><div class="consejoPanel"><svg class="icon icon18" aria-hidden="true"><use href="#i-info-circle"></use></svg><p>Consejo: separa un poco los dedos y deja la palma frente a la cámara.</p></div><button type="button" class="saltarLetra" id="btnSaltar"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-right"></use></svg> Saltar letra (cuenta como fallo)</button></aside></div></div><div id="pantallaResumen" hidden>
+  <div class="resumenCamara" id="resumenLocal">
+    <section class="heroResultadoCamara">
+      <div class="anilloResultadoCamara" id="anilloResultadoCamara">
+        <svg viewBox="0 0 150 150" aria-hidden="true"><circle class="anilloResultadoFondo" cx="75" cy="75" r="62"></circle><circle class="anilloResultadoProgreso" id="anilloResultadoProgreso" cx="75" cy="75" r="62"></circle></svg><span class="marcaUmbralAnillo" id="marcaUmbralAnillo" aria-hidden="true"></span><div class="puntosCelebracion" id="puntosCelebracion" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="rafagaResultado" id="rafagaResultado" aria-hidden="true"></div>
+        <div class="valorAnilloResultado"><strong id="porcentajeResultado" aria-hidden="true">0%</strong><span>de aciertos</span></div>
+        <span class="medallonResultado" id="medallonResultado" aria-hidden="true"><svg class="icon icon20"><use href="#i-award"></use></svg></span>
+      </div>
+      <p class="leyendaUmbral">La marca indica el porcentaje necesario para aprobar.</p>
+      <div class="textoResultado"><h1 id="tituloResultado" tabindex="-1">Resultado</h1><p id="mensajeResultado"></p></div>
+    </section>
+    <span id="anuncioResultado" class="soloLectores" role="status" aria-live="polite"></span>
+    <section class="datosClaveResultado" aria-label="Datos clave">
+      <article><strong id="datoCorrectas">0 de 10</strong><span>letras correctas</span></article>
+      <article><strong id="datoTiempoPromedio">—</strong><span>tiempo promedio</span></article>
+      <article><strong id="datoUmbral">70%</strong><span>para aprobar</span></article>
+    </section>
+    <section class="detalleResultado"><h2>Tus letras</h2><div class="cuadriculaLetrasResultado" id="detalleLetras"></div></section>
+    <section class="insigniaDesbloqueada" id="insigniaDesbloqueada" hidden>
+      <svg class="icon icon52" aria-hidden="true"><use href="#i-insignia-curso-completado"></use></svg>
+      <div><strong>¡Insignia desbloqueada!</strong><p>Curso completado · ya la puedes ver en tu perfil</p></div>
+      <span class="insigniaPerfecta" id="insigniaPerfecta" hidden><svg class="icon icon16" aria-hidden="true"><use href="#i-star"></use></svg> Puntaje perfecto</span>
+    </section>
+    <section class="bloquePracticar" id="bloquePracticar" hidden><div class="letrasPracticar" id="letrasPracticar"></div><div class="textoPracticar"><strong>Letras para practicar</strong><a id="enlaceDiccionario" href="diccionario.html"><svg class="icon icon16" aria-hidden="true"><use href="#i-book-2"></use></svg> Repasar en el diccionario</a></div></section>
+    <div class="accionesResultado" id="accionesResultado"><button type="button" class="botonResultadoSecundario" id="btnRepetir"><svg class="icon icon16" aria-hidden="true"><use href="#i-repeat"></use></svg> Repetir evaluación</button><a class="botonResultadoPrincipal" id="enlaceVolverCurso" href="cursos-usuario.html">Volver al curso</a></div>
+    <div class="estadoGuardado" id="estadoGuardado" role="status" aria-live="polite" hidden><span id="textoEstadoGuardado"></span><button type="button" class="btnReintentarGuardado" id="btnReintentarError" hidden>Reintentar</button></div>
+  </div>
+</div><div id="accionesError" hidden></div></section></main><dialog id="dialogSalir" class="dialogSalir"><h2>¿Salir de la prueba?</h2><p>Perderás tu avance</p><div><button type="button" class="botonSecundario" id="btnSeguir">Seguir aquí</button><button type="button" class="botonPeligro" id="btnConfirmarSalida">Salir</button></div></dialog><script src="../js/config.js?v=3"></script><script src="../js/api.js"></script><script src="../js/layout.js?v=8"></script><script type="module" src="../js/pages/evaluacion-camara.js?v=3"></script></body></html>
