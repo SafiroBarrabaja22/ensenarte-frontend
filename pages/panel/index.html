@@ -58,6 +58,16 @@
                     </div>
                 </div>
                 <div>
+                    <label>Insignia Curso 100%</label>
+                    <div class="campoSeleccionRecurso">
+                        <input type="hidden" id="insignia100">
+                        <span id="insignia100Seleccionada">Sin insignia asignada</span>
+                        <button class="panelBtn secundario" type="button" data-selector-recurso="insignia100" data-categoria="curso_100" data-valor-recurso="id">Elegir insignia</button>
+                        <button class="panelBtn secundario" type="button" id="btnQuitarInsignia100">Quitar</button>
+                    </div>
+                    <img id="previewInsignia100" class="miniaturaInsignia insigniaMiniatura100" alt="Vista previa de insignia Curso 100%" hidden>
+                </div>
+                <div>
                     <label for="descripcion">Descripción</label>
                     <textarea id="descripcion" rows="2"></textarea>
                 </div>
@@ -73,11 +83,11 @@
             <table class="panelTabla">
                 <thead>
                     <tr>
-                        <th>Título</th><th>Portada</th><th>Insignia</th><th>Slug</th><th>Activo</th><th>Creado por</th><th>Acciones</th>
+                        <th>Título</th><th>Portada</th><th>Insignia</th><th>Curso 100%</th><th>Slug</th><th>Activo</th><th>Creado por</th><th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tablaCursos">
-                    <tr><td colspan="7" class="cargando">Cargando...</td></tr>
+                    <tr><td colspan="8" class="cargando">Cargando...</td></tr>
                 </tbody>
             </table>
         </section>
@@ -87,7 +97,7 @@
     <script src="../../js/api.js?v=2"></script>
     <script src="../../js/layout.js?v=8"></script>
     <script src="../../js/pages/panel/layout-panel.js?v=9"></script>
-    <script src="../../js/pages/panel/selector-recursos.js?v=6"></script>
-    <script src="../../js/pages/panel/dashboard.js?v=6"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=7"></script>
+    <script src="../../js/pages/panel/dashboard.js?v=7"></script>
 </body>
 </html>

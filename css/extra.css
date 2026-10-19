@@ -428,6 +428,7 @@ body.bodyEvaluationView .barraCategorias, body.bodyEvaluationView .pestanasCurso
 .insigniaPerfecta { display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;background:#fff;font-size:12px;white-space:nowrap; }
 .bloquePracticar { display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #D8E5E0;border-radius:14px;background:#F6FAF8;color:#1B2F36;opacity:1; }
 .letrasPracticar { display:flex;flex-wrap:wrap;gap:6px; }.letrasPracticar span { width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#FCE4E0;color:#8A2E24;font-size:15px;font-weight:500; }
+.letrasPracticar.preguntasPracticar span { width:auto; min-width:34px; height:34px; padding:0 10px; border-radius:999px; white-space:nowrap; }
 .textoPracticar { display:flex;flex-direction:column;gap:3px; }.textoPracticar>strong { font-weight:500; }.textoPracticar a { display:inline-flex;align-items:center;gap:5px;color:#0B5F5B !important;font-size:13px;font-weight:500;text-decoration:underline;opacity:1 !important; }
 .accionesResultado { display:flex;gap:10px;opacity:1; }
 .accionesResultado>.botonResultadoPrincipal,.accionesResultado>.botonResultadoSecundario { min-height:44px;flex:1;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border:1.5px solid #0F7F7A;border-radius:10px;font:inherit;font-size:14px;font-weight:500;text-decoration:none;text-align:center;cursor:pointer;opacity:1 !important; }
@@ -508,3 +509,69 @@ body.bodyFeedbackView::before { display:none !important; }
 
 body.bodyEvaluationView .pestanas,body.bodyEvaluationView .tabs,body.bodyEvaluationView .tabs-container,body.bodyEvaluationView .course-tabs,body.bodyEvaluationView .barraFiltrosCursos { display:none !important; }
 .puntosCelebracion.mostrar i { animation-delay:var(--delay),calc(var(--delay) + var(--resultado-chip,550ms) + var(--offset)); }
+
+.inicioPreguntas { padding:20px 0 4px; }
+.accionesInicioPreguntas { display:flex; justify-content:center; margin-top:20px; }
+
+/* Layout compartido y responsivo de AttemptHistory. */
+.evaluacionNueva.evaluacionHistorialPagina { width:min(calc(100% - 32px), 860px); }
+.evaluacionHistorialPagina .tarjetaEvaluacionNueva { width:100%; box-sizing:border-box; }
+.evaluationPreparation { width:100%; }
+.attemptHistoryCard { width:100%; max-width:800px; box-sizing:border-box; margin:0 auto 24px; padding:28px; border:1px solid #dce9e5; border-radius:18px; background:#fff; box-shadow:0 8px 24px rgba(20,60,55,.045); }
+.attemptHistoryCard header h2 { margin:0; color:#173f3b; font-size:22px; }
+.attemptHistoryCard header p { margin:5px 0 0; color:#71817e; font-size:14px; }
+.attemptHistorySummary { display:flex; align-items:center; justify-content:center; gap:24px; margin:24px 0; min-height:160px; }
+.attemptDonut { position:relative; display:grid; place-items:center; width:148px; height:148px; flex:0 0 148px; border-radius:50%; background:conic-gradient(#12877f var(--attempt-score),#e7f0ee 0); }
+.attemptDonut:before { position:absolute; inset:10px; border-radius:50%; background:#fff; content:""; }
+.attemptDonut>div { position:relative; text-align:center; }
+.attemptDonut strong { display:block; color:#124c48; font-size:34px; line-height:1.1; }
+.attemptDonut small { display:block; margin-top:5px; color:#788783; font-size:12px; }
+.attemptHistoryCompare { display:flex; justify-content:center; }
+.attemptHistoryBadge { display:inline-flex; align-items:center; padding:10px 14px; border-radius:999px; background:#f1f5f4; color:#526762; font-size:12px; font-weight:700; }
+.attemptHistoryBadge.isPositive { background:#e1f5ee; color:#086358; }
+.attemptHistoryCard h3 { margin:0 0 12px; color:#183d3a; font-size:15px; }
+.attemptChart { width:100%; min-height:160px; aspect-ratio:7 / 2; overflow:hidden; border:1px solid #dce9e5; border-radius:13px; background:#f7fbfa; }
+.attemptChart svg { display:block; width:100%; height:100%; min-height:160px; }
+.attemptChartGuide { stroke:#dce9e5; stroke-dasharray:4 5; vector-effect:non-scaling-stroke; }
+.attemptChartLine { fill:none; stroke:#72c8b9; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.attemptChartPoint { fill:#f26e5b; stroke:#fff; stroke-width:2; vector-effect:non-scaling-stroke; }
+.attemptChartPoint.isLatest { fill:#12877f; }
+.attemptChartLabels { display:grid; grid-template-columns:repeat(var(--point-count),minmax(0,1fr)); gap:4px; margin-top:6px; text-align:center; color:#526762; font-size:12px; line-height:1.35; }
+.attemptSessionCards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-top:12px; }
+.attemptSessionCard { display:flex; min-width:0; flex-direction:column; gap:3px; padding:12px; border:1px solid #edf2f0; border-radius:11px; background:#fff; color:#526762; font-size:14px; }
+.attemptSessionCard strong { color:#0f766e; font-size:20px; }
+.attemptSessionCard time { color:#899793; font-size:12px; }
+.attemptHistoryEmpty { margin:18px 0 2px; color:#71817e; font-size:14px; }
+.accionesInicioPreguntas { display:flex; justify-content:center; margin-top:20px; }
+.accionesInicioPreguntas [data-evaluation-start] { min-width:min(100%,320px); }
+.evaluationPreparation .attemptHistoryCard { margin-bottom:0; }
+.mensajeEvaluacion:empty { display:none; }
+@media(max-width:700px) {
+  .evaluacionNueva.evaluacionHistorialPagina { width:calc(100% - 20px); padding-top:96px; }
+  .attemptHistoryCard { padding:20px 16px; }
+  .attemptHistorySummary { flex-direction:column; gap:14px; margin:20px 0 24px; }
+  .attemptSessionCards { display:flex; overflow-x:auto; padding:0 0 5px; scroll-snap-type:x mandatory; }
+  .attemptSessionCard { flex:0 0 138px; scroll-snap-align:start; }
+  .attemptChartLabels { font-size:12px; }
+}
+/* Donut SVG y animaciones del historial: WAAPI define los estados de entrada. */
+.attemptDonut { overflow:hidden; background:none; }
+.attemptDonut:before { content:none; }
+.attemptDonut > svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }
+.attemptDonutTrack,.attemptDonutProgress { fill:none; stroke-width:8; }
+.attemptDonutTrack { stroke:#e7f0ee; }
+.attemptDonutProgress { stroke:#12877f; stroke-linecap:round; stroke-dasharray:100; }
+.attemptChartPoint { transform-box:fill-box; transform-origin:center; }
+.insigniaCursoPerfil + small { font-size:10px; font-weight:800; }
+.etiquetaInsignia.esCurso100 { border:1px solid #e7c66a; background:linear-gradient(135deg,#fff8dc,#f7e6a9); color:#755312; box-shadow:0 0 0 2px rgba(231,198,106,.12); }
+.etiquetaInsignia.esCurso100 .insigniaCursoPerfil { border-color:#e2bd50; }
+.imagenInsigniaCurso100 { width:48px; height:48px; flex:0 0 48px; border:2px solid #e5c766; border-radius:50%; object-fit:cover; box-shadow:0 0 0 3px rgba(229,199,102,.18); }
+.insigniaCurso100Nueva { border:1px solid #e7c66a; background:linear-gradient(115deg,#fff9e5,#fdf1da); color:#755312; }
+.resumenCamara.resultadoAnimando .insigniaCurso100Nueva { animation:revealBadge100 .72s cubic-bezier(.2,.8,.2,1) var(--postletters-delay,0ms) both; }
+.resumenCamara.resultadoAnimando .insigniaCurso100Nueva .imagenInsigniaCurso100 { animation:popBadge100 .65s cubic-bezier(.2,.8,.2,1) var(--postletters-delay,0ms) both; }
+@keyframes revealBadge100 { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popBadge100 { 0% { opacity:0; transform:scale(.7); } 72% { opacity:1; transform:scale(1.08); } 100% { opacity:1; transform:scale(1); } }
+.insigniaMiniatura100 { border:2px solid #e5c766; border-radius:50%; }
+@media(prefers-reduced-motion:reduce) {
+  .etiquetaInsignia.esCurso100,.insigniaCurso100Nueva,.insigniaCurso100Nueva * { animation:none!important; transition:none!important; }
+}

@@ -9,6 +9,7 @@ const campos = {
   imagen_diccionario: "imgDiccionario",
   imagen_evaluacion: "imgEvaluacion",
   insignia: "insignia",
+  insignia_100: "insignia100",
   descripcion: "descripcion",
 };
 
@@ -39,7 +40,7 @@ async function cargarCursos() {
     const cursos = comoLista(await api("/panel/cursos/"));
 
     if (!cursos.length) {
-      tabla.innerHTML = '<tr><td colspan="7" class="vacio">No hay cursos todavía.</td></tr>';
+      tabla.innerHTML = '<tr><td colspan="8" class="vacio">No hay cursos todavía.</td></tr>';
       return;
     }
 
@@ -50,6 +51,7 @@ async function cargarCursos() {
           <td>${esc(curso.titulo)}</td>
           <td><img class="miniaturaCurso" src="${esc(rutaImagen(curso.portada_curso))}" alt="Portada de ${esc(curso.titulo)}"></td>
           <td>${curso.insignia ? `<img class="miniaturaInsignia" src="${esc(rutaImagen(curso.insignia))}" alt="Insignia de ${esc(curso.titulo)}">` : "-"}</td>
+          <td>${curso.insignia_100_url ? `<img class="miniaturaInsignia insigniaMiniatura100" src="${esc(rutaImagen(curso.insignia_100_url))}" alt="Insignia Curso 100% de ${esc(curso.titulo)}">` : "-"}</td>
           <td>${esc(curso.nombre)}</td>
           <td>${curso.activo ? "Sí" : "No"}</td>
           <td>${esc(curso.creado_por) || "-"}</td>
@@ -70,7 +72,7 @@ async function cargarCursos() {
       boton.addEventListener("click", () => eliminarCurso(boton.dataset.eliminar))
     );
   } catch (error) {
-    tabla.innerHTML = `<tr><td colspan="7" class="vacio">${esc(error.message)}</td></tr>`;
+    tabla.innerHTML = `<tr><td colspan="8" class="vacio">${esc(error.message)}</td></tr>`;
   }
 }
 
@@ -82,6 +84,7 @@ function editarCurso(cursos, id) {
   Object.entries(campos).forEach(([clave, elemento]) => {
     document.getElementById(elemento).value = curso[clave] || "";
   });
+  pintarInsignia100(curso.insignia_100, curso.insignia_100_nombre, curso.insignia_100_url);
 
   document.getElementById("tituloFormulario").textContent = `Editando: ${curso.titulo}`;
   document.getElementById("btnCancelar").style.display = "inline-block";
@@ -95,7 +98,33 @@ function limpiarFormulario() {
   });
   document.getElementById("tituloFormulario").textContent = "Crear curso";
   document.getElementById("btnCancelar").style.display = "none";
+  pintarInsignia100(null, "", "");
 }
+
+function pintarInsignia100(id, nombre = "", imagen = "") {
+  document.getElementById("insignia100").value = id || "";
+  document.getElementById("insignia100Seleccionada").textContent = id
+    ? `${nombre || "Insignia Curso 100%"} (ID ${id})`
+    : "Sin insignia asignada";
+  const preview = document.getElementById("previewInsignia100");
+  preview.hidden = !imagen;
+  if (imagen) preview.src = rutaImagen(imagen);
+  else preview.removeAttribute("src");
+}
+
+document.getElementById("insignia100").dataset.valorRecurso = "id";
+document.getElementById("insignia100").addEventListener("change", async (event) => {
+  const id = event.currentTarget.value.trim();
+  if (!id) { pintarInsignia100(null); return; }
+  try {
+    const recurso = await api(`/panel/recursos/${encodeURIComponent(id)}/`);
+    pintarInsignia100(recurso.id, recurso.nombre, recurso.archivo_url);
+  } catch (error) {
+    pintarInsignia100(null);
+    mostrarMensaje("mensaje", error.message);
+  }
+});
+document.getElementById("btnQuitarInsignia100").addEventListener("click", () => pintarInsignia100(null));
 
 document.getElementById("btnCancelar").addEventListener("click", limpiarFormulario);
 
@@ -106,6 +135,7 @@ document.getElementById("btnGuardar").addEventListener("click", async () => {
   Object.entries(campos).forEach(([clave, elemento]) => {
     cuerpo[clave] = document.getElementById(elemento).value.trim();
   });
+  cuerpo.insignia_100 = cuerpo.insignia_100 || null;
 
   if (!cuerpo.titulo || !cuerpo.nombre) {
     mostrarMensaje("mensaje", "El título y el slug son obligatorios.");

@@ -36,7 +36,7 @@
     const preguntas = Number(curso.total_preguntas || 0);
     const puntaje = resultado ? `${resultado.aciertos} aciertos` : "sin intentos";
     const slugSeguro = encodeURIComponent(curso.nombre);
-    // Si el curso tiene evaluacion con camara, primero se elige entre las dos.
+    // Solo los cursos multimodales necesitan selector; los demás abren la vista previa común.
     const enlaceEvaluacion = cursoTieneEvaluacionCamara(curso.nombre)
       ? `evaluaciones.html?curso=${slugSeguro}`
       : `evaluacion.html?curso=${slugSeguro}&plantilla=15`;

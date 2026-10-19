@@ -5,17 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluación</title>
     <link rel="stylesheet" href="../css/style.css?v=15">
-    <link rel="stylesheet" href="../css/extra.css">
+    <link rel="stylesheet" href="../css/extra.css?v=13">
 </head>
 <body class="bodyEvaluationView">
     <div id="layout"></div>
-    <main class="evaluacionNueva">
+    <main class="evaluacionNueva evaluacionHistorialPagina">
         <section class="tarjetaEvaluacionNueva" aria-labelledby="tituloEvaluacion">
             <div class="decoracionEvaluacion" aria-hidden="true"></div>
             <header class="cabeceraEvaluacionNueva">
                 <div class="tituloEvaluacionNueva"><span class="iconoEvaluacionMini" aria-hidden="true"><svg class="icon icon20"><use href="#i-checklist"></use></svg></span><h1 id="tituloEvaluacion">Cargando... · Evaluación</h1></div>
                 <button type="button" class="botonSalirEvaluacion" id="btnSalirEvaluacion"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Salir</button>
             </header>
+            <section id="pantallaInicioPreguntas" class="inicioPreguntas evaluationPreparation" aria-labelledby="tituloInicioPreguntas">
+                <div id="historialIntentos"></div>
+                <div id="mensajeInicio" class="mensajeEvaluacion" role="alert"></div>
+                <div class="accionesInicioPreguntas"><button type="button" class="botonComprobar" id="btnIniciarEvaluacion" data-evaluation-start disabled>Comenzar evaluación</button></div>
+            </section>
+            <div id="pantallaPreguntas" hidden>
             <div class="progresoEvaluacionNueva"><span id="contador">Pregunta 1 de 1</span><strong id="porcentajeEvaluacion">0%</strong><div class="barraEvaluacionNueva"><span id="barraEvaluacion"></span></div></div>
             <h2 id="textoPregunta">Cargando pregunta...</h2>
             <div class="marcoPregunta" id="contenedorVideo"></div>
@@ -23,12 +29,15 @@
             <div class="feedbackEvaluacion" id="feedback" role="status" aria-live="polite"></div>
             <div id="mensaje" class="mensajeEvaluacion" role="alert"></div>
             <div class="accionesEvaluacion"><button type="button" class="botonComprobar" id="btnComprobar"><svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> Comprobar</button></div>
+            </div>
         </section>
     </main>
     <dialog id="dialogSalir" class="dialogSalir"><h2>¿Salir de la evaluación?</h2><p>Perderás tu avance</p><div><button type="button" class="botonSecundario" id="btnSeguir">Seguir aquí</button><button type="button" class="botonPeligro" id="btnConfirmarSalida">Salir</button></div></dialog>
     <script src="../js/config.js?v=2"></script>
     <script src="../js/api.js"></script>
     <script src="../js/layout.js?v=6"></script>
-    <script src="../js/pages/evaluacion.js?v=5"></script>
+    <script src="../js/lib/historial-intentos.js?v=7"></script>
+    <script src="../js/lib/servicio-historial-intentos.js?v=2"></script>
+    <script src="../js/pages/evaluacion.js?v=10"></script>
 </body>
-     <script src="../js/layout.js?v=7"></script>
+</html>

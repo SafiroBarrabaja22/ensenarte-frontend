@@ -80,7 +80,9 @@ const SelectorRecursos = (() => {
   async function elegir(id) {
     try {
       const recurso = await api(`/panel/recursos/${id}/`);
-      campoDestino.value = recurso.archivo_url;
+      campoDestino.value = campoDestino.dataset.valorRecurso === "id"
+        ? String(recurso.id)
+        : recurso.archivo_url;
       campoDestino.dispatchEvent(new Event("change", { bubbles: true }));
       dialog.close();
     } catch (error) {

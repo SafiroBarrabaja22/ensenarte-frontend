@@ -36,15 +36,16 @@
         const portada = curso?.portada_curso
           ? `<img class="portadaCursoPerfil" src="${esc(rutaImagen(curso.portada_curso))}" alt="Portada del curso ${esc(p.curso_titulo)}">`
           : `<span class="portadaCursoPerfilFallback" aria-hidden="true">${iconoSvg(temaIcono(p.curso_titulo), "icon icon26")}</span>`;
+        const insignia100 = p.curso_insignia_tipo === "curso_100";
         const insignia = p.curso_insignia
-          ? `<img class="insigniaCursoPerfil" src="${rutaImagen(p.curso_insignia)}" alt="Insignia de ${esc(p.curso_titulo)}">`
+          ? `<img class="insigniaCursoPerfil" src="${rutaImagen(p.curso_insignia)}" alt="${insignia100 ? "Insignia Curso 100%" : "Insignia de curso completado"}: ${esc(p.curso_titulo)}">${insignia100 ? '<small>Curso 100%</small>' : ""}`
           : '<span class="insigniaSinImagen">Sin insignia</span>';
         const destino = `curso.html?curso=${encodeURIComponent(p.curso)}&plantilla=15`;
         return `<a class="tarjetaCursoPerfil" href="${destino}" aria-label="Entrar al curso ${esc(p.curso_titulo)}">
           <div class="portadaCursoPerfilMarco">${portada}</div>
           <div class="cabeceraCursoPerfil">
             <span class="iconoCursoPerfil" aria-hidden="true">${iconoSvg(temaIcono(p.curso_titulo), "icon icon26")}</span>
-            <span class="etiquetaInsignia ${p.curso_insignia ? "tieneInsignia" : ""}">${insignia}</span>
+            <span class="etiquetaInsignia ${p.curso_insignia ? "tieneInsignia" : ""} ${insignia100 ? "esCurso100" : ""}" title="${insignia100 ? "Curso 100%" : "Curso completado"}">${insignia}</span>
           </div>
           <h3>${esc(p.curso_titulo)}</h3>
           <div class="barraProgreso" role="progressbar" aria-label="Progreso de ${esc(p.curso_titulo)}" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" style="--progreso: ${porcentaje}%"><span></span></div>

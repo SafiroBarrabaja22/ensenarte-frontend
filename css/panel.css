@@ -257,7 +257,7 @@
 
 .recursoVisual {
     display: grid;
-    grid-template-columns: 170px 220px minmax(0, 1fr);
+    grid-template-columns: 170px minmax(0, 1fr) 72px;
     align-items: center;
     min-width: 0;
     overflow: hidden;
@@ -274,9 +274,9 @@
     background: #eef4f1;
 }
 
-.recursoVisualInfo { display: flex; justify-content: space-between; gap: 8px; padding: 12px; }
-.recursoVisualInfo strong { overflow-wrap: anywhere; }
-.recursoVisualInfo span { flex: 0 0 auto; color: #63777a; }
+.recursoVisualInfo { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; padding: 12px; }
+.recursoVisualInfo strong { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.recursoVisualInfo span { min-width: 0; color: #63777a; overflow-wrap: anywhere; }
 .recursoVisual > img { grid-column: 1; grid-row: 1; }
 .recursoVisualInfo { grid-column: 2; grid-row: 1; }
 .recursoVisual > .panelAcciones { grid-column: 3; grid-row: 1; justify-self: end; width: max-content; flex-direction: column; align-items: stretch; padding: 12px; }
@@ -329,3 +329,5 @@
     .campoSeleccionRecurso { align-items: stretch; flex-direction: column; }
     .modalRecursos { padding: 16px; }
 }
+#insignia100Seleccionada { flex:1; min-width:0; color:#536663; font-size:13px; }
+#previewInsignia100 { display:block; margin-top:8px; }

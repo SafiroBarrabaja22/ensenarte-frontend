@@ -9,7 +9,7 @@
  */
 
 import { ClasificadorKNN, ControlSostener, landmarksAPixeles, normalizarLandmarks } from "../lib/lsc-reconocedor.js";
-import { renderResultados } from "../lib/resultados.js?v=2";
+import { renderResultados } from "../lib/resultados.js?v=4";
 
 // ---------------------------------------------------------------- configuracion
 // Para cambiar el modelo basta con reemplazar este archivo (o esta ruta).
@@ -86,7 +86,7 @@ let sesion = null;
   $("btnSeguir").addEventListener("click", () => $("dialogSalir").close());
   $("btnConfirmarSalida").addEventListener("click", () => salir(enlaceCurso));
   $("btnComenzar").addEventListener("click", comenzar);
-  $("btnRepetir").addEventListener("click", comenzar);
+  $("btnRepetir").addEventListener("click", volverAPreparacionCamara);
   $("btnReintentar").addEventListener("click", () => accionReintento && accionReintento());
   $("btnReintentarError").addEventListener("click", () => accionReintento && accionReintento());
   document.addEventListener("visibilitychange", pausarAlOcultar);
@@ -102,10 +102,37 @@ let sesion = null;
     return;
   }
 
+  cargarHistorialCamara();
+
   api(`/cursos/${slugCurso}/`, { autenticado: false })
     .then((curso) => { const nombreCurso = nombreCursoParaEvaluacion(curso, slugCurso); datosCursoResultado = { nombre: nombreCurso, icono: /abecedario|letra|abc/i.test(`${nombreCurso} ${slugCurso}`) ? "abc" : "books" }; $("tituloEvaluacion").textContent = `${nombreCurso} · Evaluación con cámara`; $("iconoCursoEvaluacion").innerHTML = `<svg class="icon icon20" aria-hidden="true"><use href="#i-${datosCursoResultado.icono}"></use></svg>`; })
     .catch(() => {});
 })();
+
+function volverAPreparacionCamara() {
+  limpiarAnimacionResultado();
+  limpiarError();
+  sesion = null;
+  $("btnComenzar").disabled = false;
+  $("btnComenzar").hidden = false;
+  $("btnReintentar").hidden = true;
+  mostrarPantalla("pantallaInicio");
+  cargarHistorialCamara();
+}
+
+async function cargarHistorialCamara() {
+  try {
+    const historial = await ServicioHistorialIntentos.cargar({ curso: slugCurso, tipo: "camara" });
+    pintarHistorialCamara(historial);
+  } catch (error) {
+    console.warn("No se pudo cargar el historial de cámara:", error);
+  }
+}
+
+function pintarHistorialCamara(historial) {
+  const seccion = $("historialCamara");
+  if (seccion) AttemptHistory.render(seccion, { tipo: "camara", intentos: historial });
+}
 
 // ---------------------------------------------------------------- carga de recursos
 async function comenzar() {
@@ -431,7 +458,7 @@ function pintarResumen(intentos, oficial = null) {
   const promedio = tiempos.length ? (tiempos.reduce((s,t)=>s+t,0)/tiempos.length/1000).toFixed(1)+' s' : '—';
   const items = intentos.map(i => { const ok=Boolean(i.acerto), agotado=!ok&&Number(i.tiempo_ms)>=LIMITE_MS; return { etiqueta:i.letra_objetivo, acierto:ok, detalle:ok?Math.max(1,Math.round(Number(i.tiempo_ms)/1000))+' s':agotado?'Tiempo agotado':'Fallo' }; });
   const slugSeguro=encodeURIComponent(slugCurso), cursoUrl=`curso.html?curso=${slugSeguro}&plantilla=15`, repetirUrl=`evaluacion-camara.html?curso=${slugSeguro}`;
-  renderResultados({ curso:datosCursoResultado, modo:'camara', total, correctas, porcentaje, umbral, items, estadistica2:{valor:promedio,etiqueta:'Promedio por letra acertada'}, repasar:falladas.map(i=>i.letra_objetivo), insignia:{nueva:Boolean(oficial&&(oficial.insignia_nueva||oficial.nueva_insignia||(oficial.insignia&&oficial.insignia.nueva))),id:'curso-completado'}, slug:slugCurso, cursoUrl, repetirUrl, iconoCurso:datosCursoResultado.icono }, $('resumenLocal'), {onClose:()=>salir(cursoUrl)});
+  renderResultados({ curso:datosCursoResultado, modo:'camara', total, correctas, porcentaje, umbral, items, estadistica2:{valor:promedio,etiqueta:'Promedio por letra acertada'}, repasar:falladas.map(i=>i.letra_objetivo), insignia:{nueva:Boolean(oficial?.insignia_100_nueva),id:'curso-completado',curso100:oficial?.insignia_100||null}, slug:slugCurso, cursoUrl, repetirUrl, iconoCurso:datosCursoResultado.icono }, $('resumenLocal'), {onClose:()=>salir(cursoUrl)});
   datosFinalesAnimacion={porcentaje,umbral,correctas,total,promedioTexto:promedio,aprobado};
 }
 
@@ -441,7 +468,7 @@ function terminarAnimacionResultado(){}
 function saltarAnimacionResultado(){}async function enviarResultado(intentos) {
   if (enviando) return; enviando=true; limpiarError(); if($('btnRepetir')) $('btnRepetir').disabled=true;
   const estado=$('resumenLocal').querySelector('[data-saved]'); if(estado){estado.className='estadoGuardado guardando';estado.textContent='Guardando tu resultado...';}
-  try { const datos=await api(RUTA_RESULTADO,{metodo:'POST',cuerpo:{intentos}}); pintarResumen(intentos,datos); pintarRespuestaServidor(); }
+  try { const datos=await api(RUTA_RESULTADO,{metodo:'POST',cuerpo:{curso:slugCurso,intentos}}); pintarResumen(intentos,datos); pintarRespuestaServidor(); }
   catch(error) { console.error('Envio:',error); mostrarError(mensajeErrorEnvio(error),()=>enviarResultado(intentos)); }
   finally { enviando=false; if($('btnRepetir')) $('btnRepetir').disabled=false; }
 }

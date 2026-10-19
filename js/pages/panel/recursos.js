@@ -94,13 +94,17 @@ function tarjetaRecurso(recurso) {
       <img src="${escaparHtml(rutaImagen(recurso.archivo_url))}" alt="${escaparHtml(recurso.nombre)}">
       <div class="recursoVisualInfo">
         <strong>${escaparHtml(recurso.nombre)}</strong>
-        <span>${escaparHtml(recurso.categoria)} · .${escaparHtml(recurso.extension.toUpperCase())}</span>
+        <span>${escaparHtml(nombreCategoria(recurso.categoria))} · .${escaparHtml(recurso.extension.toUpperCase())}</span>
       </div>
       <div class="panelAcciones">
         <button class="panelBtn secundario botonIcono" type="button" data-renombrar="${recurso.id}" aria-label="Renombrar" title="Renombrar">&#9998;</button>
         <button class="panelBtn peligro botonIcono" type="button" data-eliminar-recurso="${recurso.id}" aria-label="Eliminar" title="Eliminar">&#128465;</button>
       </div>
     </article>`;
+}
+
+function nombreCategoria(categoria) {
+  return categoria === "curso_100" ? "Insignia 100%" : categoria === "insignia" ? "Insignia de curso" : categoria === "avatar" ? "Avatar" : "Recurso de curso";
 }
 
 function conectarAccionesRecurso() {

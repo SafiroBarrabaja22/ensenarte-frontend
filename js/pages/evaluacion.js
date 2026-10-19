@@ -7,6 +7,7 @@ let respuestaComprobada = false;
 let siguienteIntento = null;
 let ultimoIntento = null;
 let resumenInterfaz = [];
+let resultadoFinal = null;
 
 (async function iniciar() {
   if (!requiereSesion()) return;
@@ -19,27 +20,52 @@ let resumenInterfaz = [];
   document.getElementById("btnSalirEvaluacion").addEventListener("click", () => document.getElementById("dialogSalir").showModal());
   document.getElementById("btnSeguir").addEventListener("click", () => document.getElementById("dialogSalir").close());
   document.getElementById("btnConfirmarSalida").addEventListener("click", () => { window.location.href = `curso.html?curso=${encodeURIComponent(slugCurso)}&plantilla=15`; });
+  document.getElementById("btnIniciarEvaluacion").addEventListener("click", iniciarIntento);
   document.getElementById("btnComprobar").addEventListener("click", comprobarRespuesta);
   document.addEventListener("keydown", gestionarTeclado);
 
   try {
     const curso = await api(`/cursos/${slugCurso}/`, { autenticado: false });
-    try { resumenInterfaz = JSON.parse(sessionStorage.getItem(`evaluacion-items-${slugCurso}`) || "[]"); } catch { resumenInterfaz = []; }
     document.getElementById("tituloEvaluacion").textContent = `${nombreCursoParaEvaluacion(curso, slugCurso)} · Evaluación`;
     document.querySelector(".tituloEvaluacionNueva .icon").innerHTML = `<use href="#i-${/abecedario|letra|abc/i.test(`${curso.titulo} ${slugCurso}`) ? "abc" : "books"}"></use>`;
+  } catch (error) {
+    mostrarMensaje("mensajeInicio", error.message);
+  }
+
+  try { resumenInterfaz = JSON.parse(sessionStorage.getItem(`evaluacion-items-${slugCurso}`) || "[]"); } catch { resumenInterfaz = []; }
+  try {
+    const historial = await ServicioHistorialIntentos.cargar({ curso: slugCurso, tipo: "normal" });
+    AttemptHistory.render("#historialIntentos", { tipo: "normal", intentos: historial });
+  } catch (error) {
+    console.warn("No se pudo cargar el historial de preguntas:", error);
+    AttemptHistory.render("#historialIntentos", { tipo: "normal", intentos: [] });
+  }
+  document.getElementById("btnIniciarEvaluacion").disabled = false;
+})();
+
+async function iniciarIntento() {
+  const boton = document.getElementById("btnIniciarEvaluacion");
+  boton.disabled = true;
+  boton.textContent = "Preparando evaluación...";
+  try {
     let intento;
     try {
       intento = await api(`/cursos/${slugCurso}/evaluacion/actual/`);
-    } catch {
+    } catch (error) {
+      if (error.status !== 404) throw error;
       resumenInterfaz = [];
       try { sessionStorage.removeItem(`evaluacion-items-${slugCurso}`); } catch {}
       intento = await api(`/cursos/${slugCurso}/evaluacion/iniciar/`, { metodo: "POST" });
     }
+    document.getElementById("pantallaInicioPreguntas").hidden = true;
+    document.getElementById("pantallaPreguntas").hidden = false;
     pintarPregunta(intento);
   } catch (error) {
-    mostrarMensaje("mensaje", error.message);
+    mostrarMensaje("mensajeInicio", error.message);
+    boton.disabled = false;
+    boton.textContent = "Comenzar evaluación";
   }
-})();
+}
 
 function pintarPregunta(intento) {
   const pregunta = intento.pregunta;
@@ -110,6 +136,7 @@ async function comprobarRespuesta() {
       document.getElementById("feedback").className = "feedbackEvaluacion correcto";
       document.getElementById("feedback").innerHTML = '<svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> ¡Muy bien! Respuesta correcta.';
       if (respuesta.finalizado) {
+        resultadoFinal = respuesta.resultado || null;
         actualizarBoton("Ver resultado", "i-arrow-right");
         ultimoIntento = { ...ultimoIntento, finalizado: true };
       } else {
@@ -145,6 +172,9 @@ function gestionarTeclado(evento) {
 
 function irAResultado() {
   try { sessionStorage.setItem(`evaluacion-items-${slugCurso}`, JSON.stringify(resumenInterfaz)); } catch {}
+  try {
+    if (resultadoFinal) sessionStorage.setItem(`evaluacion-resultado-${slugCurso}`, JSON.stringify(resultadoFinal));
+  } catch {}
   window.location.href = `retroalimentacion.html?curso=${encodeURIComponent(slugCurso)}`;
 }
 
