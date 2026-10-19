@@ -38,7 +38,11 @@ let resultadoFinal = null;
     AttemptHistory.render("#historialIntentos", { tipo: "normal", intentos: historial });
   } catch (error) {
     console.warn("No se pudo cargar el historial de preguntas:", error);
-    AttemptHistory.render("#historialIntentos", { tipo: "normal", intentos: [] });
+    AttemptHistory.render("#historialIntentos", {
+      tipo: "normal",
+      intentos: [],
+      error: "No se pudo cargar el historial. Comprueba la conexión e inténtalo de nuevo.",
+    });
   }
   document.getElementById("btnIniciarEvaluacion").disabled = false;
 })();

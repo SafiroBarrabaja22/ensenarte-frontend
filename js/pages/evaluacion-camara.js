@@ -126,6 +126,12 @@ async function cargarHistorialCamara() {
     pintarHistorialCamara(historial);
   } catch (error) {
     console.warn("No se pudo cargar el historial de cámara:", error);
+    const seccion = $("historialCamara");
+    if (seccion) AttemptHistory.render(seccion, {
+      tipo: "camara",
+      intentos: [],
+      error: "No se pudo cargar el historial. Comprueba la conexión e inténtalo de nuevo.",
+    });
   }
 }
 

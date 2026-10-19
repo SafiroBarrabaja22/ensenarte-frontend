@@ -98,7 +98,7 @@
     );
   }
 
-  function render(root, { tipo = "normal", intentos = [], titulo } = {}) {
+  function render(root, { tipo = "normal", intentos = [], titulo, error = "" } = {}) {
     if (typeof root === "string") root = document.querySelector(root);
     if (!root) throw new Error("AttemptHistory requiere un contenedor en la página de evaluación.");
     const wrapper = root.closest(".evaluationPreparation");
@@ -107,7 +107,10 @@
     const encabezado = titulo || (camara ? "Tu progreso con cámara" : "Tu progreso");
     const subtitulo = "Revisa tus últimas sesiones antes de comenzar";
     if (!sesiones.length) {
-      root.innerHTML = `<section class="attemptHistoryCard isEmpty"><header><h2>${escapeHtml(encabezado)}</h2><p>${subtitulo}</p></header><p class="attemptHistoryEmpty">Aún no tienes intentos</p></section>`;
+      const estado = error
+        ? `<p class="attemptHistoryEmpty isError">${escapeHtml(error)}</p>`
+        : '<p class="attemptHistoryEmpty">Aún no tienes intentos</p>';
+      root.innerHTML = `<section class="attemptHistoryCard isEmpty"><header><h2>${escapeHtml(encabezado)}</h2><p>${subtitulo}</p></header>${estado}</section>`;
       return;
     }
     const ultima = sesiones.at(-1), anterior = sesiones.at(-2);

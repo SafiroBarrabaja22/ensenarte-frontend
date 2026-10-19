@@ -542,6 +542,7 @@ body.bodyEvaluationView .pestanas,body.bodyEvaluationView .tabs,body.bodyEvaluat
 .attemptSessionCard strong { color:#0f766e; font-size:20px; }
 .attemptSessionCard time { color:#899793; font-size:12px; }
 .attemptHistoryEmpty { margin:18px 0 2px; color:#71817e; font-size:14px; }
+.attemptHistoryEmpty.isError { color:#9c5149; }
 .accionesInicioPreguntas { display:flex; justify-content:center; margin-top:20px; }
 .accionesInicioPreguntas [data-evaluation-start] { min-width:min(100%,320px); }
 .evaluationPreparation .attemptHistoryCard { margin-bottom:0; }
