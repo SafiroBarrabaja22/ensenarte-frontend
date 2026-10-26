@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegir evaluación</title>
+    <link rel="stylesheet" href="../css/style.css?v=15">
+    <link rel="stylesheet" href="../css/extra.css?v=2">
+</head>
+<body class="bodyEvaluationView">
+    <div id="layout"></div>
+    <main class="evaluacionNueva">
+        <section class="tarjetaEvaluacionNueva" aria-labelledby="tituloEvaluacion">
+            <div class="decoracionEvaluacion" aria-hidden="true"></div>
+            <header class="cabeceraEvaluacionNueva">
+                <div class="tituloEvaluacionNueva"><span class="iconoEvaluacionMini" aria-hidden="true"><svg class="icon icon20"><use href="#i-checklist"></use></svg></span><h1 id="tituloEvaluacion">Cargando... · Evaluación</h1></div>
+                <a class="botonSalirEvaluacion" id="enlaceVolver" href="cursos-usuario.html"><svg class="icon icon16" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Volver al curso</a>
+            </header>
+            <h2>¿Cómo quieres evaluarte?</h2>
+            <div class="opcionesEvaluacionNueva selectorEvaluaciones">
+                <a class="opcionEvaluacion tarjetaTipoEvaluacion" id="enlaceEvaluacionPreguntas" href="#">
+                    <span class="letraOpcion" aria-hidden="true"><svg class="icon icon20"><use href="#i-help-circle"></use></svg></span>
+                    <span><strong>Evaluación de preguntas</strong><small>Mira la seña y elige la respuesta correcta.</small></span>
+                </a>
+                <a class="opcionEvaluacion tarjetaTipoEvaluacion" id="enlaceEvaluacionCamara" href="#">
+                    <span class="letraOpcion" aria-hidden="true"><svg class="icon icon20"><use href="#i-camera"></use></svg></span>
+                    <span><strong>Evaluación con cámara</strong><small>Haz con tu mano las letras que te pidamos. Necesitas una cámara.</small></span>
+                </a>
+            </div>
+            <div id="mensaje"></div>
+        </section>
+    </main>
+    <script src="../js/config.js?v=3"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/layout.js?v=7"></script>
+    <script src="../js/pages/evaluaciones.js?v=1"></script>
+</body>
+</html>

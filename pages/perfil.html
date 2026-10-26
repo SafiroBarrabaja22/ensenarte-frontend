@@ -13,26 +13,46 @@
     <main class="bodyPerfil">
         <div class="perfilPage">
             <h1 class="titlePerfil">Perfil de Usuario</h1>
-            <div class="infoUsuarioPerfil">
-                <img id="fotoPerfil" src="../assets/imagenes/imgPredeterminadaUsuario.png" alt="Foto de Usuario" class="fotoUsuarioPerfil">
-                <h2 class="nombreUsuarioPerfil" id="nombreUsuario"></h2>
-                <p class="emailUsuarioPerfil" id="correoUsuario"></p>
-                <p class="emailUsuarioPerfil" id="estrellasUsuario"></p>
-            </div>
+            <section class="perfilCabecera" aria-label="Resumen del perfil">
+                <div class="perfilDecoracion perfilDecoracionCuadrado" aria-hidden="true"></div>
+            </section>
 
-            <h2>Cursos completados</h2>
-            <div id="progresoUsuario"><p class="cargando">Cargando progreso...</p></div>
+            <section class="infoUsuarioPerfil">
+                <img id="fotoPerfil" src="../assets/imagenes/imgPredeterminadaUsuario.png" alt="Avatar del usuario" class="fotoUsuarioPerfil">
+                <div class="identidadUsuarioPerfil">
+                    <h2 class="nombreUsuarioPerfil" id="nombreUsuario"></h2>
+                    <p class="emailUsuarioPerfil" id="correoUsuario"></p>
+                    <p class="nivelUsuarioPerfil" id="nivelUsuario">Nivel 1 · Explorador de señas</p>
+                </div>
+                <a class="buttonSelector botonEditarPerfil" href="editar-perfil.html">Editar perfil</a>
+            </section>
 
-            <div class="buttonContainer">
-                <a href="editar-perfil.html"><button class="buttonSelector">Editar perfil</button></a>
-            </div>
+            <section class="estadisticasPerfil" aria-label="Estadísticas del usuario">
+                <article class="tarjetaEstadistica">
+                    <span class="iconoEstadistica iconoCursos" aria-hidden="true"><svg class="icon icon26"><use href="#i-books"></use></svg></span>
+                    <div><strong id="cursosCompletados">0</strong><span>Cursos completados</span></div>
+                </article>
+                <article class="tarjetaEstadistica">
+                    <span class="iconoEstadistica iconoInsignias" aria-hidden="true"><svg class="icon icon26"><use href="#i-award"></use></svg></span>
+                    <div><strong id="insigniasGanadas">0</strong><span>Insignias ganadas</span></div>
+                </article>
+                <article class="tarjetaEstadistica">
+                    <span class="iconoEstadistica iconoRacha" aria-hidden="true"><svg class="icon icon26"><use href="#i-flame"></use></svg></span>
+                    <div><strong id="rachaPractica">0</strong><span>Racha de práctica</span></div>
+                </article>
+            </section>
+
+            <section class="seccionCursosPerfil">
+                <h2>Mis cursos</h2>
+                <div id="progresoUsuario"><p class="cargando">Cargando progreso...</p></div>
+            </section>
         </div>
     </main>
 
     <script src="../js/config.js?v=2"></script>
     <script src="../js/api.js?v=2"></script>
-    <script src="../js/layout.js?v=2"></script>
+    <script src="../js/layout.js?v=7"></script>
     <script src="../js/auth.js?v=2"></script>
-    <script src="../js/pages/perfil.js?v=4"></script>
+    <script src="../js/pages/perfil.js?v=7"></script>
 </body>
 </html>

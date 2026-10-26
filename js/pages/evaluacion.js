@@ -1,27 +1,29 @@
-/**
- * Evaluación.
- * El estado vive en el backend (modelo IntentoEvaluacion); esta página solo
- * pinta la pregunta actual y envía la opción elegida.
- */
+/** Evaluacion interactiva. El estado y las respuestas siguen viviendo en el backend. */
 
 const slugCurso = new URLSearchParams(window.location.search).get("curso");
 let bloqueado = false;
+let respuestaSeleccionada = null;
+let respuestaComprobada = false;
+let siguienteIntento = null;
+let ultimoIntento = null;
 
 (async function iniciar() {
   if (!requiereSesion()) return;
+  montarLayout("usuario");
   if (!slugCurso) {
     window.location.href = "cursos-usuario.html";
     return;
   }
 
-  document.getElementById("linkSalir").href =
-    `curso.html?curso=${encodeURIComponent(slugCurso)}`;
+  document.getElementById("btnSalirEvaluacion").addEventListener("click", () => document.getElementById("dialogSalir").showModal());
+  document.getElementById("btnSeguir").addEventListener("click", () => document.getElementById("dialogSalir").close());
+  document.getElementById("btnConfirmarSalida").addEventListener("click", () => { window.location.href = `curso.html?curso=${encodeURIComponent(slugCurso)}&plantilla=15`; });
+  document.getElementById("btnComprobar").addEventListener("click", comprobarRespuesta);
+  document.addEventListener("keydown", gestionarTeclado);
 
   try {
     const curso = await api(`/cursos/${slugCurso}/`, { autenticado: false });
-    document.getElementById("tituloCurso").textContent = curso.titulo;
-
-    // Se retoma el intento abierto si existe; si no, se crea uno nuevo.
+    document.getElementById("tituloEvaluacion").textContent = `${curso.titulo} · Evaluación`;
     let intento;
     try {
       intento = await api(`/cursos/${slugCurso}/evaluacion/actual/`);
@@ -40,56 +42,104 @@ function pintarPregunta(intento) {
     irAResultado();
     return;
   }
-
-  document.getElementById("contador").textContent =
-    `Pregunta ${intento.actual} de ${intento.total}`;
-  document.getElementById("textoPregunta").textContent = pregunta.texto;
-
-  document.getElementById("contenedorVideo").innerHTML = pregunta.video
-    ? `<img src="${rutaVideo(pregunta.video)}" alt="Seña de la pregunta">`
-    : "";
-
-  document.getElementById("contenedorOpciones").innerHTML = pregunta.opciones
-    .map((op) => `<button class="optionBtn" data-id="${op.id}">${op.texto}</button>`)
-    .join("");
-
-  document
-    .querySelectorAll(".optionBtn")
-    .forEach((boton) => boton.addEventListener("click", () => responder(boton.dataset.id)));
-
-  document.getElementById("feedback").textContent = "";
+  ultimoIntento = intento;
+  respuestaSeleccionada = null;
+  respuestaComprobada = false;
+  siguienteIntento = null;
   bloqueado = false;
+
+  const porcentaje = Math.round(((intento.actual - 1) / intento.total) * 100);
+  document.getElementById("contador").textContent = `Pregunta ${intento.actual} de ${intento.total}`;
+  document.getElementById("porcentajeEvaluacion").textContent = `${porcentaje}%`;
+  const barra = document.getElementById("barraEvaluacion");
+  barra.style.setProperty("--progreso-evaluacion", `${porcentaje}%`);
+  barra.classList.remove("visible");
+  requestAnimationFrame(() => barra.classList.add("visible"));
+  document.getElementById("textoPregunta").textContent = pregunta.texto;
+  document.getElementById("contenedorVideo").innerHTML = pregunta.video
+    ? `<img src="${esc(rutaVideo(pregunta.video))}" alt="Seña relacionada con la pregunta: ${esc(pregunta.texto)}">`
+    : "";
+  document.getElementById("contenedorVideo").hidden = !pregunta.video;
+  document.getElementById("contenedorOpciones").innerHTML = pregunta.opciones.map((opcion, indice) => `
+    <button type="button" class="opcionEvaluacion" data-id="${opcion.id}" aria-pressed="false"><span class="letraOpcion">${String.fromCharCode(65 + indice)}</span><span>${esc(opcion.texto)}</span></button>
+  `).join("");
+  document.querySelectorAll(".opcionEvaluacion").forEach((boton) => boton.addEventListener("click", () => seleccionarRespuesta(boton)));
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("mensaje").textContent = "";
+  actualizarBoton("Comprobar", "i-check");
 }
 
-async function responder(opcionId) {
+function seleccionarRespuesta(boton) {
+  if (bloqueado || respuestaComprobada) return;
+  respuestaSeleccionada = boton.dataset.id;
+  document.querySelectorAll(".opcionEvaluacion").forEach((opcion) => {
+    const activa = opcion === boton;
+    opcion.classList.toggle("seleccionada", activa);
+    opcion.setAttribute("aria-pressed", activa);
+  });
+  document.getElementById("mensaje").textContent = "";
+}
+
+async function comprobarRespuesta() {
+  if (ultimoIntento?.finalizado && respuestaComprobada) {
+    irAResultado();
+    return;
+  }
+  if (respuestaComprobada && siguienteIntento) {
+    pintarPregunta(siguienteIntento);
+    return;
+  }
+  if (!respuestaSeleccionada) {
+    document.getElementById("mensaje").textContent = "Elige una respuesta primero";
+    return;
+  }
   if (bloqueado) return;
   bloqueado = true;
-
   try {
-    const respuesta = await api(`/cursos/${slugCurso}/evaluacion/responder/`, {
-      metodo: "POST",
-      cuerpo: { opcion_id: Number(opcionId) },
-    });
-
-    document.getElementById("feedback").textContent = respuesta.mensaje;
-
-    if (respuesta.finalizado) {
-      setTimeout(irAResultado, 900);
-      return;
-    }
-
+    const respuesta = await api(`/cursos/${slugCurso}/evaluacion/responder/`, { metodo: "POST", cuerpo: { opcion_id: Number(respuestaSeleccionada) } });
+    const opcionActual = document.querySelector(`[data-id="${respuestaSeleccionada}"]`);
     if (respuesta.correcta) {
-      // Solo se avanza al acertar, igual que en la versión original.
-      setTimeout(() => pintarPregunta(respuesta.siguiente), 700);
+      respuestaComprobada = true;
+      opcionActual?.classList.add("correcta");
+      document.getElementById("feedback").className = "feedbackEvaluacion correcto";
+      document.getElementById("feedback").innerHTML = '<svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> ¡Muy bien! Respuesta correcta.';
+      if (respuesta.finalizado) {
+        actualizarBoton("Ver resultado", "i-arrow-right");
+        ultimoIntento = { ...ultimoIntento, finalizado: true };
+      } else {
+        siguienteIntento = respuesta.siguiente;
+        actualizarBoton("Siguiente", "i-arrow-right");
+      }
     } else {
       bloqueado = false;
+      opcionActual?.classList.add("incorrecta");
+      document.getElementById("feedback").className = "feedbackEvaluacion incorrecto";
+      document.getElementById("feedback").innerHTML = '<svg class="icon icon16" aria-hidden="true"><use href="#i-info-circle"></use></svg> Casi. Inténtalo de nuevo.';
     }
   } catch (error) {
-    mostrarMensaje("mensaje", error.message);
     bloqueado = false;
+    mostrarMensaje("mensaje", error.message);
   }
+}
+
+function actualizarBoton(texto, icono) {
+  document.getElementById("btnComprobar").innerHTML = `<svg class="icon icon16" aria-hidden="true"><use href="#${icono}"></use></svg> ${texto}`;
+}
+
+function gestionarTeclado(evento) {
+  if (evento.target.matches("input, textarea")) return;
+  const indice = ["1", "2", "3", "4", "a", "b", "c", "d"].indexOf(evento.key.toLowerCase());
+  if (indice >= 0 && indice < 4) {
+    const boton = document.querySelectorAll(".opcionEvaluacion")[indice];
+    if (boton) seleccionarRespuesta(boton);
+  }
+  if (evento.key === "Enter" && document.activeElement?.classList.contains("opcionEvaluacion")) comprobarRespuesta();
 }
 
 function irAResultado() {
   window.location.href = `retroalimentacion.html?curso=${encodeURIComponent(slugCurso)}`;
+}
+
+function esc(valor) {
+  return String(valor ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
