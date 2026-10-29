@@ -12,6 +12,9 @@ const FORMATO_RECURSO = new Set([
   "heic",
   "heif",
 ]);
+let paginaRecursos = 1;
+let hayMasRecursos = false;
+let cargandoRecursos = false;
 
 (async function iniciarBiblioteca() {
   if (!Sesion.activa()) {
@@ -49,6 +52,9 @@ const FORMATO_RECURSO = new Set([
   document.getElementById("btnLimpiarPreview").addEventListener("click", limpiarPrevisualizacion);
   document.getElementById("filtroExtension").addEventListener("change", cargarRecursos);
   document.getElementById("filtroCategoria").addEventListener("change", cargarRecursos);
+  document.getElementById("btnCargarMasRecursos").addEventListener("click", () => {
+    cargarRecursos(true);
+  });
 
   let temporizadorBusqueda;
   document.getElementById("buscarRecursos").addEventListener("input", () => {
@@ -59,8 +65,12 @@ const FORMATO_RECURSO = new Set([
   await cargarRecursos();
 })();
 
-async function cargarRecursos() {
+async function cargarRecursos(cargarSiguiente = false) {
+  if (cargandoRecursos || (cargarSiguiente && !hayMasRecursos)) return;
+
   const contenedor = document.getElementById("listaRecursos");
+  const botonMas = document.getElementById("btnCargarMasRecursos");
+  const paginaSolicitada = cargarSiguiente ? paginaRecursos + 1 : 1;
   const parametros = new URLSearchParams();
   const busqueda = document.getElementById("buscarRecursos").value.trim();
   const extension = document.getElementById("filtroExtension").value;
@@ -68,23 +78,43 @@ async function cargarRecursos() {
   if (busqueda) parametros.set("q", busqueda);
   if (extension) parametros.set("extension", extension);
   if (categoria) parametros.set("categoria", categoria);
+  parametros.set("page", String(paginaSolicitada));
 
-  contenedor.innerHTML = '<p class="cargando">Cargando recursos...</p>';
+  cargandoRecursos = true;
+  botonMas.disabled = true;
+  if (!cargarSiguiente) {
+    botonMas.hidden = true;
+    contenedor.innerHTML = '<p class="cargando">Cargando recursos...</p>';
+  }
   try {
     const query = parametros.toString();
-    const recursos = comoLista(
-      await api(`/panel/recursos/${query ? `?${query}` : ""}`)
-    );
+    const respuesta = await api(`/panel/recursos/?${query}`);
+    const recursos = comoLista(respuesta);
 
-    if (!recursos.length) {
+    if (!recursos.length && !cargarSiguiente) {
       contenedor.innerHTML = '<p class="vacio">No hay imágenes con esos filtros.</p>';
       return;
     }
 
-    contenedor.innerHTML = recursos.map(tarjetaRecurso).join("");
+    const tarjetas = recursos.map(tarjetaRecurso).join("");
+    if (cargarSiguiente) {
+      contenedor.insertAdjacentHTML("beforeend", tarjetas);
+    } else {
+      contenedor.innerHTML = tarjetas;
+    }
+    paginaRecursos = paginaSolicitada;
+    hayMasRecursos = Boolean(respuesta && respuesta.next);
+    botonMas.hidden = !hayMasRecursos;
     conectarAccionesRecurso();
   } catch (error) {
-    contenedor.innerHTML = `<p class="vacio">${escaparHtml(error.message)}</p>`;
+    if (cargarSiguiente) {
+      mostrarMensaje("mensaje", error.message);
+    } else {
+      contenedor.innerHTML = `<p class="vacio">${escaparHtml(error.message)}</p>`;
+    }
+  } finally {
+    cargandoRecursos = false;
+    botonMas.disabled = false;
   }
 }
 
@@ -105,6 +135,8 @@ function tarjetaRecurso(recurso) {
 
 function conectarAccionesRecurso() {
   document.querySelectorAll("[data-renombrar]").forEach((boton) => {
+    if (boton.dataset.accionesConectadas) return;
+    boton.dataset.accionesConectadas = "true";
     boton.addEventListener("click", async () => {
       const recurso = await obtenerRecurso(boton.dataset.renombrar);
       if (!recurso) return;
@@ -125,6 +157,8 @@ function conectarAccionesRecurso() {
   });
 
   document.querySelectorAll("[data-eliminar-recurso]").forEach((boton) => {
+    if (boton.dataset.accionesConectadas) return;
+    boton.dataset.accionesConectadas = "true";
     boton.addEventListener("click", async () => {
       if (!confirm("¿Eliminar esta imagen de la biblioteca?")) return;
       try {
@@ -157,24 +191,56 @@ async function subirRecurso(evento) {
   const archivo = document.getElementById("archivoRecurso").files[0];
   const boton = document.getElementById("btnSubirRecurso");
 
+  if (!archivo) {
+    mostrarMensaje("mensaje", "Selecciona una imagen.");
+    return;
+  }
+
   if (!FORMATO_RECURSO.has(archivo?.name.split(".").pop().toLowerCase())) {
     mostrarMensaje("mensaje", "Selecciona un archivo PNG, GIF, JPG, JPEG o WebP.");
     return;
   }
+  if (archivo.size > 10 * 1024 * 1024) {
+    mostrarMensaje("mensaje", "El archivo no puede superar 10 MB.");
+    return;
+  }
 
-  const datos = new FormData();
-  datos.append("nombre", nombre);
-  datos.append("categoria", categoria);
-  datos.append("archivo", archivo);
   boton.disabled = true;
   mostrarMensaje("mensaje", "");
 
   try {
-    await api("/panel/recursos/", {
+    const firma = await api("/panel/recursos/firmar-subida/", {
       metodo: "POST",
-      cuerpo: datos,
-      esFormData: true,
+      cuerpo: {
+        nombre,
+        categoria,
+        extension: archivo.name.split(".").pop().toLowerCase(),
+        tamano: archivo.size,
+      },
     });
+
+    const datosCloudinary = new FormData();
+    datosCloudinary.append("file", archivo);
+    for (const campo of ["api_key", "timestamp", "signature", "folder", "public_id"]) {
+      datosCloudinary.append(campo, String(firma[campo]));
+    }
+
+    const respuestaCloudinary = await fetch(firma.upload_url, {
+      method: "POST",
+      body: datosCloudinary,
+    });
+    const recursoCloudinary = await respuestaCloudinary.json();
+    if (!respuestaCloudinary.ok) {
+      throw new Error(
+        recursoCloudinary.error?.message || "Cloudinary no pudo guardar la imagen."
+      );
+    }
+
+    await api("/panel/recursos/finalizar-subida/", {
+      metodo: "POST",
+      cuerpo: { nombre, categoria, public_id: recursoCloudinary.public_id },
+    });
+
     formulario.reset();
     previsualizarRecurso({ currentTarget: document.getElementById("archivoRecurso") });
     mostrarMensaje("mensaje", "Imagen cargada en la biblioteca.", "ok");

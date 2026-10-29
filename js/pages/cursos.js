@@ -14,11 +14,13 @@ let busquedaActual = "";
   conectarFiltrosCursos();
 
   try {
-    cursosDisponibles = comoLista(await api("/cursos/", { autenticado: false }));
-    if (Sesion.activa()) {
-      const progresos = comoLista(await api("/progreso/"));
-      progresosCursos = new Map(progresos.map((progreso) => [progreso.curso, progreso]));
-    }
+    const [respuestaCursos, respuestaProgreso] = await Promise.all([
+      api("/cursos/", { autenticado: false }),
+      Sesion.activa() ? api("/progreso/") : Promise.resolve([]),
+    ]);
+    cursosDisponibles = comoLista(respuestaCursos);
+    const progresos = comoLista(respuestaProgreso);
+    progresosCursos = new Map(progresos.map((progreso) => [progreso.curso, progreso]));
     renderizarCursos();
   } catch (error) {
     document.getElementById("listaCursos").innerHTML = "";
