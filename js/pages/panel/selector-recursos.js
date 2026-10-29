@@ -3,6 +3,11 @@ const SelectorRecursos = (() => {
   let campoDestino;
   let extensionForzada = "";
   let categoriaForzada = "recurso";
+  let paginaActual = 1;
+  let hayMasRecursos = false;
+  let cargandoRecursos = false;
+  let idBusqueda = 0;
+  let temporizadorBusqueda;
 
   function conectar() {
     document.querySelectorAll("[data-selector-recurso]").forEach((boton) => {
@@ -23,13 +28,22 @@ const SelectorRecursos = (() => {
         <label for="buscarEnBiblioteca">Buscar por nombre</label>
         <input type="search" id="buscarEnBiblioteca" placeholder="Escribe un nombre">
       </div>
-      <div class="selectorRecursosGrid" id="resultadosBiblioteca" aria-live="polite"></div>`;
+      <div class="selectorRecursosGrid" id="resultadosBiblioteca" aria-live="polite"></div>
+      <button class="panelBtn secundario botonCargarMasSelector" id="btnCargarMasSelector" type="button" hidden>Cargar más</button>`;
     document.body.append(dialog);
     dialog.querySelector("[data-cerrar-recursos]").addEventListener("click", () => dialog.close());
     dialog.addEventListener("click", (evento) => {
       if (evento.target === dialog) dialog.close();
     });
-    dialog.querySelector("#buscarEnBiblioteca").addEventListener("input", buscar);
+    dialog.querySelector("#buscarEnBiblioteca").addEventListener("input", () => {
+      clearTimeout(temporizadorBusqueda);
+      temporizadorBusqueda = setTimeout(() => buscar(), 250);
+    });
+    dialog.querySelector("#btnCargarMasSelector").addEventListener("click", () => buscar(true));
+    dialog.querySelector("#resultadosBiblioteca").addEventListener("click", (evento) => {
+      const boton = evento.target.closest("[data-elegir-recurso]");
+      if (boton) elegir(boton.dataset.elegirRecurso);
+    });
   }
 
   function abrir(boton) {
@@ -42,29 +56,68 @@ const SelectorRecursos = (() => {
     buscar();
   }
 
-  async function buscar() {
+  async function buscar(cargarSiguiente = false) {
+    if (cargarSiguiente && (cargandoRecursos || !hayMasRecursos)) return;
+
     const resultados = dialog.querySelector("#resultadosBiblioteca");
+    const botonMas = dialog.querySelector("#btnCargarMasSelector");
+    const paginaSolicitada = cargarSiguiente ? paginaActual + 1 : 1;
+    const busquedaActual = cargarSiguiente ? idBusqueda : ++idBusqueda;
     const parametros = new URLSearchParams();
     const texto = dialog.querySelector("#buscarEnBiblioteca").value.trim();
     const categoriaActiva = dialog.dataset.categoria || categoriaForzada || "recurso";
     if (texto) parametros.set("q", texto);
     if (extensionForzada) parametros.set("extension", extensionForzada);
     parametros.set("categoria", categoriaActiva);
-    resultados.innerHTML = '<p class="cargando">Buscando...</p>';
+    parametros.set("page", String(paginaSolicitada));
+
+    cargandoRecursos = true;
+    botonMas.disabled = true;
+    if (!cargarSiguiente) {
+      botonMas.hidden = true;
+      hayMasRecursos = false;
+      resultados.innerHTML = '<p class="cargando">Buscando...</p>';
+    } else {
+      botonMas.hidden = false;
+      botonMas.textContent = "Cargando...";
+    }
 
     try {
       const query = parametros.toString();
-      const recursos = comoLista(
-        await api(`/panel/recursos/${query ? `?${query}` : ""}`)
-      );
-      resultados.innerHTML = recursos.length
-        ? recursos.map(opcionRecurso).join("")
-        : '<p class="vacio">No se encontraron imágenes.</p>';
-      resultados.querySelectorAll("[data-elegir-recurso]").forEach((boton) => {
-        boton.addEventListener("click", () => elegir(boton.dataset.elegirRecurso));
-      });
+      const respuesta = await api(`/panel/recursos/?${query}`);
+      if (busquedaActual !== idBusqueda) return;
+      const recursos = comoLista(respuesta);
+      if (!recursos.length && !cargarSiguiente) {
+        resultados.innerHTML = '<p class="vacio">No se encontraron imágenes.</p>';
+      } else {
+        const opciones = recursos.map(opcionRecurso).join("");
+        if (cargarSiguiente) {
+          resultados.insertAdjacentHTML("beforeend", opciones);
+        } else {
+          resultados.innerHTML = opciones;
+        }
+      }
+      paginaActual = paginaSolicitada;
+      hayMasRecursos = Boolean(respuesta && respuesta.next);
+      botonMas.hidden = !hayMasRecursos;
     } catch (error) {
-      resultados.innerHTML = `<p class="vacio">${escaparRecurso(error.message)}</p>`;
+      if (busquedaActual === idBusqueda) {
+        if (cargarSiguiente) {
+          resultados.insertAdjacentHTML(
+            "beforeend",
+            `<p class="vacio">${escaparRecurso(error.message)}</p>`
+          );
+        } else {
+          resultados.innerHTML = `<p class="vacio">${escaparRecurso(error.message)}</p>`;
+        }
+      }
+    } finally {
+      if (busquedaActual === idBusqueda) {
+        cargandoRecursos = false;
+        botonMas.disabled = false;
+        botonMas.textContent = "Cargar más";
+        botonMas.hidden = !hayMasRecursos;
+      }
     }
   }
 

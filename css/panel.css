@@ -296,6 +296,8 @@
 .modalRecursos > label { display: block; margin-bottom: 6px; font-weight: 700; }
 .modalRecursos > input { width: 100%; margin-bottom: 16px; }
 .selectorRecursosGrid { max-height: 52vh; overflow: auto; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
+.botonCargarMasSelector { display: block; min-width: 150px; margin: 14px auto 0; }
+.botonCargarMasSelector[hidden] { display: none; }
 
 .opcionRecurso {
     display: grid;
