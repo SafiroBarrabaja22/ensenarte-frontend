@@ -422,7 +422,10 @@ async function enviarResultado(intentos) {
   caja.className = "feedbackEvaluacion";
   caja.textContent = "Guardando tu resultado...";
   try {
-    const datos = await api(RUTA_RESULTADO, { metodo: "POST", cuerpo: { intentos } });
+    const datos = await api(RUTA_RESULTADO, {
+      metodo: "POST",
+      cuerpo: { curso: slugCurso, intentos },
+    });
     pintarRespuestaServidor(datos);
   } catch (error) {
     console.error("Envio:", error);
