@@ -83,7 +83,7 @@ function tarjetaCurso(curso) {
 
   return `<a class="tarjetaCurso tarjetaCursoEstado-${estado}" href="${destino}" aria-label="${esc(curso.titulo)}">
     <div class="portadaCurso">
-      <img src="${esc(rutaImagen(curso.portada_curso))}" alt="Portada del curso ${esc(curso.titulo)}">
+      <img src="${esc(rutaImagenOptimizada(curso.portada_curso, 720))}" alt="Portada del curso ${esc(curso.titulo)}" loading="lazy" decoding="async">
       <span class="estadoCurso estado-${estado}">${estadoTexto}</span>
     </div>
     <div class="infoCurso">

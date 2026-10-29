@@ -1281,6 +1281,14 @@
     .card:hover .back{
         transform: perspective(600px) rotateY(360deg);  
     }
+
+    .card.abierta .front{
+        transform: perspective(600px) rotateY(180deg);
+    }
+
+    .card.abierta .back{
+        transform: perspective(600px) rotateY(360deg);
+    }
     .buttonContainer {
         text-align: center;
         margin-top: 20px;

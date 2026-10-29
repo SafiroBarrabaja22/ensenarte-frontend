@@ -29,6 +29,30 @@ function rutaVideo(archivo) {
   return resolverRutaArchivo(archivo, CONFIG.RUTA_VIDEOS);
 }
 
+function rutaImagenOptimizada(archivo, ancho = 720) {
+  return optimizarImagenCloudinary(rutaImagen(archivo), ancho);
+}
+
+function rutaVideoOptimizada(archivo, ancho = 360) {
+  return optimizarImagenCloudinary(rutaVideo(archivo), ancho);
+}
+
+function optimizarImagenCloudinary(ruta, ancho) {
+  if (!/^https:\/\/res\.cloudinary\.com\//i.test(ruta)) return ruta;
+
+  const url = new URL(ruta);
+  const marcador = "/image/upload/";
+  const indice = url.pathname.indexOf(marcador);
+  if (indice < 0) return ruta;
+
+  const archivo = url.pathname.slice(indice + marcador.length);
+  if (/^(?:c_[^/]+,|f_[^/]+,)/.test(archivo)) return ruta;
+
+  url.pathname = `${url.pathname.slice(0, indice + marcador.length)}` +
+    `c_limit,f_webp,q_auto,w_${Math.max(1, Math.round(ancho))}/${archivo}`;
+  return url.href;
+}
+
 function resolverRutaArchivo(archivo, carpetaAssets) {
   const ruta = String(archivo);
   if (/^(https?:|data:|blob:)/i.test(ruta)) return ruta;

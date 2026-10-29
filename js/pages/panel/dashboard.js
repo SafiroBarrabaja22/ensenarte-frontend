@@ -48,8 +48,8 @@ async function cargarCursos() {
         (curso) => `
         <tr>
           <td>${esc(curso.titulo)}</td>
-          <td><img class="miniaturaCurso" src="${esc(rutaImagen(curso.portada_curso))}" alt="Portada de ${esc(curso.titulo)}"></td>
-          <td>${curso.insignia ? `<img class="miniaturaInsignia" src="${esc(rutaImagen(curso.insignia))}" alt="Insignia de ${esc(curso.titulo)}">` : "-"}</td>
+          <td><img class="miniaturaCurso" src="${esc(rutaImagenOptimizada(curso.portada_curso, 360))}" alt="Portada de ${esc(curso.titulo)}" loading="lazy" decoding="async"></td>
+          <td>${curso.insignia ? `<img class="miniaturaInsignia" src="${esc(rutaImagenOptimizada(curso.insignia, 180))}" alt="Insignia de ${esc(curso.titulo)}" loading="lazy" decoding="async">` : "-"}</td>
           <td>${esc(curso.nombre)}</td>
           <td>${curso.activo ? "Sí" : "No"}</td>
           <td>${esc(curso.creado_por) || "-"}</td>

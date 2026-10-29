@@ -29,16 +29,42 @@
         (palabra) => `
         <div class="card">
           <div class="face front">
-            <img src="${rutaImagen(palabra.imagen_frontal)}" alt="${palabra.titulo}">
+            <img src="${rutaImagenOptimizada(palabra.imagen_frontal, 360)}" alt="${palabra.titulo}" loading="lazy" decoding="async">
             <h3>${palabra.titulo}</h3>
           </div>
           <div class="face back">
-            <img src="${rutaVideo(palabra.video_gif)}" alt="${palabra.titulo}">
+            <img data-src="${rutaVideoOptimizada(palabra.video_gif, 360)}" alt="Seña de ${palabra.titulo}" decoding="async">
             <h3>${palabra.titulo}</h3>
           </div>
         </div>`
       )
       .join("");
+
+    contenedor.querySelectorAll(".card").forEach((tarjeta) => {
+      const gif = tarjeta.querySelector(".back img");
+      const cargarGif = () => {
+        if (!gif.dataset.src) return;
+        gif.src = gif.dataset.src;
+        delete gif.dataset.src;
+      };
+      const alternarTarjeta = () => {
+        cargarGif();
+        const abierta = tarjeta.classList.toggle("abierta");
+        tarjeta.setAttribute("aria-pressed", String(abierta));
+      };
+
+      tarjeta.setAttribute("tabindex", "0");
+      tarjeta.setAttribute("role", "button");
+      tarjeta.setAttribute("aria-pressed", "false");
+      tarjeta.addEventListener("pointerenter", cargarGif, { once: true });
+      tarjeta.addEventListener("focus", cargarGif, { once: true });
+      tarjeta.addEventListener("click", alternarTarjeta);
+      tarjeta.addEventListener("keydown", (evento) => {
+        if (evento.key !== "Enter" && evento.key !== " ") return;
+        evento.preventDefault();
+        alternarTarjeta();
+      });
+    });
   } catch (error) {
     contenedor.innerHTML = `<p class="vacio">No se pudo cargar el diccionario: ${error.message}</p>`;
   }

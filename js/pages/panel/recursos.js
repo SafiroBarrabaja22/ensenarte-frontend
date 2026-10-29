@@ -91,7 +91,7 @@ async function cargarRecursos() {
 function tarjetaRecurso(recurso) {
   return `
     <article class="recursoVisual">
-      <img src="${escaparHtml(rutaImagen(recurso.archivo_url))}" alt="${escaparHtml(recurso.nombre)}">
+      <img src="${escaparHtml(rutaImagenOptimizada(recurso.archivo_url, 360))}" alt="${escaparHtml(recurso.nombre)}" loading="lazy" decoding="async">
       <div class="recursoVisualInfo">
         <strong>${escaparHtml(recurso.nombre)}</strong>
         <span>${escaparHtml(recurso.categoria)} · .${escaparHtml(recurso.extension.toUpperCase())}</span>

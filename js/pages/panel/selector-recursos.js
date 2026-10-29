@@ -71,7 +71,7 @@ const SelectorRecursos = (() => {
   function opcionRecurso(recurso) {
     return `
       <button class="opcionRecurso" type="button" data-elegir-recurso="${recurso.id}">
-        <img src="${escaparRecurso(rutaImagen(recurso.archivo_url))}" alt="">
+        <img src="${escaparRecurso(rutaImagenOptimizada(recurso.archivo_url, 360))}" alt="" loading="lazy" decoding="async">
         <span>${escaparRecurso(recurso.nombre)}</span>
         <small>.${escaparRecurso(recurso.extension.toUpperCase())}</small>
       </button>`;
