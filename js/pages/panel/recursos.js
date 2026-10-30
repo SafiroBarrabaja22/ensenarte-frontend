@@ -13,6 +13,11 @@ const FORMATO_RECURSO = new Set([
   "heif",
 ]);
 
+let archivosSeleccionados = [];
+// Debe coincidir con PAGE_SIZE del backend.
+const RECURSOS_POR_PAGINA = 50;
+let paginaRecursos = 1;
+
 (async function iniciarBiblioteca() {
   if (!Sesion.activa()) {
     irALogin();
@@ -47,21 +52,28 @@ const FORMATO_RECURSO = new Set([
   });
   document.getElementById("archivoRecurso").addEventListener("change", previsualizarRecurso);
   document.getElementById("btnLimpiarPreview").addEventListener("click", limpiarPrevisualizacion);
-  document.getElementById("filtroExtension").addEventListener("change", cargarRecursos);
-  document.getElementById("filtroCategoria").addEventListener("change", cargarRecursos);
+  // Al cambiar un filtro se vuelve a la primera página.
+  document.getElementById("filtroExtension").addEventListener("change", () => cargarRecursos(1));
+  document.getElementById("filtroCategoria").addEventListener("change", () => cargarRecursos(1));
+  document.getElementById("paginacionRecursos").addEventListener("click", (evento) => {
+    const boton = evento.target.closest("[data-pagina]");
+    if (!boton || boton.disabled) return;
+    cargarRecursos(Number(boton.dataset.pagina));
+    document.getElementById("listaRecursos").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
   let temporizadorBusqueda;
   document.getElementById("buscarRecursos").addEventListener("input", () => {
     clearTimeout(temporizadorBusqueda);
-    temporizadorBusqueda = setTimeout(cargarRecursos, 250);
+    temporizadorBusqueda = setTimeout(() => cargarRecursos(1), 250);
   });
 
   await cargarRecursos();
 })();
 
-async function cargarRecursos() {
+async function cargarRecursos(pagina = paginaRecursos) {
   const contenedor = document.getElementById("listaRecursos");
-  const parametros = new URLSearchParams();
+  const parametros = new URLSearchParams({ page: pagina });
   const busqueda = document.getElementById("buscarRecursos").value.trim();
   const extension = document.getElementById("filtroExtension").value;
   const categoria = document.getElementById("filtroCategoria").value;
@@ -71,10 +83,10 @@ async function cargarRecursos() {
 
   contenedor.innerHTML = '<p class="cargando">Cargando recursos...</p>';
   try {
-    const query = parametros.toString();
-    const recursos = comoLista(
-      await api(`/panel/recursos/${query ? `?${query}` : ""}`)
-    );
+    const datos = await api(`/panel/recursos/?${parametros}`);
+    const recursos = comoLista(datos);
+    paginaRecursos = pagina;
+    pintarPaginacion(pagina, Math.max(1, Math.ceil((datos.count || 0) / RECURSOS_POR_PAGINA)), datos.count || 0);
 
     if (!recursos.length) {
       contenedor.innerHTML = '<p class="vacio">No hay imágenes con esos filtros.</p>';
@@ -84,14 +96,48 @@ async function cargarRecursos() {
     contenedor.innerHTML = recursos.map(tarjetaRecurso).join("");
     conectarAccionesRecurso();
   } catch (error) {
+    // La página dejó de existir (p. ej. se borró el último recurso de la última página).
+    if (error.status === 404 && pagina > 1) {
+      await cargarRecursos(pagina - 1);
+      return;
+    }
+    pintarPaginacion(1, 1, 0);
     contenedor.innerHTML = `<p class="vacio">${escaparHtml(error.message)}</p>`;
   }
+}
+
+function pintarPaginacion(pagina, totalPaginas, totalRecursos) {
+  const nav = document.getElementById("paginacionRecursos");
+  if (totalPaginas <= 1) {
+    nav.hidden = true;
+    nav.innerHTML = "";
+    return;
+  }
+  // Primera, última y las vecinas de la actual; el resto se resume con "…".
+  const numeros = [];
+  for (let n = 1; n <= totalPaginas; n += 1) {
+    if (n === 1 || n === totalPaginas || Math.abs(n - pagina) <= 1) numeros.push(n);
+    else if (numeros[numeros.length - 1] !== "…") numeros.push("…");
+  }
+  const desde = (pagina - 1) * RECURSOS_POR_PAGINA + 1;
+  const hasta = Math.min(pagina * RECURSOS_POR_PAGINA, totalRecursos);
+  nav.hidden = false;
+  nav.innerHTML = `
+    <span class="paginacionInfo">${desde}–${hasta} de ${totalRecursos} imágenes</span>
+    <div class="paginacionBotones">
+      <button class="panelBtn secundario" type="button" data-pagina="${pagina - 1}" ${pagina === 1 ? "disabled" : ""} aria-label="Página anterior">&lsaquo; Anterior</button>
+      ${numeros.map((n) => n === "…"
+        ? '<span class="paginacionPuntos">…</span>'
+        : `<button class="panelBtn ${n === pagina ? "" : "secundario"}" type="button" data-pagina="${n}" ${n === pagina ? 'aria-current="page"' : ""}>${n}</button>`
+      ).join("")}
+      <button class="panelBtn secundario" type="button" data-pagina="${pagina + 1}" ${pagina === totalPaginas ? "disabled" : ""} aria-label="Página siguiente">Siguiente &rsaquo;</button>
+    </div>`;
 }
 
 function tarjetaRecurso(recurso) {
   return `
     <article class="recursoVisual">
-      <img src="${escaparHtml(rutaImagen(recurso.archivo_url))}" alt="${escaparHtml(recurso.nombre)}">
+      <img src="${escaparHtml(rutaImagen(recurso.archivo_url))}" alt="${escaparHtml(recurso.nombre)}" loading="lazy">
       <div class="recursoVisualInfo">
         <strong>${escaparHtml(recurso.nombre)}</strong>
         <span>${escaparHtml(nombreCategoria(recurso.categoria))} · .${escaparHtml(recurso.extension.toUpperCase())}</span>
@@ -155,69 +201,127 @@ async function obtenerRecurso(id) {
 
 async function subirRecurso(evento) {
   evento.preventDefault();
-  const formulario = evento.currentTarget;
-  const nombre = document.getElementById("nombreRecurso").value.trim();
   const categoria = document.getElementById("categoriaRecurso").value;
-  const archivo = document.getElementById("archivoRecurso").files[0];
   const boton = document.getElementById("btnSubirRecurso");
 
-  if (!FORMATO_RECURSO.has(archivo?.name.split(".").pop().toLowerCase())) {
-    mostrarMensaje("mensaje", "Selecciona un archivo PNG, GIF, JPG, JPEG o WebP.");
+  if (!archivosSeleccionados.length) {
+    mostrarMensaje("mensaje", "Selecciona al menos una imagen.");
+    return;
+  }
+  const sinNombre = archivosSeleccionados.find((item) => !item.nombre.trim());
+  if (sinNombre) {
+    mostrarMensaje("mensaje", `Escribe un nombre para "${sinNombre.archivo.name}".`);
     return;
   }
 
-  const datos = new FormData();
-  datos.append("nombre", nombre);
-  datos.append("categoria", categoria);
-  datos.append("archivo", archivo);
   boton.disabled = true;
-  mostrarMensaje("mensaje", "");
+  const total = archivosSeleccionados.length;
+  const fallidos = [];
+  let subidos = 0;
 
-  try {
-    await api("/panel/recursos/", {
-      metodo: "POST",
-      cuerpo: datos,
-      esFormData: true,
-    });
-    formulario.reset();
-    previsualizarRecurso({ currentTarget: document.getElementById("archivoRecurso") });
-    mostrarMensaje("mensaje", "Imagen cargada en la biblioteca.", "ok");
-    await cargarRecursos();
-  } catch (error) {
-    mostrarMensaje("mensaje", error.message);
-  } finally {
-    boton.disabled = false;
+  for (const item of [...archivosSeleccionados]) {
+    mostrarMensaje("mensaje", `Subiendo ${subidos + fallidos.length + 1} de ${total}...`, "ok");
+    const datos = new FormData();
+    datos.append("nombre", item.nombre.trim());
+    datos.append("categoria", categoria);
+    datos.append("archivo", item.archivo);
+    try {
+      await api("/panel/recursos/", {
+        metodo: "POST",
+        cuerpo: datos,
+        esFormData: true,
+      });
+      quitarArchivo(item);
+      subidos += 1;
+    } catch (error) {
+      fallidos.push(`${item.archivo.name}: ${error.message}`);
+    }
   }
+
+  boton.disabled = false;
+  if (fallidos.length) {
+    mostrarMensaje(
+      "mensaje",
+      `Se subieron ${subidos} de ${total}. No se pudieron subir: ${fallidos.join(" · ")}`
+    );
+  } else {
+    mostrarMensaje(
+      "mensaje",
+      total === 1 ? "Imagen cargada en la biblioteca." : `${total} imágenes cargadas en la biblioteca.`,
+      "ok"
+    );
+  }
+  if (subidos) await cargarRecursos();
 }
 
 function previsualizarRecurso(evento) {
-  const archivo = evento.currentTarget.files[0];
-  const vista = document.getElementById("previewRecurso");
-  const nombreArchivo = document.getElementById("nombreArchivoRecurso");
-  const textoPrevisualizacion = document.querySelector(".textoPrevisualizacion");
-  const botonLimpiar = document.getElementById("btnLimpiarPreview");
-  if (vista.dataset.urlTemporal) URL.revokeObjectURL(vista.dataset.urlTemporal);
-  if (!archivo) {
-    vista.hidden = true;
-    botonLimpiar.hidden = true;
-    nombreArchivo.textContent = "Ningún archivo seleccionado";
-    textoPrevisualizacion.hidden = false;
-    vista.removeAttribute("src");
-    delete vista.dataset.urlTemporal;
-    return;
-  }
-  nombreArchivo.textContent = archivo.name;
-  vista.dataset.urlTemporal = URL.createObjectURL(archivo);
-  vista.src = vista.dataset.urlTemporal;
-  vista.hidden = false;
-  textoPrevisualizacion.hidden = true;
-  botonLimpiar.hidden = false;
+  const entrada = evento.currentTarget;
+  const rechazados = [];
+  Array.from(entrada.files).forEach((archivo) => {
+    if (!FORMATO_RECURSO.has(archivo.name.split(".").pop().toLowerCase())) {
+      rechazados.push(archivo.name);
+      return;
+    }
+    archivosSeleccionados.push({
+      archivo,
+      nombre: archivo.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim().slice(0, 120),
+      url: URL.createObjectURL(archivo),
+    });
+  });
+  // Se vacía para poder volver a elegir los mismos archivos y sumar más.
+  entrada.value = "";
+  mostrarMensaje(
+    "mensaje",
+    rechazados.length ? `Formato no permitido: ${rechazados.join(", ")}` : ""
+  );
+  pintarPrevisualizacion();
+}
+
+function pintarPrevisualizacion() {
+  const lista = document.getElementById("listaPrevisualizacion");
+  const cantidad = archivosSeleccionados.length;
+  document.getElementById("nombreArchivoRecurso").textContent = cantidad
+    ? cantidad === 1 ? "1 imagen seleccionada" : `${cantidad} imágenes seleccionadas`
+    : "Ningún archivo seleccionado";
+  document.querySelector(".textoPrevisualizacion").hidden = cantidad > 0;
+  document.getElementById("btnLimpiarPreview").hidden = cantidad === 0;
+  document.getElementById("btnSubirRecurso").textContent =
+    cantidad > 1 ? `Subir ${cantidad} imágenes` : "Subir imagen";
+
+  lista.innerHTML = archivosSeleccionados
+    .map(
+      (item, indice) => `
+      <div class="itemPrevisualizacion">
+        <img src="${item.url}" alt="Vista previa de ${escaparHtml(item.archivo.name)}">
+        <input type="text" maxlength="120" value="${escaparHtml(item.nombre)}" data-nombre-indice="${indice}" aria-label="Nombre para buscar de ${escaparHtml(item.archivo.name)}" placeholder="Nombre para buscar">
+        <button class="botonLimpiarPreview" type="button" data-quitar-indice="${indice}" aria-label="Quitar ${escaparHtml(item.archivo.name)}" title="Quitar imagen">&#10005;</button>
+      </div>`
+    )
+    .join("");
+
+  lista.querySelectorAll("[data-nombre-indice]").forEach((campo) => {
+    campo.addEventListener("input", () => {
+      archivosSeleccionados[campo.dataset.nombreIndice].nombre = campo.value;
+    });
+  });
+  lista.querySelectorAll("[data-quitar-indice]").forEach((boton) => {
+    boton.addEventListener("click", () => {
+      quitarArchivo(archivosSeleccionados[boton.dataset.quitarIndice]);
+    });
+  });
+}
+
+function quitarArchivo(item) {
+  URL.revokeObjectURL(item.url);
+  archivosSeleccionados = archivosSeleccionados.filter((otro) => otro !== item);
+  pintarPrevisualizacion();
 }
 
 function limpiarPrevisualizacion() {
-  const archivo = document.getElementById("archivoRecurso");
-  archivo.value = "";
-  previsualizarRecurso({ currentTarget: archivo });
+  archivosSeleccionados.forEach((item) => URL.revokeObjectURL(item.url));
+  archivosSeleccionados = [];
+  document.getElementById("archivoRecurso").value = "";
+  pintarPrevisualizacion();
 }
 
 function escaparHtml(valor) {

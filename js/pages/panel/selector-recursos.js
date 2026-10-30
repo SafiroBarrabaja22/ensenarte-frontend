@@ -3,10 +3,12 @@ const SelectorRecursos = (() => {
   let campoDestino;
   let extensionForzada = "";
   let categoriaForzada = "recurso";
+  const FORMATOS_LOCALES = new Set(["png", "gif", "jpg", "jpeg", "jfif", "webp", "bmp", "tif", "tiff", "avif", "heic", "heif"]);
 
   function conectar() {
-    document.querySelectorAll("[data-selector-recurso]").forEach((boton) => {
-      boton.addEventListener("click", () => abrir(boton));
+    document.addEventListener("click", (evento) => {
+      const boton = evento.target.closest("[data-selector-recurso]");
+      if (boton) abrir(boton);
     });
     crearDialogo();
   }
@@ -19,6 +21,12 @@ const SelectorRecursos = (() => {
         <h2>Seleccionar imagen</h2>
         <button class="panelBtn secundario" type="button" data-cerrar-recursos>Cerrar</button>
       </div>
+      <div class="modalRecursosSubida" id="subidaLocalRecurso">
+        <input type="file" id="archivoLocalRecurso" accept="image/*" hidden>
+        <button class="panelBtn" type="button" id="btnSubirLocalRecurso">Subir desde mi dispositivo</button>
+        <small>Solo se usará aquí; no se guarda en la biblioteca.</small>
+        <p class="modalRecursosEstado" id="estadoSubidaLocal" aria-live="polite"></p>
+      </div>
       <div class="modalRecursosFiltros">
         <label for="buscarEnBiblioteca">Buscar por nombre</label>
         <input type="search" id="buscarEnBiblioteca" placeholder="Escribe un nombre">
@@ -30,6 +38,9 @@ const SelectorRecursos = (() => {
       if (evento.target === dialog) dialog.close();
     });
     dialog.querySelector("#buscarEnBiblioteca").addEventListener("input", buscar);
+    const archivoLocal = dialog.querySelector("#archivoLocalRecurso");
+    dialog.querySelector("#btnSubirLocalRecurso").addEventListener("click", () => archivoLocal.click());
+    archivoLocal.addEventListener("change", subirLocal);
   }
 
   function abrir(boton) {
@@ -38,6 +49,10 @@ const SelectorRecursos = (() => {
     categoriaForzada = boton.dataset.categoria || "recurso";
     dialog.dataset.categoria = categoriaForzada;
     dialog.querySelector("#buscarEnBiblioteca").value = "";
+    // Los campos que guardan el id de un recurso necesitan uno de la biblioteca.
+    dialog.querySelector("#subidaLocalRecurso").hidden = campoDestino.dataset.valorRecurso === "id";
+    dialog.querySelector("#archivoLocalRecurso").accept = extensionForzada ? `.${extensionForzada}` : "image/*";
+    dialog.querySelector("#estadoSubidaLocal").textContent = "";
     dialog.showModal();
     buscar();
   }
@@ -71,7 +86,7 @@ const SelectorRecursos = (() => {
   function opcionRecurso(recurso) {
     return `
       <button class="opcionRecurso" type="button" data-elegir-recurso="${recurso.id}">
-        <img src="${escaparRecurso(rutaImagen(recurso.archivo_url))}" alt="">
+        <img src="${escaparRecurso(rutaImagen(recurso.archivo_url))}" alt="" loading="lazy">
         <span>${escaparRecurso(recurso.nombre)}</span>
         <small>.${escaparRecurso(recurso.extension.toUpperCase())}</small>
       </button>`;
@@ -87,6 +102,43 @@ const SelectorRecursos = (() => {
       dialog.close();
     } catch (error) {
       mostrarMensaje("mensaje", error.message);
+    }
+  }
+
+  async function subirLocal(evento) {
+    const input = evento.currentTarget;
+    const archivo = input.files[0];
+    const estado = dialog.querySelector("#estadoSubidaLocal");
+    const boton = dialog.querySelector("#btnSubirLocalRecurso");
+    if (!archivo) return;
+
+    const extension = archivo.name.split(".").pop().toLowerCase();
+    if (extensionForzada ? extension !== extensionForzada : !FORMATOS_LOCALES.has(extension)) {
+      estado.textContent = extensionForzada
+        ? `Selecciona un archivo .${extensionForzada.toUpperCase()}.`
+        : "Selecciona una imagen válida (PNG, JPG, GIF, WebP...).";
+      input.value = "";
+      return;
+    }
+
+    const datos = new FormData();
+    datos.append("archivo", archivo);
+    boton.disabled = true;
+    estado.textContent = "Subiendo...";
+    try {
+      const respuesta = await api("/panel/archivos/", {
+        metodo: "POST",
+        cuerpo: datos,
+        esFormData: true,
+      });
+      campoDestino.value = respuesta.archivo_url;
+      campoDestino.dispatchEvent(new Event("change", { bubbles: true }));
+      dialog.close();
+    } catch (error) {
+      estado.textContent = error.message;
+    } finally {
+      boton.disabled = false;
+      input.value = "";
     }
   }
 

@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluación</title>
-    <link rel="stylesheet" href="../css/style.css?v=15">
-    <link rel="stylesheet" href="../css/extra.css?v=14">
+    <link rel="stylesheet" href="../css/style.css?v=22">
+    <link rel="stylesheet" href="../css/extra.css?v=21">
 </head>
 <body class="bodyEvaluationView">
     <div id="layout"></div>
     <main class="evaluacionNueva evaluacionHistorialPagina">
-        <section class="tarjetaEvaluacionNueva" aria-labelledby="tituloEvaluacion">
+        <section class="tarjetaEvaluacionNueva tarjetaPreguntas" aria-labelledby="tituloEvaluacion">
             <div class="decoracionEvaluacion" aria-hidden="true"></div>
             <header class="cabeceraEvaluacionNueva">
                 <div class="tituloEvaluacionNueva"><span class="iconoEvaluacionMini" aria-hidden="true"><svg class="icon icon20"><use href="#i-checklist"></use></svg></span><h1 id="tituloEvaluacion">Cargando... · Evaluación</h1></div>
@@ -26,9 +26,11 @@
             <h2 id="textoPregunta">Cargando pregunta...</h2>
             <div class="marcoPregunta" id="contenedorVideo"></div>
             <div class="opcionesEvaluacionNueva" id="contenedorOpciones"></div>
+            <div class="barraAccionesEvaluacion">
             <div class="feedbackEvaluacion" id="feedback" role="status" aria-live="polite"></div>
             <div id="mensaje" class="mensajeEvaluacion" role="alert"></div>
             <div class="accionesEvaluacion"><button type="button" class="botonComprobar" id="btnComprobar"><svg class="icon icon16" aria-hidden="true"><use href="#i-check"></use></svg> Comprobar</button></div>
+            </div>
             </div>
         </section>
     </main>
@@ -38,6 +40,6 @@
     <script src="../js/layout.js?v=6"></script>
     <script src="../js/lib/historial-intentos.js?v=8"></script>
     <script src="../js/lib/servicio-historial-intentos.js?v=2"></script>
-    <script src="../js/pages/evaluacion.js?v=11"></script>
+    <script src="../js/pages/evaluacion.js?v=13"></script>
 </body>
 </html>

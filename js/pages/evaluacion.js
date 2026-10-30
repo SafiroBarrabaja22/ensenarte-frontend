@@ -32,7 +32,6 @@ let resultadoFinal = null;
     mostrarMensaje("mensajeInicio", error.message);
   }
 
-  try { resumenInterfaz = JSON.parse(sessionStorage.getItem(`evaluacion-items-${slugCurso}`) || "[]"); } catch { resumenInterfaz = []; }
   try {
     const historial = await ServicioHistorialIntentos.cargar({ curso: slugCurso, tipo: "normal" });
     AttemptHistory.render("#historialIntentos", { tipo: "normal", intentos: historial });
@@ -52,15 +51,11 @@ async function iniciarIntento() {
   boton.disabled = true;
   boton.textContent = "Preparando evaluación...";
   try {
-    let intento;
-    try {
-      intento = await api(`/cursos/${slugCurso}/evaluacion/actual/`);
-    } catch (error) {
-      if (error.status !== 404) throw error;
-      resumenInterfaz = [];
-      try { sessionStorage.removeItem(`evaluacion-items-${slugCurso}`); } catch {}
-      intento = await api(`/cursos/${slugCurso}/evaluacion/iniciar/`, { metodo: "POST" });
-    }
+    // Siempre se empieza de cero: el backend descarta cualquier intento sin terminar,
+    // salga el usuario por "Salir", la flecha atrás o cerrando la pestaña.
+    resumenInterfaz = [];
+    try { sessionStorage.removeItem(`evaluacion-items-${slugCurso}`); } catch {}
+    const intento = await api(`/cursos/${slugCurso}/evaluacion/iniciar/`, { metodo: "POST" });
     document.getElementById("pantallaInicioPreguntas").hidden = true;
     document.getElementById("pantallaPreguntas").hidden = false;
     pintarPregunta(intento);
@@ -100,6 +95,7 @@ function pintarPregunta(intento) {
   `).join("");
   document.querySelectorAll(".opcionEvaluacion").forEach((boton) => boton.addEventListener("click", () => seleccionarRespuesta(boton)));
   document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedbackEvaluacion";
   document.getElementById("mensaje").textContent = "";
   actualizarBoton("Comprobar", "i-check");
 }

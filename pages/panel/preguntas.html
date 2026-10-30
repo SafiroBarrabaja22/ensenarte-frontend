@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel - Preguntas</title>
-    <link rel="stylesheet" href="../../css/panel.css">
+    <link rel="stylesheet" href="../../css/panel.css?v=4">
     <link rel="stylesheet" href="../../css/extra.css">
 </head>
 <body class="panelBody">
@@ -14,6 +14,20 @@
         <a class="panelBtn panelBtnPequeno" href="index.html">Volver</a>
         <h2 id="tituloCurso">Preguntas</h2>
         <div id="mensaje"></div>
+
+        <section class="panelSeccion">
+            <h2>Preguntas por evaluación</h2>
+            <div class="panelForm configEvaluacion">
+                <div>
+                    <label for="limitePreguntas">¿Cuántas preguntas salen en cada intento?</label>
+                    <input type="number" id="limitePreguntas" min="1" step="1" placeholder="Todas">
+                    <small id="ayudaLimitePreguntas">Déjalo vacío para que salgan todas. Las preguntas se eligen al azar en cada intento.</small>
+                </div>
+                <div class="panelAcciones">
+                    <button class="panelBtn" type="button" id="btnGuardarLimite">Guardar</button>
+                </div>
+            </div>
+        </section>
 
         <section class="panelSeccion">
             <h2>Nueva pregunta</h2>
@@ -45,7 +59,7 @@
     <script src="../../js/api.js"></script>
     <script src="../../js/layout.js?v=8"></script>
     <script src="../../js/pages/panel/layout-panel.js?v=11"></script>
-    <script src="../../js/pages/panel/selector-recursos.js?v=6"></script>
-    <script src="../../js/pages/panel/preguntas.js?v=3"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=9"></script>
+    <script src="../../js/pages/panel/preguntas.js?v=6"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@
  */
 
 import { ClasificadorKNN, ControlSostener, landmarksAPixeles, normalizarLandmarks } from "../lib/lsc-reconocedor.js";
-import { renderResultados } from "../lib/resultados.js?v=4";
+import { renderResultados } from "../lib/resultados.js?v=5";
 
 // ---------------------------------------------------------------- configuracion
 // Para cambiar el modelo basta con reemplazar este archivo (o esta ruta).
