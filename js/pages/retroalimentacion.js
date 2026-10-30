@@ -1,4 +1,4 @@
-import { renderResultados } from "../lib/resultados.js?v=4";
+import { renderResultados } from "../lib/resultados.js?v=5";
 
 const esc = valor => String(valor ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -16,13 +16,13 @@ const esc = valor => String(valor ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;",
       sessionStorage.removeItem(`evaluacion-resultado-${slug}`);
     } catch {}
     const datosResultado = resultadoReciente || resultado;
-    const total = Number(curso.total_preguntas || datosResultado.total || Number(datosResultado.aciertos) + Number(datosResultado.errores) || 1);
+    const total = Number(datosResultado.total || curso.total_preguntas || Number(datosResultado.aciertos) + Number(datosResultado.errores) || 1);
     const correctas = Number(datosResultado.aciertos), porcentaje = Number(datosResultado.porcentaje ?? Math.round(correctas * 100 / total));
     let historial = [];
     try { historial = JSON.parse(sessionStorage.getItem(`evaluacion-items-${slug}`) || "[]"); } catch {}
     const detalleServidor = Array.isArray(datosResultado.detalle_preguntas) ? datosResultado.detalle_preguntas : [];
     const items = detalleServidor.length === total
-      ? detalleServidor.map((x, i) => ({ etiqueta: String(x.etiqueta || i + 1), acierto: Boolean(x.acierto), detalle: x.detalle || (x.acierto ? "Correcta" : "Incorrecta"), termino: x.texto }))
+      ? detalleServidor.map((x, i) => ({ etiqueta: String(x.etiqueta || i + 1), acierto: Boolean(x.acierto), detalle: x.detalle || (x.acierto ? "Correcta" : "Incorrecta"), termino: x.texto, pregunta: Array.isArray(x.opciones) ? { texto: x.texto, video: x.video, opciones: x.opciones, elegidas: x.elegidas || [] } : null }))
       : historial.length === total
         ? historial.map((x, i) => ({ etiqueta: String(i + 1), acierto: Boolean(x.acierto), detalle: x.acierto ? "Correcta" : "Incorrecta", termino: x.termino }))
         : Array.from({ length: total }, (_, i) => ({ etiqueta: String(i + 1), acierto: null, detalle: "Sin detalle" }));

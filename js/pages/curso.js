@@ -26,7 +26,7 @@
     document.getElementById("tituloCurso").textContent = curso.titulo;
     document.getElementById("migaCurso").textContent = curso.titulo;
     document.getElementById("descripcionCurso").textContent = curso.descripcion || "Aprende nuevas señas y practica a tu ritmo.";
-    document.getElementById("imagenCurso").src = rutaImagen(curso.portada_curso);
+    document.getElementById("imagenCurso").src = rutaImagen(curso.icono_curso || curso.portada_curso);
     document.getElementById("imagenCurso").alt = `Ilustración del curso ${curso.titulo}`;
     document.getElementById("palabrasCurso").textContent = `${curso.total_palabras || 0} ${plural(curso.total_palabras, "palabra", "palabras")}`;
     document.getElementById("preguntasCurso").textContent = `${curso.total_preguntas || 0} ${plural(curso.total_preguntas, "pregunta", "preguntas")}`;

@@ -1,5 +1,30 @@
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
+/** Ventana con la pregunta, sus opciones, la correcta y lo que eligió el estudiante. */
+function abrirDetallePregunta(dialog, item) {
+  const datos = item?.pregunta;
+  if (!dialog || !datos) return;
+  const elegidas = datos.elegidas.map(Number);
+  const primera = elegidas[0];
+  const opciones = datos.opciones.map(op => {
+    const esElegida = elegidas.includes(Number(op.id));
+    const estado = op.es_correcta ? "correcta" : esElegida ? "elegidaIncorrecta" : "";
+    const nota = op.es_correcta
+      ? (Number(op.id) === primera ? "Tu respuesta · Correcta" : "Respuesta correcta")
+      : esElegida ? (Number(op.id) === primera ? "Tu respuesta" : "También la elegiste") : "";
+    return `<li class="opcionDetalle ${estado}"><span>${esc(op.texto)}</span>${nota ? `<small><svg class="icon icon16" aria-hidden="true"><use href="#i-${op.es_correcta ? "check" : "x"}"></use></svg> ${nota}</small>` : ""}</li>`;
+  }).join("");
+  dialog.innerHTML = `<header><h2 id="tituloDetallePregunta">Pregunta ${esc(item.etiqueta)}</h2><span class="estadoDetalle ${item.acierto ? "correcta" : "fallida"}">${item.acierto ? "Correcta" : "Incorrecta"}</span></header>
+    <p class="textoDetalle">${esc(datos.texto)}</p>
+    ${datos.video ? `<div class="medioDetalle"><img src="${esc(rutaVideo(datos.video))}" alt="Seña de la pregunta ${esc(item.etiqueta)}"></div>` : ""}
+    <ul class="opcionesDetalle">${opciones}</ul>
+    ${elegidas.length ? "" : '<p class="sinRegistroDetalle">No hay registro de las opciones que elegiste en este intento.</p>'}
+    <div class="accionesDetalle"><button type="button" class="botonResultadoPrincipal" data-cerrar-detalle>Cerrar</button></div>`;
+  dialog.querySelector("[data-cerrar-detalle]").addEventListener("click", () => dialog.close());
+  dialog.onclick = evento => { if (evento.target === dialog) dialog.close(); };
+  dialog.showModal();
+}
+
 /** Render común para evaluaciones de preguntas y cámara. */
 export function renderResultados(resultado, root, opciones = {}) {
   const { curso, modo, total, correctas, porcentaje, umbral = 70, items = [], estadistica2, repasar = [], insignia, slug, cursoUrl, repetirUrl, iconoCurso = "books" } = resultado;
@@ -11,11 +36,13 @@ export function renderResultados(resultado, root, opciones = {}) {
   root.innerHTML = `<header class="resultadoCabecera"><span class="resultadoCursoIcon"><svg class="icon icon26" aria-hidden="true"><use href="#i-${esc(iconoCurso)}"></use></svg></span><h1>${esc(nombreCurso)} · Evaluación ${pregunta ? "de preguntas" : "con cámara"}</h1><button type="button" class="botonResultadoSecundario resultadoCerrar">Cerrar</button></header>
   <section class="heroResultadoCamara"><div class="anilloResultadoCamara ${aprobado ? "aprobado" : "noAprobado"}" data-ring><svg viewBox="0 0 150 150" aria-hidden="true"><circle class="anilloResultadoFondo" cx="75" cy="75" r="62"/><circle class="anilloResultadoProgreso" data-arc cx="75" cy="75" r="62"/></svg><span class="marcaUmbralAnillo" style="transform:translate(-50%,-50%) rotate(${umbral*3.6}deg) translateY(-62px)" aria-hidden="true"></span><div class="puntosCelebracion" aria-hidden="true">${Array.from({length:6},()=>"<i></i>").join("")}</div><div class="rafagaResultado" aria-hidden="true"></div><div class="valorAnilloResultado"><strong data-percent aria-hidden="true">0%</strong><span>de aciertos</span></div><span class="medallonResultado ${aprobado?"":"noAprobado"}" data-chip aria-hidden="true"><svg class="icon icon20"><use href="#i-${aprobado?"award":"repeat"}"></use></svg></span></div><div class="textoResultado"><h2>${aprobado?"¡Aprobaste!":"¡Casi lo logras!"}</h2><p>${aprobado?`Hiciste ${correctas} de ${total} ${plural} correctamente.`:`Hiciste ${correctas} de ${total} ${plural}. Puedes intentarlo de nuevo cuando quieras.`}</p></div></section>
   <span class="soloLectores" data-live role="status" aria-live="polite"></span><section class="datosClaveResultado"><article><strong>${correctas} de ${total}</strong><span>${correctLabel}</span></article><article><strong>${esc(estadistica2?.valor ?? "—")}</strong><span>${esc(estadistica2?.etiqueta ?? "Mejor puntaje")}</span></article><article><strong>${umbral}%</strong><span>para aprobar</span></article></section>
-  <section class="detalleResultado"><h2>${pregunta?"Tus respuestas":"Tus letras"}</h2><div class="cuadriculaLetrasResultado" style="--cols:${cols}">${items.map((x,i)=>`<article class="resultadoLetra ${x.acierto===null?"sinDetalle":x.acierto?"correcta":"fallida"}" style="--i:${i}"><strong>${esc(x.etiqueta)}</strong><span><svg class="icon icon16" aria-hidden="true"><use href="#i-${x.acierto===null?"help-circle":x.acierto?"check":"x"}"></use></svg>${esc(x.detalle)}</span></article>`).join("")}</div></section>
+  <section class="detalleResultado"><h2>${pregunta?"Tus respuestas":"Tus letras"}</h2><div class="cuadriculaLetrasResultado" style="--cols:${cols}">${items.map((x,i)=>{const etiqueta=x.pregunta?"button":"article";return `<${etiqueta} ${x.pregunta?`type="button" data-detalle="${i}" aria-label="Ver pregunta ${esc(x.etiqueta)}: ${esc(x.detalle)}"`:""} class="resultadoLetra ${x.pregunta?"conDetalle":""} ${x.acierto===null?"sinDetalle":x.acierto?"correcta":"fallida"}" style="--i:${i}"><strong>${esc(x.etiqueta)}</strong><span><svg class="icon icon16" aria-hidden="true"><use href="#i-${x.acierto===null?"help-circle":x.acierto?"check":"x"}"></use></svg>${esc(x.detalle)}</span></${etiqueta}>`;}).join("")}</div>${items.some(x=>x.pregunta)?'<p class="ayudaDetalleResultado">Toca una pregunta para ver qué respondiste.</p>':""}</section>
   ${aprobado&&insignia?.nueva?insignia.curso100?.imagen?`<section class="insigniaDesbloqueada insigniaCurso100Nueva"><img class="imagenInsigniaCurso100" src="${esc(rutaImagen(insignia.curso100.imagen))}" alt="Insignia Curso 100%"><div><strong>¡Ganaste la insignia Curso 100%!</strong><p>Tu insignia ya está disponible en tu perfil.</p></div></section>`:`<section class="insigniaDesbloqueada"><svg class="icon icon52"><use href="#i-insignia-${esc(insignia.id||"curso-completado")}"></use></svg><div><strong>¡Insignia desbloqueada!</strong><p>Curso completado · ya la puedes ver en tu perfil</p></div>${porcentaje===100?'<span class="insigniaPerfecta">Puntaje perfecto</span>':""}</section>`:""}
-  ${bad.length?`<section class="bloquePracticar"><div class="letrasPracticar ${pregunta?"preguntasPracticar":""}">${repasar.map(x=>`<span>${pregunta?`Pregunta ${esc(x)}`:esc(x)}</span>`).join("")}</div><div class="textoPracticar"><strong>${pregunta?"Para repasar":"Letras para practicar"}</strong><a href="diccionario.html?curso=${encodeURIComponent(slug||"")}"><svg class="icon icon16"><use href="#i-book-2"></use></svg> Repasar en el diccionario</a></div></section>`:""}
-  <div class="accionesResultado">${aprobado?`<a class="botonResultadoSecundario" href="${esc(repetirUrl)}"><svg class="icon icon16"><use href="#i-repeat"></use></svg> Repetir evaluación</a>`:""}<a class="botonResultadoPrincipal" href="${esc(aprobado?cursoUrl:repetirUrl)}">${aprobado?"Volver al curso":"Repetir evaluación"}</a></div><div class="estadoGuardado correcto" data-saved><span><svg class="icon icon16"><use href="#i-check"></use></svg> Resultado guardado en tu perfil</span></div>`;
+  ${bad.length?`<section class="bloquePracticar"><div class="letrasPracticar ${pregunta?"preguntasPracticar":""}">${repasar.map(x=>{const i=items.findIndex(it=>it.etiqueta===x);return items[i]?.pregunta?`<button type="button" data-detalle="${i}">Pregunta ${esc(x)}</button>`:`<span>${pregunta?`Pregunta ${esc(x)}`:esc(x)}</span>`;}).join("")}</div><div class="textoPracticar"><strong>${pregunta?"Para repasar":"Letras para practicar"}</strong><a href="diccionario.html?curso=${encodeURIComponent(slug||"")}"><svg class="icon icon16"><use href="#i-book-2"></use></svg> Repasar en el diccionario</a></div></section>`:""}
+  <div class="accionesResultado">${aprobado?`<a class="botonResultadoSecundario" href="${esc(repetirUrl)}"><svg class="icon icon16"><use href="#i-repeat"></use></svg> Repetir evaluación</a>`:""}<a class="botonResultadoPrincipal" href="${esc(aprobado?cursoUrl:repetirUrl)}">${aprobado?"Volver al curso":"Repetir evaluación"}</a></div><div class="estadoGuardado correcto" data-saved><span><svg class="icon icon16"><use href="#i-check"></use></svg> Resultado guardado en tu perfil</span></div>
+  <dialog class="dialogDetallePregunta" data-dialog-detalle aria-labelledby="tituloDetallePregunta"></dialog>`;
   root.querySelector(".resultadoCerrar")?.addEventListener("click", opciones.onClose || (()=>history.back()));
+  root.querySelectorAll("[data-detalle]").forEach(boton=>boton.addEventListener("click",()=>abrirDetallePregunta(root.querySelector("[data-dialog-detalle]"),items[Number(boton.dataset.detalle)])));
   const arc=root.querySelector("[data-arc]"), ring=root.querySelector("[data-ring]"), pct=root.querySelector("[data-percent]"), circumference=2*Math.PI*62, reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   root.querySelectorAll(".resultadoLetra").forEach((el,i)=>el.style.setProperty("--delay",`${1500+i*90}ms`));
   const delayPost=1500+Math.max(0,total-1)*90+550+700;

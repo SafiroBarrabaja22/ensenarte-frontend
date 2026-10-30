@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel - Diccionario</title>
-    <link rel="stylesheet" href="../../css/panel.css">
+    <link rel="stylesheet" href="../../css/panel.css?v=4">
     <link rel="stylesheet" href="../../css/extra.css">
 </head>
 <body class="panelBody">
@@ -44,12 +44,13 @@
 
         <section class="panelSeccion">
             <h2>Palabras registradas</h2>
+            <p class="ayudaOrden">Arrastra una fila desde <span aria-hidden="true">&#10303;</span> para cambiar el orden en que se muestran en el diccionario.</p>
             <table class="panelTabla">
                 <thead>
-                    <tr><th>Palabra</th><th>Imagen</th><th>Gif</th><th>Acciones</th></tr>
+                    <tr><th aria-label="Orden"></th><th>Palabra</th><th>Imagen</th><th>Gif</th><th>Acciones</th></tr>
                 </thead>
                 <tbody id="tablaPalabras">
-                    <tr><td colspan="4" class="cargando">Cargando...</td></tr>
+                    <tr><td colspan="5" class="cargando">Cargando...</td></tr>
                 </tbody>
             </table>
         </section>
@@ -59,7 +60,7 @@
     <script src="../../js/api.js"></script>
     <script src="../../js/layout.js?v=8"></script>
     <script src="../../js/pages/panel/layout-panel.js?v=11"></script>
-    <script src="../../js/pages/panel/selector-recursos.js?v=6"></script>
-    <script src="../../js/pages/panel/diccionario.js?v=2"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=9"></script>
+    <script src="../../js/pages/panel/diccionario.js?v=5"></script>
 </body>
 </html>
