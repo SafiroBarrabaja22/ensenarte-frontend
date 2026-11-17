@@ -6,12 +6,7 @@ const FORMATO_RECURSO = new Set([
   "jfif",
   "webp",
   "bmp",
-  "tif",
-  "tiff",
-  "avif",
-  "heic",
-  "heif",
-]);
+]);  // Igual que FORMATOS_IMAGEN en ensenarte-backend/apps/cursos/archivos.py
 
 let archivosSeleccionados = [];
 // Debe coincidir con PAGE_SIZE del backend.

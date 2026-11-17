@@ -2,15 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contáctanos</title>
     <link rel="stylesheet" href="../css/tokens.css?v=20261116">
     <link rel="stylesheet" href="../css/style.css?v=20261116">
     <link rel="stylesheet" href="../css/extra.css?v=20261116b">
     <link rel="stylesheet" href="../css/componentes.css?v=20261116">
-        <script src="../js/layout.js?v=10"></script>
-        <script src="../js/layout.js?v=10"></script>
-        <script src="../js/layout.js?v=10"></script>
 </head>
 <body class="bodyBase">
     <div id="layout"></div>
@@ -21,13 +19,13 @@
             <h2 class="h2Cont">¡Contáctanos!</h2>
             <div class="input-group-contact">
                 <label for="name" class="labelCont">Nombre</label>
-                <input type="text" name="name" id="name" placeholder="Nombre" class="inputCont" required>
+                <input maxlength="100" type="text" name="name" id="name" placeholder="Nombre" class="inputCont" required>
                 <label for="phone" class="labelCont">Número</label>
-                <input type="tel" name="phone" id="phone" placeholder="Número telefónico" class="inputCont">
+                <input maxlength="20" type="tel" name="phone" id="phone" placeholder="Número telefónico" class="inputCont">
                 <label for="email" class="labelCont">Correo</label>
-                <input type="email" name="email" id="email" placeholder="Correo electrónico" class="inputCont" required>
+                <input maxlength="254" type="email" name="email" id="email" placeholder="Correo electrónico" class="inputCont" required>
                 <label for="message" class="labelCont">Mensaje</label>
-                <textarea name="message" id="message" cols="30" rows="5" placeholder="Mensaje / Sugerencia" class="textareaCont" required></textarea>
+                <textarea maxlength="1000" name="message" id="message" cols="30" rows="5" placeholder="Mensaje / Sugerencia" class="textareaCont" required></textarea>
                 <input class="btn" type="submit" value="Enviar">
             </div>
         </form>
@@ -35,12 +33,9 @@
 
     <div id="footer"></div>
 
-    <script src="../js/config.js?v=4"></script>
+    <script src="../js/config.js?v=6"></script>
     <script src="../js/api.js?v=5"></script>
-    <script src="../js/layout.js?v=10"></script>
-    <script>
-        montarLayout(Sesion.activa() ? "usuario" : "publico");
-     <script src="../js/layout.js?v=10"></script>
-    </script>
+    <script src="../js/layout.js?v=11"></script>
+    <script src="../js/pages/pagina-publica.js"></script>
 </body>
 </html>

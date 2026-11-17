@@ -8,7 +8,8 @@ document.getElementById("formRegistro").addEventListener("submit", async (evento
     await Auth.registrar(
       document.getElementById("nombre").value.trim(),
       document.getElementById("correo").value.trim(),
-      document.getElementById("password").value
+      document.getElementById("password").value,
+      document.getElementById("sitioWeb").value
     );
     mostrarMensaje("mensaje", "Cuenta creada. Redirigiendo al inicio de sesión...", "ok");
     setTimeout(() => (window.location.href = "login.html"), 1500);

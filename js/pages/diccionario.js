@@ -29,17 +29,17 @@
         (palabra) => `
         <div class="card">
           <div class="face front">
-            <img src="${rutaImagen(palabra.imagen_frontal)}" alt="${palabra.titulo}">
-            <h3>${palabra.titulo}</h3>
+            <img src="${escaparHtml(rutaImagen(palabra.imagen_frontal))}" alt="${escaparHtml(palabra.titulo)}">
+            <h3>${escaparHtml(palabra.titulo)}</h3>
           </div>
           <div class="face back">
-            <img src="${rutaVideo(palabra.video_gif)}" alt="${palabra.titulo}">
-            <h3>${palabra.titulo}</h3>
+            <img src="${escaparHtml(rutaVideo(palabra.video_gif))}" alt="${escaparHtml(palabra.titulo)}">
+            <h3>${escaparHtml(palabra.titulo)}</h3>
           </div>
         </div>`
       )
       .join("");
   } catch (error) {
-    contenedor.innerHTML = `<p class="vacio">No se pudo cargar el diccionario: ${error.message}</p>`;
+    contenedor.innerHTML = `<p class="vacio">No se pudo cargar el diccionario: ${escaparHtml(error.message)}</p>`;
   }
 })();

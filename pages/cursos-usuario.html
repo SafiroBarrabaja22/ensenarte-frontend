@@ -2,15 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis cursos</title>
     <link rel="stylesheet" href="../css/tokens.css?v=20261116">
     <link rel="stylesheet" href="../css/style.css?v=20261116">
     <link rel="stylesheet" href="../css/extra.css?v=20261116b">
     <link rel="stylesheet" href="../css/componentes.css?v=20261116">
-        <script src="../js/layout.js?v=10"></script>
-        <script src="../js/layout.js?v=10"></script>
-        <script src="../js/layout.js?v=10"></script>
 </head>
 <body class="bodyBase paginaProtegida">
     <div id="layout"></div>
@@ -24,7 +22,7 @@
 
         <div id="mensaje"></div>
         <section class="controlesCursos" aria-label="Buscar y filtrar cursos">
-            <label class="buscadorCursos" for="buscarCurso"><svg class="icon icon16" aria-hidden="true"><use href="#i-search"></use></svg><span class="srOnly">Buscar un curso</span><input id="buscarCurso" type="search" placeholder="Buscar un curso"></label>
+            <label class="buscadorCursos" for="buscarCurso"><svg class="icon icon16" aria-hidden="true"><use href="#i-search"></use></svg><span class="srOnly">Buscar un curso</span><input maxlength="100" id="buscarCurso" type="search" placeholder="Buscar un curso"></label>
             <div class="filtrosCursos" role="group" aria-label="Filtros de cursos">
                 <button type="button" class="chipCurso activo" data-filtro="todos">Todos</button>
                 <button type="button" class="chipCurso" data-filtro="progreso">En progreso</button>
@@ -39,9 +37,8 @@
 
     <div id="footer"></div>
 
-    <script src="../js/config.js?v=4"></script>
+    <script src="../js/config.js?v=6"></script>
     <script src="../js/api.js?v=5"></script>
-    <script src="../js/layout.js?v=10"></script>
+    <script src="../js/layout.js?v=11"></script>
     <script src="../js/pages/cursos.js?v=5"></script>
 </body>
-     <script src="../js/layout.js?v=10"></script>

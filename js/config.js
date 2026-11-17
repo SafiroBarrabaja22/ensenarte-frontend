@@ -1,7 +1,8 @@
 /**
  * Configuracion del cliente.
  *
- * URL DEL BACKEND: se cambia SOLO aqui (BACKEND_PRODUCCION / BACKEND_LOCAL).
+ * URL DEL BACKEND: se cambia aqui (BACKEND_PRODUCCION / BACKEND_LOCAL) y en
+ * scripts/aplicar_csp.py, que la autoriza en la CSP de todas las paginas.
  * - Abierto en localhost o 127.0.0.1 (Live Server, http.server) usa el backend local.
  * - En cualquier otro dominio (GitHub Pages) usa el de produccion: la miniPC
  *   expuesta con Tailscale Funnel. Ver docs/DESPLIEGUE.md del backend.
@@ -24,6 +25,17 @@ CONFIG.API_BASE_URL =
   (["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname)
     ? CONFIG.BACKEND_LOCAL
     : CONFIG.BACKEND_PRODUCCION) + "/api";
+
+/**
+ * Escapa texto para meterlo en HTML (contenido o atributo entre comillas).
+ * Todo dato que venga de la API (nombres, titulos, rutas de imagen) debe pasar
+ * por aqui antes de ir a innerHTML: un nombre de usuario como
+ * <img src=x onerror=...> se mostraria como texto y no se ejecutaria.
+ * Si no hace falta HTML, mejor textContent.
+ */
+function escaparHtml(valor) {
+  return String(valor ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
 
 function cursoTieneEvaluacionCamara(slug) {
   return CONFIG.CURSOS_CON_EVALUACION_CAMARA.includes(slug);

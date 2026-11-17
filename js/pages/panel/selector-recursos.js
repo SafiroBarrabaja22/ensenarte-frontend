@@ -3,7 +3,7 @@ const SelectorRecursos = (() => {
   let campoDestino;
   let extensionForzada = "";
   let categoriaForzada = "recurso";
-  const FORMATOS_LOCALES = new Set(["png", "gif", "jpg", "jpeg", "jfif", "webp", "bmp", "tif", "tiff", "avif", "heic", "heif"]);
+  const FORMATOS_LOCALES = new Set(["png", "gif", "jpg", "jpeg", "jfif", "webp", "bmp"]);  // igual que apps/cursos/archivos.py del backend
 
   function conectar() {
     document.addEventListener("click", (evento) => {
@@ -29,7 +29,7 @@ const SelectorRecursos = (() => {
       </div>
       <div class="modalRecursosFiltros">
         <label for="buscarEnBiblioteca">Buscar por nombre</label>
-        <input type="search" id="buscarEnBiblioteca" placeholder="Escribe un nombre">
+        <input maxlength="100" type="search" id="buscarEnBiblioteca" placeholder="Escribe un nombre">
       </div>
       <div class="selectorRecursosGrid" id="resultadosBiblioteca" aria-live="polite"></div>`;
     document.body.append(dialog);

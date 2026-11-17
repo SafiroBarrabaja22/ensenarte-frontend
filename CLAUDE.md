@@ -162,10 +162,26 @@ de `detail` o del primer error de validación de DRF.
 Otro estado del cliente: `sessionStorage` (`evaluacion-items-<slug>`,
 `evaluacion-resultado-<slug>`) y `localStorage` (`evaluacion-mejor-<slug>`).
 
+## Seguridad del cliente
+
+- **CSP:** cada página lleva `<meta http-equiv="Content-Security-Policy">`, generada por
+  [scripts/aplicar_csp.py](scripts/aplicar_csp.py) (**única fuente**; para cambiarla,
+  edita el script y córrelo: `python scripts/aplicar_csp.py`). Solo se ejecutan scripts
+  del propio sitio y de cdn.jsdelivr.net (MediaPipe). Por eso:
+  - **Ningún `<script>` en línea ni atributos `onclick=`/`onerror=`**: todo el JS va en
+    archivos (`js/pages/inicio.js` y `js/pages/pagina-publica.js` reemplazaron los que había).
+  - Un dominio nuevo para la API o un CDN nuevo hay que agregarlo en `aplicar_csp.py`.
+- **Escapar todo dato de la API antes de `innerHTML`:** `escaparHtml()` (global, en
+  `config.js`) o el `esc()` local de cada página. Incluye las rutas de `rutaImagen()` /
+  `rutaVideo()` dentro de `src="..."`. Si no hace falta HTML, usa `textContent`.
+- Cada página carga `layout.js` **una sola vez**, después de `config.js` y `api.js`.
+- Formatos de imagen permitidos (`recursos.js`, `selector-recursos.js`): los mismos que
+  `apps/cursos/archivos.py` del backend.
+
 ## Configuración
 
-Todo en [js/config.js](js/config.js). La URL del backend se cambia SOLO en
-`BACKEND_PRODUCCION` / `BACKEND_LOCAL`; `API_BASE_URL` se calcula según
+Todo en [js/config.js](js/config.js). La URL del backend se cambia en
+`BACKEND_PRODUCCION` / `BACKEND_LOCAL` (y en `scripts/aplicar_csp.py`, que la autoriza en la CSP); `API_BASE_URL` se calcula según
 `location.hostname` (localhost/127.0.0.1 → local; otro → producción). Al tocar
 config.js, sube `config.js?v=` en todos los HTML. Despliegue en GitHub Pages bajo
 `/ensenarte-frontend/`: ninguna ruta puede empezar por `/` y las mayúsculas deben

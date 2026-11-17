@@ -1,7 +1,45 @@
+/**
+ * Recuperacion de contrasena en dos pasos.
+ *
+ * 1. El usuario escribe su correo. El backend le envia un correo con un enlace
+ *    de un solo uso (vence en 1 hora):
+ *      pages/recuperar.html#uid=...&token=...
+ * 2. Al abrir ese enlace, el dueno del correo confirma que fue el quien lo pidio
+ *    y elige la contrasena nueva. Si no lo pidio, ignora el correo y nada cambia.
+ *
+ * El uid y el token van despues de "#": el navegador nunca los envia a ningun
+ * servidor. En cuanto se leen se borran de la barra de direcciones para que no
+ * queden en el historial ni se compartan por error.
+ */
+
 let uidRecuperacion = null;
+let tokenRecuperacion = null;
+
+function leerEnlaceDelCorreo() {
+  const parametros = new URLSearchParams(window.location.hash.slice(1));
+  const uid = parametros.get("uid");
+  const token = parametros.get("token");
+  if (!uid || !token) return false;
+  uidRecuperacion = uid;
+  tokenRecuperacion = token;
+  history.replaceState(null, "", window.location.pathname);
+  return true;
+}
+
+function mostrarPasoConfirmar() {
+  document.getElementById("formSolicitar").style.display = "none";
+  document.getElementById("formConfirmar").style.display = "flex";
+  document.getElementById("textoBanner").textContent =
+    "Elige una contraseña nueva. Al guardarla se cerrará tu sesión en todos tus dispositivos.";
+  document.getElementById("passwordNueva").focus();
+}
+
+if (leerEnlaceDelCorreo()) mostrarPasoConfirmar();
 
 document.getElementById("formSolicitar").addEventListener("submit", async (evento) => {
   evento.preventDefault();
+  const boton = evento.submitter;
+  if (boton) boton.disabled = true;
   mostrarMensaje("mensaje", "");
 
   try {
@@ -9,17 +47,24 @@ document.getElementById("formSolicitar").addEventListener("submit", async (event
       document.getElementById("correo").value.trim()
     );
 
-    // En desarrollo el backend devuelve el token para poder probar sin correo.
+    // Solo en desarrollo (DEBUG=True) el backend devuelve el enlace: se abre
+    // como si el usuario hubiera pulsado el boton del correo.
     if (respuesta.debug) {
-      uidRecuperacion = respuesta.debug.uid;
-      document.getElementById("token").value = respuesta.debug.token;
+      window.location.hash = `uid=${encodeURIComponent(respuesta.debug.uid)}&token=${encodeURIComponent(respuesta.debug.token)}`;
+      if (leerEnlaceDelCorreo()) mostrarPasoConfirmar();
+      return;
     }
 
-    mostrarMensaje("mensaje", respuesta.mensaje, "ok");
-    document.getElementById("formSolicitar").style.display = "none";
-    document.getElementById("formConfirmar").style.display = "flex";
+    mostrarMensaje(
+      "mensaje",
+      "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña. " +
+        "Revisa tu bandeja de entrada y la carpeta de spam. El enlace vence en 1 hora.",
+      "ok"
+    );
   } catch (error) {
     mostrarMensaje("mensaje", error.message);
+  } finally {
+    if (boton) boton.disabled = false;
   }
 });
 
@@ -35,15 +80,18 @@ document.getElementById("formConfirmar").addEventListener("submit", async (event
     return;
   }
 
+  const boton = evento.submitter;
+  if (boton) boton.disabled = true;
   try {
-    await Auth.confirmarRecuperacion(
-      uidRecuperacion,
-      document.getElementById("token").value.trim(),
-      nueva
-    );
-    mostrarMensaje("mensajeConfirmar", "Contraseña restablecida. Redirigiendo...", "ok");
+    await Auth.confirmarRecuperacion(uidRecuperacion, tokenRecuperacion, nueva);
+    mostrarMensaje("mensajeConfirmar", "Contraseña restablecida. Redirigiendo al inicio de sesión...", "ok");
     setTimeout(() => (window.location.href = "login.html"), 1500);
   } catch (error) {
     mostrarMensaje("mensajeConfirmar", error.message);
+    // Enlace vencido o ya usado: se ofrece pedir uno nuevo.
+    if (/expir|usado|no es valido/i.test(error.message)) {
+      document.getElementById("pedirOtroEnlace").style.display = "block";
+    }
+    if (boton) boton.disabled = false;
   }
 });

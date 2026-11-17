@@ -104,11 +104,11 @@ function bloquePregunta(pregunta) {
           <tr data-edicion-pregunta="${pregunta.id}" hidden>
             <td colspan="3">
               <div class="panelForm">
-                <div><label>Enunciado</label><input type="text" data-texto-pregunta value="${esc(pregunta.texto)}"></div>
+                <div><label>Enunciado</label><input maxlength="200" type="text" data-texto-pregunta value="${esc(pregunta.texto)}"></div>
                 <div>
                   <label for="videoPregunta-${pregunta.id}">GIF de la seña</label>
                   <div class="campoSeleccionRecurso">
-                    <input type="text" id="videoPregunta-${pregunta.id}" data-video-pregunta value="${esc(pregunta.video || "")}" placeholder="abecedario/a.gif">
+                    <input maxlength="255" type="text" id="videoPregunta-${pregunta.id}" data-video-pregunta value="${esc(pregunta.video || "")}" placeholder="abecedario/a.gif">
                     <button class="panelBtn secundario" type="button" data-selector-recurso="videoPregunta-${pregunta.id}" data-extension="gif">Buscar GIF</button>
                   </div>
                 </div>
@@ -120,7 +120,7 @@ function bloquePregunta(pregunta) {
           <tr>
             <td colspan="3">
               <div class="panelAcciones">
-                <input type="text" id="nuevaOpcion-${pregunta.id}" placeholder="Texto de la opción"
+                <input maxlength="100" type="text" id="nuevaOpcion-${pregunta.id}" placeholder="Texto de la opción"
                        ${puedeAgregar ? "" : "disabled"}>
                 <label>
                   <input type="checkbox" id="nuevaCorrecta-${pregunta.id}" ${puedeAgregar ? "" : "disabled"}>

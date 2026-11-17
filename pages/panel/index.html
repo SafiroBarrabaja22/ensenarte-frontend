@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel - Cursos</title>
     <link rel="stylesheet" href="../../css/tokens.css?v=20261116">
@@ -26,29 +27,29 @@
             <div class="panelForm">
                 <div>
                     <label for="titulo">Título</label>
-                    <input type="text" id="titulo" placeholder="Abecedario">
+                    <input maxlength="100" type="text" id="titulo" placeholder="Abecedario">
                 </div>
                 <div>
                     <label for="nombre">Slug (identificador en la URL)</label>
-                    <input type="text" id="nombre" placeholder="abecedario">
+                    <input maxlength="50" type="text" id="nombre" placeholder="abecedario">
                 </div>
                 <div>
                     <label for="portada">Archivo de portada</label>
                     <div class="campoSeleccionRecurso">
-                        <input type="text" id="portada" placeholder="portadaAbecedario.jpg">
+                        <input maxlength="255" type="text" id="portada" placeholder="portadaAbecedario.jpg">
                         <button class="panelBtn secundario" type="button" data-selector-recurso="portada" data-categoria="recurso">Buscar imagen</button>
                     </div>
                 </div>
                 <div>
                     <label for="iconoCurso">Ícono del curso</label>
                     <div class="campoSeleccionRecurso">
-                        <input type="text" id="iconoCurso" placeholder="Opcional · imagen cuadrada">
+                        <input maxlength="255" type="text" id="iconoCurso" placeholder="Opcional · imagen cuadrada">
                         <button class="panelBtn secundario" type="button" data-selector-recurso="iconoCurso" data-categoria="recurso">Buscar imagen</button>
                     </div>                </div>
                 <div>
                     <label for="insignia">Insignia del curso</label>
                     <div class="campoSeleccionRecurso">
-                        <input type="text" id="insignia" placeholder="Opcional">
+                        <input maxlength="255" type="text" id="insignia" placeholder="Opcional">
                         <button class="panelBtn secundario" type="button" data-selector-recurso="insignia" data-categoria="insignia">Buscar insignia</button>
                     </div>
                 </div>
@@ -64,7 +65,7 @@
                 </div>
                 <div>
                     <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" rows="2"></textarea>
+                    <textarea maxlength="1000" id="descripcion" rows="2"></textarea>
                 </div>
                 <div class="panelAcciones">
                     <button class="panelBtn" id="btnGuardar">Guardar curso</button>
@@ -88,11 +89,11 @@
         </section>
     </main>
 
-    <script src="../../js/config.js?v=4"></script>
+    <script src="../../js/config.js?v=6"></script>
     <script src="../../js/api.js?v=5"></script>
-    <script src="../../js/layout.js?v=10"></script>
+    <script src="../../js/layout.js?v=11"></script>
     <script src="../../js/pages/panel/layout-panel.js?v=10"></script>
-    <script src="../../js/pages/panel/selector-recursos.js?v=9"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=11"></script>
     <script src="../../js/pages/panel/dashboard.js?v=10"></script>
 </body>
 </html>

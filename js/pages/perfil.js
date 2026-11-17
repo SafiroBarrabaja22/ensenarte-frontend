@@ -38,7 +38,7 @@
           : `<span class="portadaCursoPerfilFallback" aria-hidden="true">${iconoSvg(temaIcono(p.curso_titulo), "icon icon26")}</span>`;
         const insignia100 = p.curso_insignia_tipo === "curso_100";
         const insignia = p.curso_insignia
-          ? `<img class="insigniaCursoPerfil" src="${rutaImagen(p.curso_insignia)}" alt="${insignia100 ? "Insignia Curso 100%" : "Insignia de curso completado"}: ${esc(p.curso_titulo)}">${insignia100 ? '<small>Curso 100%</small>' : ""}`
+          ? `<img class="insigniaCursoPerfil" src="${esc(rutaImagen(p.curso_insignia))}" alt="${insignia100 ? "Insignia Curso 100%" : "Insignia de curso completado"}: ${esc(p.curso_titulo)}">${insignia100 ? '<small>Curso 100%</small>' : ""}`
           : '<span class="insigniaSinImagen">Sin insignia</span>';
         const destino = `curso.html?curso=${encodeURIComponent(p.curso)}&plantilla=15`;
         return `<a class="tarjetaCursoPerfil" href="${destino}" aria-label="Entrar al curso ${esc(p.curso_titulo)}">

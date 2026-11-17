@@ -150,7 +150,7 @@ function renderizarAvatares() {
   const contenido = modalAvatar.querySelector("#listaAvatares");
   contenido.innerHTML = avataresDisponibles.map((archivo, indice) => `
     <button type="button" class="avatarOption ${archivo === avatarModalElegido ? "avatarOptionSelected" : ""}" data-avatar="${escHtml(archivo)}" aria-label="Avatar disponible ${indice + 1}" aria-pressed="${archivo === avatarModalElegido}">
-      <img src="${rutaImagen(archivo)}" alt="Avatar disponible ${indice + 1}">
+      <img src="${escaparHtml(rutaImagen(archivo))}" alt="Avatar disponible ${indice + 1}">
       ${archivo === avatarModalElegido ? '<span class="avatarCheck" aria-hidden="true"><svg class="icon icon16"><use href="#i-check"></use></svg></span>' : ""}
     </button>
   `).join("");

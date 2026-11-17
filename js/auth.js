@@ -1,10 +1,11 @@
 /** Operaciones de autenticacion contra /api/auth/. */
 
 const Auth = {
-  async registrar(nombre, correo, password) {
+  async registrar(nombre, correo, password, sitioWeb = "") {
     return api("/auth/registro/", {
       metodo: "POST",
-      cuerpo: { nombre, correo, password },
+      // sitio_web es el campo trampa contra bots: una persona lo deja vacio.
+      cuerpo: { nombre, correo, password, sitio_web: sitioWeb },
       autenticado: false,
     });
   },

@@ -133,9 +133,9 @@ function editarPalabra(palabra) {
   fila.draggable = false;
   fila.innerHTML = `
     <td class="asaArrastre" aria-hidden="true"></td>
-    <td><input type="text" data-campo="titulo" value="${esc(palabra.titulo)}" aria-label="Palabra"></td>
-    <td><div class="campoSeleccionRecurso"><input type="text" id="editarImagen-${palabra.id}" data-campo="imagen_frontal" value="${esc(palabra.imagen_frontal)}" aria-label="Imagen frontal"><button class="panelBtn secundario" type="button" data-selector-recurso="editarImagen-${palabra.id}">Buscar</button></div></td>
-    <td><div class="campoSeleccionRecurso"><input type="text" id="editarGif-${palabra.id}" data-campo="video_gif" value="${esc(palabra.video_gif)}" aria-label="GIF de la seña"><button class="panelBtn secundario" type="button" data-selector-recurso="editarGif-${palabra.id}" data-extension="gif">Buscar</button></div></td>
+    <td><input maxlength="100" type="text" data-campo="titulo" value="${esc(palabra.titulo)}" aria-label="Palabra"></td>
+    <td><div class="campoSeleccionRecurso"><input maxlength="200" type="text" id="editarImagen-${palabra.id}" data-campo="imagen_frontal" value="${esc(palabra.imagen_frontal)}" aria-label="Imagen frontal"><button class="panelBtn secundario" type="button" data-selector-recurso="editarImagen-${palabra.id}">Buscar</button></div></td>
+    <td><div class="campoSeleccionRecurso"><input maxlength="200" type="text" id="editarGif-${palabra.id}" data-campo="video_gif" value="${esc(palabra.video_gif)}" aria-label="GIF de la seña"><button class="panelBtn secundario" type="button" data-selector-recurso="editarGif-${palabra.id}" data-extension="gif">Buscar</button></div></td>
     <td class="panelAcciones"><button class="panelBtn" data-guardar>Guardar</button><button class="panelBtn secundario" data-cancelar>Cancelar</button></td>`;
   fila.querySelector("[data-cancelar]").addEventListener("click", cargarPalabras);
   fila.querySelector("[data-guardar]").addEventListener("click", async () => {

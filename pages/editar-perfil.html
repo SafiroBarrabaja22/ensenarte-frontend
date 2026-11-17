@@ -2,15 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar perfil</title>
     <link rel="stylesheet" href="../css/tokens.css?v=20261116">
     <link rel="stylesheet" href="../css/style.css?v=20261116">
     <link rel="stylesheet" href="../css/extra.css?v=20261116b">
     <link rel="stylesheet" href="../css/componentes.css?v=20261116">
-        <script src="../js/layout.js?v=10"></script>
-        <script src="../js/layout.js?v=10"></script>
-        <script src="../js/layout.js?v=10"></script>
 </head>
 <body class="bodyBase paginaProtegida">
     <div id="layout"></div>
@@ -46,11 +44,11 @@
                 <div class="editarCamposGrid">
                     <div class="editarCampo">
                         <label for="username">Nombre de usuario</label>
-                        <div class="campoConIcono"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-at"></use></svg></span><input type="text" id="username" name="username" placeholder="Tu nombre de usuario"></div>
+                        <div class="campoConIcono"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-at"></use></svg></span><input maxlength="150" type="text" id="username" name="username" placeholder="Tu nombre de usuario"></div>
                     </div>
                     <div class="editarCampo">
                         <label for="email">Correo electrónico</label>
-                        <div class="campoConIcono"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-mail"></use></svg></span><input type="email" id="email" name="email" placeholder="tu-correo@ejemplo.com"></div>
+                        <div class="campoConIcono"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-mail"></use></svg></span><input maxlength="254" type="email" id="email" name="email" placeholder="tu-correo@ejemplo.com"></div>
                     </div>
                 </div>
                 <div class="editarAcciones">
@@ -68,16 +66,16 @@
                 <div class="editarCamposGrid editarCamposPassword">
                     <div class="editarCampo editarCampoCompleto">
                         <label for="passwordActual">Contraseña actual</label>
-                        <div class="campoConIcono campoPassword"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-key"></use></svg></span><input type="password" id="passwordActual" autocomplete="current-password"><button type="button" class="botonVerPassword" data-password="passwordActual" aria-label="Mostrar contraseña"><svg class="icon icon16"><use href="#i-eye"></use></svg></button></div>
+                        <div class="campoConIcono campoPassword"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-key"></use></svg></span><input maxlength="128" type="password" id="passwordActual" autocomplete="current-password"><button type="button" class="botonVerPassword" data-password="passwordActual" aria-label="Mostrar contraseña"><svg class="icon icon16"><use href="#i-eye"></use></svg></button></div>
                     </div>
                     <div class="editarCampo">
                         <label for="passwordNueva">Nueva contraseña</label>
-                        <div class="campoConIcono campoPassword"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-key"></use></svg></span><input type="password" id="passwordNueva" minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres"><button type="button" class="botonVerPassword" data-password="passwordNueva" aria-label="Mostrar contraseña"><svg class="icon icon16"><use href="#i-eye"></use></svg></button></div>
+                        <div class="campoConIcono campoPassword"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-key"></use></svg></span><input maxlength="128" type="password" id="passwordNueva" minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres"><button type="button" class="botonVerPassword" data-password="passwordNueva" aria-label="Mostrar contraseña"><svg class="icon icon16"><use href="#i-eye"></use></svg></button></div>
                         <div class="seguridadPassword" id="seguridadPassword" aria-live="polite"><div class="segmentosPassword"><span></span><span></span><span></span><span></span></div><span id="textoSeguridad">Escribe una contraseña</span></div>
                     </div>
                     <div class="editarCampo">
                         <label for="passwordConfirmar">Confirmar contraseña</label>
-                        <div class="campoConIcono campoPassword"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-key"></use></svg></span><input type="password" id="passwordConfirmar" minlength="8" autocomplete="new-password" placeholder="Repite la contraseña"><button type="button" class="botonVerPassword" data-password="passwordConfirmar" aria-label="Mostrar contraseña"><svg class="icon icon16"><use href="#i-eye"></use></svg></button></div>
+                        <div class="campoConIcono campoPassword"><span aria-hidden="true"><svg class="icon icon16"><use href="#i-key"></use></svg></span><input maxlength="128" type="password" id="passwordConfirmar" minlength="8" autocomplete="new-password" placeholder="Repite la contraseña"><button type="button" class="botonVerPassword" data-password="passwordConfirmar" aria-label="Mostrar contraseña"><svg class="icon icon16"><use href="#i-eye"></use></svg></button></div>
                         <p class="mensajeCoincidencia" id="mensajeCoincidencia" role="alert"></p>
                     </div>
                 </div>
@@ -86,12 +84,11 @@
         </div>
     </main>
 
-    <script src="../js/config.js?v=4"></script>
+    <script src="../js/config.js?v=6"></script>
     <script src="../js/api.js?v=5"></script>
-    <script src="../js/layout.js?v=10"></script>
-    <script src="../js/auth.js?v=2"></script>
-    <script src="../js/pages/editar-perfil.js?v=11"></script>
-     <script src="../js/layout.js?v=10"></script>
+    <script src="../js/layout.js?v=11"></script>
+    <script src="../js/auth.js?v=3"></script>
+    <script src="../js/pages/editar-perfil.js?v=12"></script>
 </html>
 
 

@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' https://cachyos-x8664.tailb93c3e.ts.net http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel - Diccionario</title>
     <link rel="stylesheet" href="../../css/tokens.css?v=20261116">
@@ -22,19 +23,19 @@
             <div class="panelForm">
                 <div>
                     <label for="tituloPalabra">Palabra</label>
-                    <input type="text" id="tituloPalabra" placeholder="Agua">
+                    <input maxlength="100" type="text" id="tituloPalabra" placeholder="Agua">
                 </div>
                 <div>
                     <label for="imagenPalabra">Imagen frontal</label>
                     <div class="campoSeleccionRecurso">
-                        <input type="text" id="imagenPalabra" placeholder="agua.png">
+                        <input maxlength="200" type="text" id="imagenPalabra" placeholder="agua.png">
                         <button class="panelBtn secundario" type="button" data-selector-recurso="imagenPalabra">Buscar imagen</button>
                     </div>
                 </div>
                 <div>
                     <label for="gifPalabra">Gif de la seña</label>
                     <div class="campoSeleccionRecurso">
-                        <input type="text" id="gifPalabra" placeholder="agua.gif">
+                        <input maxlength="200" type="text" id="gifPalabra" placeholder="agua.gif">
                         <button class="panelBtn secundario" type="button" data-selector-recurso="gifPalabra" data-extension="gif">Buscar GIF</button>
                     </div>
                 </div>
@@ -58,11 +59,11 @@
         </section>
     </main>
 
-    <script src="../../js/config.js?v=4"></script>
+    <script src="../../js/config.js?v=6"></script>
     <script src="../../js/api.js?v=5"></script>
-    <script src="../../js/layout.js?v=10"></script>
+    <script src="../../js/layout.js?v=11"></script>
     <script src="../../js/pages/panel/layout-panel.js?v=12"></script>
-    <script src="../../js/pages/panel/selector-recursos.js?v=9"></script>
-    <script src="../../js/pages/panel/diccionario.js?v=5"></script>
+    <script src="../../js/pages/panel/selector-recursos.js?v=11"></script>
+    <script src="../../js/pages/panel/diccionario.js?v=6"></script>
 </body>
 </html>

@@ -35,9 +35,9 @@ function montarLayout(tipo) {
   const bloqueDerecho =
     tipo === "usuario"
       ? `<div class="menuUsuario">
-         <a class="perfilUsuarioHeader" href="${raiz}pages/perfil.html" aria-label="Ver perfil de ${usuario ? usuario.nombre : "usuario"}">
-           <img class="avatarHeader" src="${avatarDe(usuario)}" alt="" loading="lazy">
-           <span class="nombreHeader">${usuario ? usuario.nombre : ""}</span>
+         <a class="perfilUsuarioHeader" href="${raiz}pages/perfil.html" aria-label="Ver perfil de ${escaparHtml(usuario ? usuario.nombre : "usuario")}">
+           <img class="avatarHeader" src="${escaparHtml(avatarDe(usuario))}" alt="" loading="lazy">
+           <span class="nombreHeader">${escaparHtml(usuario ? usuario.nombre : "")}</span>
          </a>
          ${puedeBiblioteca ? `<a class="perfilHeader" href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
          </div>`
@@ -132,7 +132,7 @@ function spriteIconos() {
 }
 
 function iconoSvg(nombre, clase = "icon", etiqueta = "") {
-  const accesibilidad = etiqueta ? ` role="img" aria-label="${etiqueta}"` : " aria-hidden=\"true\"";
+  const accesibilidad = etiqueta ? ` role="img" aria-label="${escaparHtml(etiqueta)}"` : " aria-hidden=\"true\"";
   return `<svg class="${clase}"${accesibilidad}><use href="#i-${nombre}"></use></svg>`;
 }
 
