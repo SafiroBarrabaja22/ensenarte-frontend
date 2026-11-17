@@ -52,12 +52,30 @@
         <h3>Evaluación</h3>
         <p>${iconoSvg("help-circle", "icon icon16")} ${preguntas} ${plural(preguntas, "pregunta", "preguntas")} · Mejor puntaje: ${puntaje}</p>
         <a class="botonAccionCurso" href="${enlaceEvaluacion}">${iconoSvg("play", "icon icon16")}Entrar a la evaluación</a>
-      </article>`;
+      </article>${progreso?.completado ? tarjetaConstancia(curso) : ""}`;
   } catch (error) {
     document.getElementById("tituloCurso").textContent = "Curso no encontrado";
     mostrarMensaje("mensaje", error.message);
   }
 })();
+
+/**
+ * Solo si el curso esta completado. La descarga va por fetch con el token
+ * (data-descargar, ver api.js): un enlace directo devolveria 401.
+ */
+function tarjetaConstancia(curso) {
+  const ruta = `/reportes/constancia/${encodeURIComponent(curso.nombre)}/`;
+  return `
+      <article class="tarjetaAccionCurso" tabindex="0">
+        <div class="cabeceraAccionCurso"><span class="iconoAccionCurso iconoEvaluacionCurso" aria-hidden="true">${iconoSvg("award", "icon icon26")}</span><span class="pasoCurso pasoDos">Completado</span></div>
+        <h3>Constancia</h3>
+        <p>Descarga la constancia de que completaste ${esc(curso.titulo)}.</p>
+        <div class="accionesDescarga">
+          <button type="button" class="botonAccionCurso" data-descargar="${ruta}?formato=pdf" data-nombre="constancia-${esc(curso.nombre)}.pdf">${iconoSvg("download", "icon icon16")}PDF</button>
+          <button type="button" class="boton boton--secundario" data-descargar="${ruta}?formato=xlsx" data-nombre="constancia-${esc(curso.nombre)}.xlsx">${iconoSvg("download", "icon icon16")}Excel</button>
+        </div>
+      </article>`;
+}
 
 function asegurarPlantillaCurso() {
   if (document.querySelector(".bodyCursoNuevo")) return;

@@ -647,3 +647,16 @@ body.paginaProtegida:not(.accesoVerificado) { visibility: hidden; }
 .bloqueoAcceso p { margin: 0 0 20px; line-height: 1.5; }
 .bloqueoAcceso a { display: inline-block; margin: 0 8px; color: var(--color-teal); font-weight: 700; }
 
+/* ==========================================================
+   Descarga de reportes (PDF / Excel)
+   ========================================================== */
+
+/* Dos botones (PDF y Excel) lado a lado al pie de una tarjeta de curso. */
+.accionesDescarga { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.accionesDescarga > * { flex: 1 1 120px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; margin-top: 0; }
+
+/* Barra de reportes de la plataforma en el panel (solo Administrador). */
+.reportesPlataforma { align-items: center; margin-top: 16px; }
+.reportesPlataforma > span { color: var(--color-texto-suave); font-weight: 700; margin-right: 4px; }
+
+[data-descargar][aria-busy="true"] { cursor: progress; opacity: .75; }

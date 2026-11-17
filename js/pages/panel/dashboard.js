@@ -15,9 +15,21 @@ const campos = {
 (async function iniciar() {
   if (!(await montarPanel())) return;
   SelectorRecursos.conectar();
+  mostrarReportesPlataforma();
   await cargarResumen();
   await cargarCursos();
 })();
+
+/** Solo el Administrador ve (y puede pedir) las estadisticas de la plataforma. */
+function mostrarReportesPlataforma() {
+  const contenedor = document.getElementById("reportesPlataforma");
+  if (!contenedor || !tieneRol(Sesion.usuario(), ACCESO.REPORTE_PLATAFORMA)) return;
+  contenedor.innerHTML = `
+    <span>Estadísticas de la plataforma:</span>
+    <button type="button" class="panelBtn" data-descargar="/reportes/plataforma/?formato=pdf" data-nombre="estadisticas-plataforma.pdf">Descargar PDF</button>
+    <button type="button" class="panelBtn secundario" data-descargar="/reportes/plataforma/?formato=xlsx" data-nombre="estadisticas-plataforma.xlsx">Descargar Excel</button>`;
+  contenedor.hidden = false;
+}
 
 async function cargarResumen() {
   try {
@@ -58,6 +70,8 @@ async function cargarCursos() {
             <button class="panelBtn" data-editar="${curso.id}">Editar</button>
             <a class="panelBtn" href="preguntas.html?curso=${curso.id}">Preguntas</a>
             <a class="panelBtn" href="diccionario.html?curso=${curso.id}">Diccionario</a>
+            <button type="button" class="panelBtn secundario" data-descargar="/reportes/cursos/${curso.id}/progreso/?formato=pdf" data-nombre="progreso-${esc(curso.nombre)}.pdf" title="Progreso de los estudiantes en PDF">Progreso PDF</button>
+            <button type="button" class="panelBtn secundario" data-descargar="/reportes/cursos/${curso.id}/progreso/?formato=xlsx" data-nombre="progreso-${esc(curso.nombre)}.xlsx" title="Progreso de los estudiantes en Excel">Excel</button>
             <button class="panelBtn peligro" data-eliminar="${curso.id}">Eliminar</button>
           </td>
         </tr>`

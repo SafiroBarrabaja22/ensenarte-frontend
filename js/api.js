@@ -123,7 +123,8 @@ async function pedirRefresco() {
 /**
  * Peticion generica a la API.
  * @param {string} ruta   Ruta relativa, por ejemplo "/cursos/".
- * @param {object} opciones  { metodo, cuerpo, autenticado, esFormData }
+ * @param {object} opciones  { metodo, cuerpo, autenticado, esFormData, binario }
+ *   binario: devuelve { blob, nombre } en vez de JSON (descarga de archivos).
  */
 async function api(ruta, opciones = {}) {
   const {
@@ -131,6 +132,7 @@ async function api(ruta, opciones = {}) {
     cuerpo = null,
     autenticado = true,
     esFormData = false,
+    binario = false,
     reintento = false,
   } = opciones;
 
@@ -161,6 +163,11 @@ async function api(ruta, opciones = {}) {
 
   if (respuesta.status === 204) return null;
 
+  // Archivo (PDF, Excel): los errores siguen llegando en JSON y se tratan abajo.
+  if (binario && respuesta.ok) {
+    return { blob: await respuesta.blob(), nombre: nombreDeArchivo(respuesta) };
+  }
+
   let datos = null;
   const tipo = respuesta.headers.get("content-type") || "";
   if (tipo.includes("application/json")) {
@@ -183,6 +190,60 @@ async function api(ruta, opciones = {}) {
 
   return datos;
 }
+
+// ==========================================================
+// DESCARGA DE ARCHIVOS PROTEGIDOS (reportes PDF / Excel)
+// ==========================================================
+
+/** Nombre que propone la API en Content-Disposition (expuesto por CORS). */
+function nombreDeArchivo(respuesta) {
+  const cabecera = respuesta.headers.get("Content-Disposition") || "";
+  const coincidencia = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(cabecera);
+  return coincidencia ? decodeURIComponent(coincidencia[1]) : null;
+}
+
+/**
+ * Descarga un archivo protegido. Un <a href> directo a la API NO lleva el token
+ * JWT y responderia 401: se pide con fetch (cabecera Authorization, con refresco
+ * automatico), se convierte en blob y se descarga con un enlace temporal.
+ */
+async function descargarArchivo(ruta, nombreRespaldo) {
+  const { blob, nombre } = await api(ruta, { binario: true });
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = nombre || nombreRespaldo || "reporte";
+  enlace.hidden = true;
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * Cualquier boton con data-descargar="/ruta/de/la/api/" descarga ese archivo.
+ * data-nombre: nombre de respaldo. data-mensaje: id donde mostrar errores.
+ */
+document.addEventListener("click", async (evento) => {
+  const boton = evento.target.closest("[data-descargar]");
+  if (!boton || boton.disabled) return;
+  evento.preventDefault();
+  const contenido = boton.innerHTML;
+  boton.disabled = true;
+  boton.setAttribute("aria-busy", "true");
+  boton.textContent = "Generando…";
+  try {
+    await descargarArchivo(boton.dataset.descargar, boton.dataset.nombre);
+  } catch (error) {
+    if (typeof mostrarMensaje === "function") {
+      mostrarMensaje(boton.dataset.mensaje || "mensaje", `No se pudo descargar: ${error.message}`);
+    }
+  } finally {
+    boton.disabled = false;
+    boton.removeAttribute("aria-busy");
+    boton.innerHTML = contenido;
+  }
+});
 
 /** DRF pagina por defecto: devuelve siempre un array. */
 function comoLista(datos) {
@@ -230,6 +291,8 @@ const ACCESO = Object.freeze({
   PANEL_CONTENIDO: [ROLES.PROFESOR, ROLES.CREADOR, ROLES.ADMINISTRADOR],
   // Biblioteca visual (recursos, avatares e insignias).
   BIBLIOTECA: [ROLES.INTERPRETE, ROLES.ADMINISTRADOR],
+  // Reporte de estadisticas de la plataforma.
+  REPORTE_PLATAFORMA: [ROLES.ADMINISTRADOR],
 });
 
 /** True si el usuario tiene al menos uno de los roles indicados. */
