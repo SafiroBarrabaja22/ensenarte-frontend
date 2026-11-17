@@ -55,8 +55,38 @@ INICIO_CSP = '<meta http-equiv="Content-Security-Policy"'
 CHARSET = '<meta charset="UTF-8">'
 
 
-def paginas():
-    return sorted(list(RAIZ.glob("*.html")) + list(RAIZ.glob("pages/**/*.html")))
+# Paginas a las que se aplica la CSP. La lista es fija a proposito: el script
+# solo escribe en estos archivos. Si creas una pagina nueva, agregala aqui.
+PAGINAS = (
+    "index.html",
+    "pages/contacto.html",
+    "pages/curso.html",
+    "pages/cursos-usuario.html",
+    "pages/cursos.html",
+    "pages/diccionario.html",
+    "pages/editar-perfil.html",
+    "pages/evaluacion-camara.html",
+    "pages/evaluacion.html",
+    "pages/evaluaciones.html",
+    "pages/inicio-usuario.html",
+    "pages/login.html",
+    "pages/panel/diccionario.html",
+    "pages/panel/index.html",
+    "pages/panel/preguntas.html",
+    "pages/panel/recursos.html",
+    "pages/perfil.html",
+    "pages/recuperar.html",
+    "pages/retroalimentacion.html",
+    "pages/signup.html",
+    "pages/sobre-nosotros.html",
+)
+
+
+def paginas_sin_registrar():
+    """Paginas .html que existen pero no estan en PAGINAS (solo para avisar)."""
+    existentes = {p.relative_to(RAIZ).as_posix() for p in RAIZ.glob("*.html")}
+    existentes |= {p.relative_to(RAIZ).as_posix() for p in RAIZ.glob("pages/**/*.html")}
+    return sorted(existentes - set(PAGINAS))
 
 
 def quitar_csp(texto):
@@ -95,12 +125,16 @@ def insertar_csp(texto):
 
 
 def aplicar():
-    for pagina in paginas():
+    faltan = paginas_sin_registrar()
+    if faltan:
+        sys.exit("Agrega estas paginas a PAGINAS en scripts/aplicar_csp.py: " + ", ".join(faltan))
+    for relativa in PAGINAS:
+        pagina = RAIZ / relativa
         texto = insertar_csp(quitar_csp(pagina.read_text(encoding="utf-8")))
         if texto is None:
-            sys.exit(f"{pagina}: no tiene <meta charset=\"UTF-8\">")
+            sys.exit(f"{relativa}: no tiene <meta charset=\"UTF-8\">")
         pagina.write_text(texto, encoding="utf-8")
-    print(f"CSP aplicada en {len(paginas())} paginas.")
+    print(f"CSP aplicada en {len(PAGINAS)} paginas.")
 
 
 if __name__ == "__main__":
