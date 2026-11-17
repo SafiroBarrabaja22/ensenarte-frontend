@@ -19,7 +19,7 @@
                     <p class="heroSubtitle">Explora tus cursos y continúa practicando a tu ritmo.</p>
                     <div class="btnContainer">
                         <a href="pages/cursos.html" class="btnHome btnLeft">Consulta nuestros cursos</a>
-                        <a href="pages/panel/recursos.html" class="btnHome btnRight"><svg class="icon icon16" aria-hidden="true"><use href="#i-photo"></use></svg> Biblioteca visual</a>
+                        <a data-acceso="BIBLIOTECA" href="pages/panel/recursos.html" class="btnHome btnRight"><svg class="icon icon16" aria-hidden="true"><use href="#i-photo"></use></svg> Biblioteca visual</a>
                     </div>
                     <div id="accesoPanel"></div>
                 </div>
@@ -49,11 +49,11 @@
         <section id="contacto" class="contactSection"><div class="homeContainer contactBanner"><div><h2>¿Tienes una sugerencia?</h2><p>Cuéntanos cómo mejorar enSEÑArte.</p></div><a href="pages/contacto.html" class="contactButton"><svg class="icon icon16" aria-hidden="true"><use href="#i-message-circle"></use></svg>Manda tu ticket aquí</a></div></section>
     </main>
 
-    <footer class="siteFooter"><div class="homeContainer"><span>enSEÑArte · Aprende Lengua de Señas Colombiana</span><nav><a href="pages/cursos.html">Cursos</a><a href="pages/panel/recursos.html">Biblioteca visual</a><a href="pages/contacto.html">Contacto</a></nav></div></footer>
+    <footer class="siteFooter"><div class="homeContainer"><span>enSEÑArte · Aprende Lengua de Señas Colombiana</span><nav><a href="pages/cursos.html">Cursos</a><a data-acceso="BIBLIOTECA" href="pages/panel/recursos.html">Biblioteca visual</a><a href="pages/contacto.html">Contacto</a></nav></div></footer>
 
     <script src="js/config.js?v=2"></script>
-    <script src="js/api.js"></script>
-    <script src="js/layout.js?v=5"></script>
+    <script src="js/api.js?v=5"></script>
+    <script src="js/layout.js?v=10"></script>
     <script>
         const esVisitante = !Sesion.activa();
         document.body.classList.toggle("homePublico", esVisitante);
@@ -70,4 +70,4 @@
         }
     </script>
 </body>
-     <script src="js/layout.js?v=7"></script>
+     <script src="js/layout.js?v=10"></script>

@@ -7,7 +7,7 @@ let filtroActual = "todos";
 let busquedaActual = "";
 
 (async function iniciar() {
-  if (esVistaUsuario && !requiereSesion()) return;
+  if (esVistaUsuario && !(await exigirRol(ACCESO.APRENDIZAJE))) return;
 
   montarLayout(Sesion.activa() ? "usuario" : "publico");
   montarFooter();

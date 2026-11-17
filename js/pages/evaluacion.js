@@ -10,7 +10,7 @@ let resumenInterfaz = [];
 let resultadoFinal = null;
 
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
   montarLayout("usuario");
   if (!slugCurso) {
     window.location.href = "cursos-usuario.html";

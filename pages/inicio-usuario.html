@@ -10,7 +10,7 @@
         <script src="../js/layout.js?v=7"></script>
         <script src="../js/layout.js?v=7"></script>
 </head>
-<body class="bodyBase">
+<body class="bodyBase paginaProtegida">
     <div id="layout"></div>
 
     <main class="bodyHome">
@@ -22,7 +22,7 @@
                     <p class="heroSubtitle">Explora tus cursos y continúa practicando a tu ritmo.</p>
                     <div class="btnContainer">
                         <a href="cursos-usuario.html" class="btnHome btnLeft">Consulta nuestros cursos</a>
-                        <a href="panel/recursos.html" class="btnHome btnRight"><svg class="icon icon16" aria-hidden="true"><use href="#i-photo"></use></svg> Biblioteca visual</a>
+                        <a data-acceso="BIBLIOTECA" href="panel/recursos.html" class="btnHome btnRight"><svg class="icon icon16" aria-hidden="true"><use href="#i-photo"></use></svg> Biblioteca visual</a>
                     </div>
                     <div id="accesoPanel"></div>
                 </div>
@@ -39,12 +39,12 @@
         <section id="contacto" class="contactSection"><div class="homeContainer contactBanner"><div><h2>¿Tienes una sugerencia?</h2><p>Cuéntanos cómo mejorar enSEÑArte.</p></div><a href="contacto.html" class="contactButton"><svg class="icon icon16" aria-hidden="true"><use href="#i-message-circle"></use></svg>Manda tu ticket aquí</a></div></section>
     </main>
 
-    <footer class="siteFooter"><div class="homeContainer"><span>enSEÑArte · Aprende Lengua de Señas Colombiana</span><nav><a href="cursos-usuario.html">Cursos</a><a href="panel/recursos.html">Biblioteca visual</a><a href="contacto.html">Contacto</a></nav></div></footer>
+    <footer class="siteFooter"><div class="homeContainer"><span>enSEÑArte · Aprende Lengua de Señas Colombiana</span><nav><a href="cursos-usuario.html">Cursos</a><a data-acceso="BIBLIOTECA" href="panel/recursos.html">Biblioteca visual</a><a href="contacto.html">Contacto</a></nav></div></footer>
 
     <script src="../js/config.js?v=2"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/layout.js?v=5"></script>
+    <script src="../js/api.js?v=5"></script>
+    <script src="../js/layout.js?v=10"></script>
     <script src="../js/auth.js"></script>
-    <script src="../js/pages/inicio-usuario.js?v=4"></script>
-     <script src="../js/layout.js?v=7"></script>
+    <script src="../js/pages/inicio-usuario.js?v=5"></script>
+     <script src="../js/layout.js?v=10"></script>
 </html>

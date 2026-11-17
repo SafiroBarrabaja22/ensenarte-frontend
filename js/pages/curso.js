@@ -1,7 +1,7 @@
 /** Vista interna del curso: diccionario y evaluación. */
 
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
 
   montarLayout("usuario");
   asegurarPlantillaCurso();

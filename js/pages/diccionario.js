@@ -1,7 +1,7 @@
 /** Diccionario visual: tarjetas que se voltean (imagen -> gif de la seña). */
 
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
 
   montarLayout("usuario");
 

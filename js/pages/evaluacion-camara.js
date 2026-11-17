@@ -61,8 +61,8 @@ let datosCursoResultado = { nombre: "Curso", icono: "books" };
 let sesion = null;
 
 // ---------------------------------------------------------------- arranque
-(function iniciar() {
-  if (!requiereSesion()) return;
+(async function iniciar() {
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
   montarLayout("usuario");
   if (!slugCurso) {
     window.location.href = "cursos-usuario.html";

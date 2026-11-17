@@ -3,7 +3,7 @@ import { renderResultados } from "../lib/resultados.js?v=5";
 const esc = valor => String(valor ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
   montarLayout("usuario");
   const slug = new URLSearchParams(window.location.search).get("curso");
   if (!slug) { window.location.href = "cursos-usuario.html"; return; }

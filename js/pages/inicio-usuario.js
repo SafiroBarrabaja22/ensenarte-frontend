@@ -1,5 +1,5 @@
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
 
   montarLayout("usuario");
   montarFooter();
@@ -9,7 +9,7 @@
     document.getElementById("saludo").innerHTML =
       `Bienvenid@, <span>${escInicio(usuario.nombre)}</span>`;
 
-    if (usuario.es_creador) {
+    if (tieneRol(usuario, ACCESO.PANEL_CONTENIDO)) {
       document.getElementById("accesoPanel").innerHTML =
         `<a href="panel/index.html" class="enlacePanel">${iconoSvg("shield-lock", "icon icon16")} Panel de administración</a>`;
     }

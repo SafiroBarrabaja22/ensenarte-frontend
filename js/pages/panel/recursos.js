@@ -19,26 +19,12 @@ const RECURSOS_POR_PAGINA = 50;
 let paginaRecursos = 1;
 
 (async function iniciarBiblioteca() {
-  if (!Sesion.activa()) {
-    irALogin();
-    return;
-  }
-
-  try {
-    const usuario = await api("/auth/perfil/");
-    Sesion.actualizarUsuario(usuario);
-    if (!usuario.es_interprete) {
-      window.location.href = "../inicio-usuario.html";
-      return;
-    }
-    document.getElementById("volverSitioRecursos").href =
-      usuario.es_creador || usuario.es_profesor
-        ? "index.html"
-        : "../inicio-usuario.html";
-  } catch (error) {
-    console.error("No se pudo validar el acceso a la biblioteca.", error);
-    return;
-  }
+  // Interprete o Administrador. Si no, exigirRol redirige.
+  const usuario = await exigirRol(ACCESO.BIBLIOTECA);
+  if (!usuario) return;
+  document.getElementById("volverSitioRecursos").href = tieneRol(usuario, ACCESO.PANEL_CONTENIDO)
+    ? "index.html"
+    : "../inicio-usuario.html";
 
   document.getElementById("salirRecursos").addEventListener("click", (evento) => {
     evento.preventDefault();

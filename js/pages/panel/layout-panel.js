@@ -1,30 +1,12 @@
 /** Cabecera del panel y control de acceso. */
 
 async function montarPanel() {
-  if (!Sesion.activa()) {
-    irALogin();
-    return false;
-  }
-
-  let usuario = Sesion.usuario();
-  if (!usuario || (!usuario.es_creador && !usuario.es_profesor)) {
-    try {
-      usuario = await apiPanel("/auth/perfil/");
-      Sesion.actualizarUsuario(usuario);
-    } catch (error) {
-      console.error("No se pudo validar el acceso al panel.", error);
-      mostrarErrorCargaPanel("No se pudo validar el acceso al panel: " + (error.message || "Error de conexión."));
-      return false;
-    }
-  }
-
-  if (usuario && !usuario.es_creador && !usuario.es_profesor) {
-    window.location.href = "../inicio-usuario.html";
-    return false;
-  }
+  // Profesor, CreadorDeCursos o Administrador. Si no, exigirRol redirige.
+  const usuario = await exigirRol(ACCESO.PANEL_CONTENIDO);
+  if (!usuario) return false;
 
   const contenedor = document.getElementById("panelLayout");
-  const enlaceBiblioteca = usuario.es_interprete
+  const enlaceBiblioteca = tieneRol(usuario, ACCESO.BIBLIOTECA)
     ? '<a href="recursos.html">Biblioteca visual</a>'
     : "";
   contenedor.innerHTML = `

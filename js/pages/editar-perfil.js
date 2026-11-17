@@ -10,7 +10,7 @@ let vistaPreviaAvatarUrl = null;
 let fotoPerfilUrl = "";
 
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
 
   montarLayout("usuario");
 

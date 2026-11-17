@@ -1,6 +1,6 @@
 /** Selector entre evaluacion de preguntas y evaluacion con camara. */
 (async function iniciar() {
-  if (!requiereSesion()) return;
+  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
   montarLayout("usuario");
   const slug = new URLSearchParams(location.search).get("curso");
   if (!slug) { location.href = "cursos-usuario.html"; return; }

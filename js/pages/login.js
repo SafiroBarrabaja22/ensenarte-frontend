@@ -12,14 +12,13 @@ document.getElementById("formLogin").addEventListener("submit", async (evento) =
       document.getElementById("usuario").value.trim(),
       document.getElementById("password").value
     );
-    if (usuario.es_interprete && !usuario.es_creador && !usuario.es_profesor) {
-      window.location.href = "panel/recursos.html";
-    } else {
-      window.location.href =
-        usuario.es_creador || usuario.es_profesor
-          ? "panel/index.html"
-          : "inicio-usuario.html";
+    const destino = paginaInicioDe(usuario);
+    if (!destino) {
+      Sesion.cerrar();
+      mostrarMensaje("mensaje", "Tu cuenta no tiene ningún rol asignado. Pide a un administrador que te asigne uno.");
+      return;
     }
+    window.location.href = prefijoRaiz() + destino;
   } catch (error) {
     const texto =
       error.status === 401

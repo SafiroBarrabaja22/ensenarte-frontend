@@ -20,12 +20,16 @@ function montarLayout(tipo) {
     <a href="${raiz}pages/contacto.html">Soporte</a>
     <a href="${raiz}pages/sobre-nosotros.html">Sobre nosotros</a>`;
 
+  // Cada opcion aparece solo si el rol activo puede usarla (ver ACCESO en api.js).
+  const puedeAprender = tieneRol(usuario, ACCESO.APRENDIZAJE);
+  const puedePanel = tieneRol(usuario, ACCESO.PANEL_CONTENIDO);
+  const puedeBiblioteca = tieneRol(usuario, ACCESO.BIBLIOTECA);
   const enlacesUsuario = `
-    <a href="${raiz}pages/inicio-usuario.html">Inicio</a>
-    ${usuario && usuario.es_interprete ? `<a href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
-    <a href="${raiz}pages/cursos-usuario.html">Cursos</a>
+    ${puedeAprender ? `<a href="${raiz}pages/inicio-usuario.html">Inicio</a>` : ""}
+    ${puedeAprender ? `<a href="${raiz}pages/cursos-usuario.html">Cursos</a>` : ""}
+    ${puedePanel ? `<a href="${raiz}pages/panel/index.html">Panel</a>` : ""}
+    ${puedeBiblioteca ? `<a href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
     <a href="${raiz}pages/contacto.html">Soporte</a>
-    ${usuario && usuario.es_creador ? `<a href="${raiz}pages/panel/index.html">Panel</a>` : ""}
     <a href="#" id="linkCerrarSesion">Cerrar sesion</a>`;
 
   const bloqueDerecho =
@@ -35,7 +39,7 @@ function montarLayout(tipo) {
            <img class="avatarHeader" src="${avatarDe(usuario)}" alt="" loading="lazy">
            <span class="nombreHeader">${usuario ? usuario.nombre : ""}</span>
          </a>
-         ${usuario && usuario.es_interprete ? `<a class="perfilHeader" href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
+         ${puedeBiblioteca ? `<a class="perfilHeader" href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
          </div>`
       : `<nav class="menu">
            <a href="${raiz}pages/login.html">Iniciar sesión</a>
@@ -59,6 +63,8 @@ function montarLayout(tipo) {
       </div>
     </div>`;
 
+  ocultarSegunRol(usuario);
+
   const cerrar = document.getElementById("linkCerrarSesion");
   if (cerrar) {
     cerrar.addEventListener("click", (evento) => {
@@ -67,6 +73,18 @@ function montarLayout(tipo) {
       window.location.href = raiz + "index.html";
     });
   }
+}
+
+/**
+ * Enlaces escritos en el HTML con data-acceso="BIBLIOTECA" (o otra clave de
+ * ACCESO) se quitan si el usuario no tiene ese acceso. Solo es presentacion:
+ * la pagina destino vuelve a verificar con exigirRol y la API con sus permisos.
+ */
+function ocultarSegunRol(usuario) {
+  document.querySelectorAll("[data-acceso]").forEach((elemento) => {
+    const roles = ACCESO[elemento.dataset.acceso];
+    if (!roles || !tieneRol(usuario, roles)) elemento.remove();
+  });
 }
 
 function spriteIconos() {

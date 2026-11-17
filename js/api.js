@@ -121,6 +121,16 @@ async function api(ruta, opciones = {}) {
     datos = await respuesta.json();
   }
 
+  // Permiso denegado: el rol del usuario no alcanza para esta accion.
+  if (respuesta.status === 403) {
+    const detalle = datos && datos.detail ? ` ${datos.detail}` : "";
+    throw new ApiError(
+      `Permiso denegado: tu rol no permite realizar esta acción.${detalle}`,
+      403,
+      datos
+    );
+  }
+
   if (!respuesta.ok) {
     throw new ApiError(mensajeDeError(datos, respuesta.status), respuesta.status, datos);
   }
@@ -146,4 +156,122 @@ function requiereSesion() {
     return false;
   }
   return true;
+}
+
+// ==========================================================
+// ROLES
+// ==========================================================
+
+/**
+ * Nombres de los roles. Deben coincidir EXACTAMENTE con
+ * ensenarte-backend/apps/usuarios/roles.py: no escribir estos strings en otro lugar.
+ */
+const ROLES = Object.freeze({
+  ESTUDIANTE: "Estudiante",
+  PROFESOR: "Profesor",
+  INTERPRETE: "Interprete",
+  CREADOR: "CreadorDeCursos",
+  ADMINISTRADOR: "Administrador",
+});
+
+/** Quien entra a cada tipo de pagina. Refleja apps/cursos/permissions.py. */
+const ACCESO = Object.freeze({
+  // Cursos, diccionario, evaluaciones, perfil: cualquier rol.
+  APRENDIZAJE: Object.values(ROLES),
+  // Panel de cursos, preguntas y diccionario.
+  PANEL_CONTENIDO: [ROLES.PROFESOR, ROLES.CREADOR, ROLES.ADMINISTRADOR],
+  // Biblioteca visual (recursos, avatares e insignias).
+  BIBLIOTECA: [ROLES.INTERPRETE, ROLES.ADMINISTRADOR],
+});
+
+/** True si el usuario tiene al menos uno de los roles indicados. */
+function tieneRol(usuario, roles) {
+  const propios = (usuario && Array.isArray(usuario.roles)) ? usuario.roles : [];
+  return roles.some((rol) => propios.includes(rol));
+}
+
+/** Pagina de inicio segun el rol (ruta desde la raiz del sitio), o null si no tiene rol. */
+function paginaInicioDe(usuario) {
+  if (tieneRol(usuario, ACCESO.PANEL_CONTENIDO)) return "pages/panel/index.html";
+  if (tieneRol(usuario, ACCESO.BIBLIOTECA)) return "pages/panel/recursos.html";
+  if (tieneRol(usuario, ACCESO.APRENDIZAJE)) return "pages/inicio-usuario.html";
+  return null;
+}
+
+/**
+ * Verifica sesion y rol ANTES de mostrar la pagina.
+ *
+ * Las paginas protegidas tienen <body class="paginaProtegida">, que extra.css
+ * deja oculto hasta que esta funcion agrega "accesoVerificado". Los roles se
+ * piden al servidor en cada carga (no se confia en el localStorage, que el
+ * usuario puede editar y que queda viejo si le cambian el rol).
+ *
+ * Devuelve el usuario si puede entrar; si no, redirige y devuelve null.
+ */
+async function exigirRol(rolesPermitidos) {
+  if (!Sesion.activa()) {
+    irALogin();
+    return null;
+  }
+
+  let usuario;
+  try {
+    usuario = await api("/auth/perfil/");
+    Sesion.actualizarUsuario(usuario);
+  } catch (error) {
+    if (error.status !== 401) {
+      mostrarBloqueoAcceso(`No se pudo verificar tu acceso: ${error.message}`);
+    }
+    return null;
+  }
+
+  if (!tieneRol(usuario, rolesPermitidos)) {
+    const destino = paginaInicioDe(usuario);
+    if (destino) {
+      window.location.replace(`${prefijoRaiz()}${destino}?acceso=denegado`);
+    } else {
+      mostrarBloqueoAcceso(
+        "Tu cuenta no tiene ningún rol asignado. Pide a un administrador que te asigne uno."
+      );
+    }
+    return null;
+  }
+
+  document.body.classList.add("accesoVerificado");
+  avisarSiAccesoDenegado();
+  return usuario;
+}
+
+/** Reemplaza la pagina por un mensaje cuando no se puede entrar. */
+function mostrarBloqueoAcceso(texto) {
+  const raiz = prefijoRaiz();
+  document.body.innerHTML = `
+    <main class="bloqueoAcceso" role="alert">
+      <h1>Permiso denegado</h1>
+      <p></p>
+      <a href="${raiz}index.html">Ir al inicio</a>
+      <a href="#" id="bloqueoCerrarSesion">Cerrar sesión</a>
+    </main>`;
+  document.querySelector(".bloqueoAcceso p").textContent = texto;
+  document.getElementById("bloqueoCerrarSesion").addEventListener("click", (evento) => {
+    evento.preventDefault();
+    Sesion.cerrar();
+    irALogin();
+  });
+  document.body.classList.add("accesoVerificado");
+}
+
+/** Si se llego aqui redirigido desde una pagina sin permiso, lo explica. */
+function avisarSiAccesoDenegado() {
+  const parametros = new URLSearchParams(window.location.search);
+  if (parametros.get("acceso") !== "denegado") return;
+  const aviso = document.createElement("div");
+  aviso.className = "avisoAccesoDenegado";
+  aviso.setAttribute("role", "alert");
+  aviso.textContent =
+    "Permiso denegado: tu rol no tiene acceso a la página que intentaste abrir. Te trajimos a tu inicio.";
+  document.body.prepend(aviso);
+  parametros.delete("acceso");
+  const consulta = parametros.toString();
+  window.history.replaceState(null, "", window.location.pathname + (consulta ? `?${consulta}` : ""));
 }
