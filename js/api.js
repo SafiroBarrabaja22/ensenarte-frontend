@@ -32,9 +32,24 @@ const Sesion = {
     const t = Sesion.tokens();
     return Boolean(t && t.access);
   },
+  /**
+   * Cierra la sesion: borra access, refresh y usuario del navegador y pide al
+   * servidor que invalide el refresh (lista negra). Sin ese paso, un refresh
+   * copiado antes seguiria sirviendo hasta 7 dias.
+   */
   cerrar() {
+    const tokens = Sesion.tokens();
     localStorage.removeItem(TOKENS_KEY);
     localStorage.removeItem(USUARIO_KEY);
+    if (tokens && tokens.refresh) {
+      // keepalive: la peticion se completa aunque la pagina navegue al login.
+      fetch(`${CONFIG.API_BASE_URL}/auth/logout/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh: tokens.refresh }),
+        keepalive: true,
+      }).catch(() => {});
+    }
   },
 };
 
@@ -57,20 +72,51 @@ function mensajeDeError(datos, status) {
   return `Error ${status}`;
 }
 
-async function refrescarToken() {
+/**
+ * Renueva el access con el refresh. Devuelve true si hay tokens nuevos.
+ *
+ * - Si varias peticiones vencen a la vez, comparten UN solo refresco. El backend
+ *   rota el refresh y anula el anterior, asi que dos refrescos en paralelo con el
+ *   mismo refresh harian fallar al segundo y botarian al usuario.
+ * - Si otra pestana ya renovo (el localStorage es compartido), se usa lo suyo.
+ * - Un error de red NO cierra la sesion: se propaga como error normal.
+ */
+let refrescoEnCurso = null;
+
+function refrescarToken() {
+  if (!refrescoEnCurso) {
+    refrescoEnCurso = pedirRefresco().finally(() => {
+      refrescoEnCurso = null;
+    });
+  }
+  return refrescoEnCurso;
+}
+
+async function pedirRefresco() {
   const tokens = Sesion.tokens();
   if (!tokens || !tokens.refresh) return false;
 
-  const respuesta = await fetch(`${CONFIG.API_BASE_URL}/auth/refresh/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refresh: tokens.refresh }),
-  });
+  let respuesta;
+  try {
+    respuesta = await fetch(`${CONFIG.API_BASE_URL}/auth/refresh/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh: tokens.refresh }),
+    });
+  } catch (error) {
+    throw new ApiError("No hay conexión con el servidor. Revisa tu red e inténtalo de nuevo.", 0, null);
+  }
 
-  if (!respuesta.ok) return false;
+  if (!respuesta.ok) {
+    // Otra pestana pudo rotar el refresh mientras tanto: si cambio, vale ese.
+    const actuales = Sesion.tokens();
+    return Boolean(actuales && actuales.refresh && actuales.refresh !== tokens.refresh);
+  }
 
   const datos = await respuesta.json();
-  Sesion.guardar({ ...tokens, access: datos.access });
+  // Con rotacion el servidor devuelve tambien un refresh nuevo: hay que
+  // guardarlo, porque el anterior ya quedo invalidado.
+  Sesion.guardar({ access: datos.access, refresh: datos.refresh || tokens.refresh });
   return true;
 }
 
@@ -109,8 +155,8 @@ async function api(ruta, opciones = {}) {
     const ok = await refrescarToken();
     if (ok) return api(ruta, { ...opciones, reintento: true });
     Sesion.cerrar();
-    irALogin();
-    throw new ApiError("Tu sesion expiro.", 401, null);
+    irALogin("expirada");
+    throw new ApiError("Tu sesión expiró. Inicia sesión de nuevo.", 401, null);
   }
 
   if (respuesta.status === 204) return null;
@@ -145,8 +191,10 @@ function comoLista(datos) {
   return [];
 }
 
-function irALogin() {
-  window.location.href = prefijoRaiz() + "pages/login.html";
+/** @param {string} [motivo] p. ej. "expirada": login.html muestra un aviso. */
+function irALogin(motivo) {
+  const consulta = motivo ? `?sesion=${encodeURIComponent(motivo)}` : "";
+  window.location.href = prefijoRaiz() + "pages/login.html" + consulta;
 }
 
 /** Bloquea una pagina si no hay sesion iniciada. */

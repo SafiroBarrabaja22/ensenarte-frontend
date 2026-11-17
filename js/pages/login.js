@@ -1,6 +1,12 @@
 const enlaceAdmin = document.getElementById("enlaceAdmin");
 enlaceAdmin.href = `${new URL(CONFIG.API_BASE_URL).origin}/admin/`;
 
+// Llegada desde api.js cuando ya no se pudo renovar la sesion (refresh vencido,
+// cerrado en otro dispositivo o invalidado).
+if (new URLSearchParams(window.location.search).get("sesion") === "expirada") {
+  mostrarMensaje("mensaje", "Tu sesión expiró. Inicia sesión de nuevo para continuar.");
+}
+
 document.getElementById("formLogin").addEventListener("submit", async (evento) => {
   evento.preventDefault();
   const boton = document.getElementById("btnEnviar");
