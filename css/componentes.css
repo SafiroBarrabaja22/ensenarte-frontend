@@ -1,0 +1,288 @@
+/* ==========================================================================
+   componentes.css — Componentes compartidos por las vistas de usuario y el panel
+   --------------------------------------------------------------------------
+   Se carga como ÚLTIMA hoja en todas las páginas, para que un mismo componente
+   se vea igual en cualquier vista. Solo define apariencia (color, borde, radio,
+   tipografía, altura); la posición y el ancho siguen en cada hoja.
+
+   Las clases antiguas se agrupan aquí por variante. Para un componente nuevo,
+   usa directamente las clases genéricas:
+     .boton .boton--secundario .boton--peligro .boton--compacto
+     .campo  .tarjeta  .mensajeError  .mensajeOk
+   ========================================================================== */
+
+/* ------------------------------------------------------------------ Botones */
+
+.boton,
+.panelBtn,
+.panelBtnPequeno,
+.botonGuardarPerfil,
+.botonCancelarPerfil,
+.botonCambiarPassword,
+.botonContinuar,
+.botonAccionCurso,
+.botonComprobar,
+.botonResultadoPrincipal,
+.botonResultadoSecundario,
+.botonTipo,
+.botonSecundario,
+.botonSalirEvaluacion,
+.botonPeligro,
+.botonReintentarPermiso {
+    box-sizing: border-box;
+    min-height: var(--boton-alto);
+    padding-inline: var(--boton-relleno-x);
+    border: 1px solid transparent;
+    border-radius: var(--boton-radio);
+    font-family: var(--fuente-base);
+    font-size: var(--boton-tamano-fuente);
+    font-weight: var(--boton-peso);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+/* Tamaño compacto: acciones de tablas, barras y diálogos */
+.boton--compacto,
+.panelBtn,
+.botonSecundario,
+.botonSalirEvaluacion,
+.botonPeligro,
+.botonReintentarPermiso {
+    min-height: var(--boton-alto-compacto);
+    padding-inline: var(--boton-relleno-x-compacto);
+}
+
+/* Principal: teal */
+.boton,
+.panelBtn,
+.botonGuardarPerfil,
+.botonContinuar,
+.botonAccionCurso,
+.botonComprobar,
+.botonResultadoPrincipal,
+.botonTipo {
+    border-color: var(--color-teal);
+    background: var(--color-teal);
+    color: var(--color-blanco);
+}
+
+.boton:hover,
+.panelBtn:hover,
+.botonGuardarPerfil:hover,
+.botonContinuar:hover,
+.botonAccionCurso:hover,
+.botonComprobar:hover,
+.botonResultadoPrincipal:hover,
+.botonTipo:hover {
+    border-color: var(--color-teal-oscuro);
+    background: var(--color-teal-oscuro);
+    color: var(--color-blanco);
+}
+
+/* Secundario: contorno teal sobre blanco */
+.boton--secundario,
+.panelBtn.secundario,
+.panelBtnPequeno,
+.botonCancelarPerfil,
+.botonSecundario,
+.botonSalirEvaluacion,
+.botonResultadoSecundario {
+    border-color: var(--color-teal);
+    background: var(--color-blanco);
+    color: var(--color-teal-oscuro);
+}
+
+.boton--secundario:hover,
+.panelBtn.secundario:hover,
+.panelBtnPequeno:hover,
+.botonCancelarPerfil:hover,
+.botonSecundario:hover,
+.botonSalirEvaluacion:hover,
+.botonResultadoSecundario:hover {
+    border-color: var(--color-teal);
+    background: var(--color-menta);
+    color: var(--color-teal-oscuro);
+}
+
+/* Peligro: coral */
+.boton--peligro,
+.panelBtn.peligro,
+.botonPeligro,
+.botonCambiarPassword,
+.botonLimpiarPreview {
+    border-color: var(--color-coral);
+    background: var(--color-coral);
+    color: var(--color-blanco);
+}
+
+.boton--peligro:hover,
+.panelBtn.peligro:hover,
+.botonPeligro:hover,
+.botonCambiarPassword:hover,
+.botonLimpiarPreview:hover {
+    border-color: var(--color-coral-oscuro);
+    background: var(--color-coral-oscuro);
+    color: var(--color-blanco);
+}
+
+/* Peligro suave: contorno coral (reintentar, acciones reversibles) */
+.botonReintentarPermiso {
+    border-color: var(--color-coral);
+    background: var(--color-blanco);
+    color: var(--color-error-texto);
+}
+
+.botonReintentarPermiso:hover {
+    background: var(--color-coral-palido);
+}
+
+/* Estados comunes */
+.boton:disabled,
+.panelBtn:disabled,
+.botonGuardarPerfil:disabled,
+.botonCambiarPassword:disabled,
+.botonComprobar:disabled,
+.botonResultadoSecundario:disabled,
+.botonPeligro:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.boton:focus-visible,
+.panelBtn:focus-visible,
+.panelBtnPequeno:focus-visible,
+.botonGuardarPerfil:focus-visible,
+.botonCancelarPerfil:focus-visible,
+.botonCambiarPassword:focus-visible,
+.botonContinuar:focus-visible,
+.botonAccionCurso:focus-visible,
+.botonComprobar:focus-visible,
+.botonResultadoPrincipal:focus-visible,
+.botonResultadoSecundario:focus-visible,
+.botonTipo:focus-visible,
+.botonSecundario:focus-visible,
+.botonSalirEvaluacion:focus-visible,
+.botonPeligro:focus-visible,
+.botonReintentarPermiso:focus-visible {
+    outline: var(--contorno-foco);
+    outline-offset: 2px;
+}
+
+/* ------------------------------------------------------- Campos de formulario */
+
+.campo,
+.inputLogin,
+.inputCont,
+.textareaCont,
+.panelForm input[type="text"],
+.panelForm input[type="number"],
+.panelForm input[type="search"],
+.panelForm textarea,
+.panelForm select,
+.filtrosRecursos input,
+.filtrosRecursos select,
+.modalRecursos input[type="search"] {
+    box-sizing: border-box;
+    padding: var(--campo-relleno);
+    border: 1px solid var(--campo-borde);
+    border-radius: var(--campo-radio);
+    background: var(--campo-fondo);
+    color: var(--color-tinta);
+    font-family: var(--fuente-base);
+    font-size: var(--campo-tamano-fuente);
+}
+
+/* Campo con ícono: el borde lo lleva el contenedor, no el input interno */
+.campoConIcono {
+    border: 1px solid var(--campo-borde);
+    border-radius: var(--campo-radio);
+    background: var(--campo-fondo);
+    font-size: var(--campo-tamano-fuente);
+}
+
+.campo::placeholder,
+.inputLogin::placeholder,
+.inputCont::placeholder,
+.textareaCont::placeholder,
+.campoConIcono input::placeholder,
+.panelForm input::placeholder,
+.filtrosRecursos input::placeholder {
+    color: var(--color-texto-tenue);
+    opacity: 1;
+}
+
+.campo:focus,
+.inputLogin:focus,
+.inputCont:focus,
+.textareaCont:focus,
+.panelForm input[type="text"]:focus,
+.panelForm input[type="number"]:focus,
+.panelForm input[type="search"]:focus,
+.panelForm textarea:focus,
+.panelForm select:focus,
+.filtrosRecursos input:focus,
+.filtrosRecursos select:focus,
+.modalRecursos input[type="search"]:focus,
+.campoConIcono:focus-within {
+    border-color: var(--color-teal);
+    outline: none;
+    background: var(--color-blanco);
+    box-shadow: var(--anillo-foco);
+}
+
+/* ----------------------------------------------------------------- Tarjetas */
+
+.tarjeta,
+.panelCard,
+.panelForm,
+.panelTabla,
+.tarjetaEstadistica,
+.tarjetaAccionCurso,
+.tarjetaContinuacion,
+.recursoVisual,
+.opcionRecurso {
+    border: 1px solid var(--tarjeta-borde);
+    border-radius: var(--tarjeta-radio);
+    background: var(--tarjeta-fondo);
+    box-shadow: var(--tarjeta-sombra);
+}
+
+/* --------------------------------------------------------- Mensajes de estado */
+
+.mensajeError,
+.mensajeOk,
+.mensajeEvaluacion,
+.modalRecursosEstado {
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radio-md);
+    font-family: var(--fuente-base);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.mensajeError,
+.editarMensaje.mensajeError,
+.mensajeEvaluacion,
+.modalRecursosEstado,
+.feedbackEvaluacion.incorrecto {
+    border-color: var(--color-coral-borde);
+    background: var(--color-coral-palido);
+    color: var(--color-error-texto);
+}
+
+.mensajeOk,
+.editarMensaje.mensajeOk {
+    border-color: var(--color-teal-claro);
+    background: var(--color-menta);
+    color: var(--color-teal-profundo);
+}
+
+/* Los mensajes vacíos no ocupan espacio */
+.mensajeEvaluacion:empty,
+.modalRecursosEstado:empty {
+    display: none;
+}

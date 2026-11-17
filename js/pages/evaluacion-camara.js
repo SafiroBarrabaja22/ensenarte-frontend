@@ -37,6 +37,11 @@ const video = $("video");
 const canvas = $("overlay");
 const ctx = canvas.getContext("2d");
 
+// El canvas no entiende var(--...): se leen los tokens de css/tokens.css.
+const estilosRaiz = getComputedStyle(document.documentElement);
+const COLOR_TRAZO_MANO = estilosRaiz.getPropertyValue("--color-teal").trim();
+const COLOR_PUNTO_MANO = estilosRaiz.getPropertyValue("--color-blanco").trim();
+
 let clasificador = null;
 let landmarker = null;
 let conexionesMano = [];
@@ -430,14 +435,16 @@ function dibujarMano(puntos) {
   const w = canvas.width;
   const h = canvas.height;
   ctx.lineWidth = 3;
-  ctx.strokeStyle = "rgba(15, 127, 122, .9)";
+  ctx.globalAlpha = 0.9;
+  ctx.strokeStyle = COLOR_TRAZO_MANO;
   for (const c of conexionesMano) {
     ctx.beginPath();
     ctx.moveTo(puntos[c.start].x * w, puntos[c.start].y * h);
     ctx.lineTo(puntos[c.end].x * w, puntos[c.end].y * h);
     ctx.stroke();
   }
-  ctx.fillStyle = "#fff";
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = COLOR_PUNTO_MANO;
   for (const p of puntos) {
     ctx.beginPath();
     ctx.arc(p.x * w, p.y * h, 3.5, 0, Math.PI * 2);

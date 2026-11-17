@@ -1,0 +1,99 @@
+/* ==========================================================================
+   tokens.css — Línea gráfica de enSEÑArte
+   --------------------------------------------------------------------------
+   ÚNICA fuente de colores, tipografía, radios y sombras del frontend.
+   Es la primera hoja de estilos de TODAS las páginas (usuario y panel).
+
+   Reglas:
+   - No escribir colores en hex/rgb en ninguna otra hoja: usar estas variables.
+   - Para transparencias: color-mix(in srgb, var(--color-teal) 30%, transparent)
+   - Los componentes compartidos (botones, campos, tarjetas, mensajes) están
+     en componentes.css y leen los tokens de la sección "Componentes".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Montserrat:wght@400;600;700&display=swap');
+
+:root {
+    /* ---------------------------------------------------------------- Paleta */
+    /* Neutros y superficies */
+    --color-blanco: #ffffff;
+    --color-papel: #fffdf8;
+    --color-crema: #f7f3eb;
+    --color-fondo: #f6faf8;          /* fondo de página y de campos */
+    --color-menta: #e8f2ee;          /* hover suave, chips */
+    --color-menta-fuerte: #d9eee7;   /* seleccionado, cabeceras de tabla */
+    --color-linea: #dce8e4;          /* bordes */
+    --color-linea-fuerte: #cfe0db;   /* bordes de campos y zonas punteadas */
+
+    /* Texto */
+    --color-tinta: #1b2f36;          /* texto principal y títulos */
+    --color-tinta-oscura: #102128;   /* fondos oscuros y velos */
+    --color-texto-suave: #5c6f75;    /* texto secundario */
+    --color-texto-tenue: #728589;    /* placeholders, ayudas */
+
+    /* Marca: teal */
+    --color-teal: #0f7f7a;
+    --color-teal-oscuro: #075b5b;    /* hover de botones, enlaces */
+    --color-teal-profundo: #085041;  /* texto de éxito */
+    --color-teal-claro: #7cc9bd;     /* acentos sobre fondos oscuros */
+
+    /* Acento coral / error */
+    --color-coral: #f26b5e;
+    --color-coral-oscuro: #d9574d;   /* hover de coral */
+    --color-rojo: #b64439;           /* peligro, acciones destructivas */
+    --color-error-texto: #8a2e24;    /* texto de error sobre fondo pálido */
+    --color-coral-palido: #fce4e0;   /* fondo de mensajes de error */
+    --color-coral-borde: #f4b9b1;
+
+    /* Ámbar / aviso */
+    --color-ambar: #e7a928;
+    --color-ambar-suave: #e5c766;
+    --color-ambar-palido: #fdf1da;
+    --color-ambar-texto: #6b4308;
+
+    /* Base de todas las sombras */
+    --color-sombra: #172c35;
+
+    /* ------------------------------------------------------------ Tipografía */
+    --fuente-base: 'DM Sans', 'Montserrat', sans-serif;
+
+    /* ---------------------------------------------------------------- Radios */
+    --radio-xs: 4px;
+    --radio-sm: 6px;
+    --radio-md: 8px;
+    --radio-lg: 12px;
+    --radio-xl: 16px;
+    --radio-2xl: 24px;
+    --radio-pill: 999px;
+    --radio-circulo: 50%;
+
+    /* --------------------------------------------------------------- Sombras */
+    --sombra-sm: 0 2px 10px color-mix(in srgb, var(--color-sombra) 8%, transparent);
+    --sombra-md: 0 8px 22px color-mix(in srgb, var(--color-sombra) 6%, transparent);
+    --sombra-lg: 0 18px 45px color-mix(in srgb, var(--color-sombra) 12%, transparent);
+    --anillo-foco: 0 0 0 3px color-mix(in srgb, var(--color-teal) 18%, transparent);
+    --contorno-foco: 3px solid color-mix(in srgb, var(--color-teal) 30%, transparent);
+
+    /* ----------------------------------------------------------- Componentes */
+    /* Botones */
+    --boton-radio: var(--radio-md);
+    --boton-alto: 44px;
+    --boton-alto-compacto: 38px;
+    --boton-relleno-x: 18px;
+    --boton-relleno-x-compacto: 13px;
+    --boton-tamano-fuente: 14px;
+    --boton-peso: 700;
+
+    /* Campos de formulario */
+    --campo-radio: var(--radio-md);
+    --campo-borde: var(--color-linea-fuerte);
+    --campo-fondo: var(--color-fondo);
+    --campo-relleno: 12px 14px;
+    --campo-tamano-fuente: 16px;     /* 16px evita el zoom automático en iOS */
+
+    /* Tarjetas */
+    --tarjeta-radio: var(--radio-lg);
+    --tarjeta-borde: var(--color-linea);
+    --tarjeta-fondo: var(--color-blanco);
+    --tarjeta-sombra: var(--sombra-md);
+}
