@@ -57,7 +57,7 @@
     document.getElementById("tituloCurso").textContent = "Curso no encontrado";
     mostrarMensaje("mensaje", error.message);
   }
-})();
+})().catch(errorInesperado);
 
 /**
  * Solo si el curso esta completado. La descarga va por fetch con el token
@@ -97,7 +97,7 @@ function asegurarPlantillaCurso() {
   antiguo.replaceWith(nuevo);
   const estilos = document.createElement("link");
   estilos.rel = "stylesheet";
-  estilos.href = "../css/style.css?v=15";
+  estilos.href = "../css/style.css?v=20261117b";
   document.head.appendChild(estilos);
 }
 

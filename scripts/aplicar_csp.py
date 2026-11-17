@@ -16,7 +16,6 @@ MediaPipe. Si alguien lograra inyectar HTML, su <script> en linea no correria y
 no podria enviar los tokens a un servidor suyo.
 """
 
-import re
 import sys
 from pathlib import Path
 
@@ -33,9 +32,10 @@ POLITICA = {
     # 'wasm-unsafe-eval' permite compilar el WebAssembly de MediaPipe; NO
     # habilita eval() de JavaScript. Ningun script en linea.
     "script-src": "'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'",
-    # Estilos: hojas propias y Google Fonts. 'unsafe-inline' porque las paginas
-    # usan atributos style="..." (los estilos no ejecutan codigo).
-    "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com",
+    # Estilos: solo hojas propias y Google Fonts. Sin 'unsafe-inline': ninguna
+    # pagina usa atributos style="..." ni <style>; los valores calculados se
+    # aplican desde JS con element.style (aplicarVariablesCss en config.js).
+    "style-src": "'self' https://fonts.googleapis.com",
     "font-src": "'self' https://fonts.gstatic.com",
     # Imagenes: assets propios, subidas del backend (/media/) y vistas previas.
     "img-src": f"'self' data: blob: {BACKEND_PRODUCCION} {BACKEND_LOCAL}",
@@ -51,26 +51,53 @@ POLITICA = {
 
 CONTENIDO = "; ".join(f"{directiva} {valor}" for directiva, valor in POLITICA.items())
 META = f'<meta http-equiv="Content-Security-Policy" content="{CONTENIDO}">'
-EXISTENTE = re.compile(r'[ \t]*<meta http-equiv="Content-Security-Policy"[^>]*>(\r?\n)?')
-# Algunas paginas tienen el <head> en una sola linea y otras usan CRLF.
-CHARSET = re.compile(r'([ \t]*)(<meta charset="UTF-8">)(\r?\n)?', re.I)
+INICIO_CSP = '<meta http-equiv="Content-Security-Policy"'
+CHARSET = '<meta charset="UTF-8">'
 
 
 def paginas():
     return sorted(list(RAIZ.glob("*.html")) + list(RAIZ.glob("pages/**/*.html")))
 
 
+def quitar_csp(texto):
+    """Quita la etiqueta CSP existente, con su sangria y su salto de linea."""
+    inicio = texto.find(INICIO_CSP)
+    if inicio < 0:
+        return texto
+    fin = texto.index(">", inicio) + 1
+    while inicio > 0 and texto[inicio - 1] in " \t":
+        inicio -= 1
+    if texto.startswith("\r\n", fin):
+        fin += 2
+    elif texto.startswith("\n", fin):
+        fin += 1
+    return texto[:inicio] + texto[fin:]
+
+
+def insertar_csp(texto):
+    """
+    Pone la CSP justo despues de <meta charset> (tiene que ir antes de cualquier
+    recurso para cubrirlo), con la misma sangria y el mismo salto de linea.
+    Algunas paginas tienen el <head> en una sola linea y otras usan CRLF.
+    """
+    inicio = texto.find(CHARSET)
+    if inicio < 0:
+        return None
+    fin = inicio + len(CHARSET)
+    comienzo_linea = texto.rfind("\n", 0, inicio) + 1
+    sangria = texto[comienzo_linea:inicio]
+    if sangria.strip():          # hay otras etiquetas antes en la misma linea
+        sangria = ""
+    salto = "\r\n" if texto.startswith("\r\n", fin) else "\n" if texto.startswith("\n", fin) else ""
+    if salto:
+        return texto[:fin + len(salto)] + sangria + META + salto + texto[fin + len(salto):]
+    return texto[:fin] + META + texto[fin:]
+
+
 def aplicar():
     for pagina in paginas():
-        texto = pagina.read_text(encoding="utf-8")
-        texto = EXISTENTE.sub("", texto)
-        # Justo despues de <meta charset>: tiene que ir antes de cualquier
-        # recurso para que lo cubra.
-        texto, cambios = CHARSET.subn(
-            lambda m: f"{m.group(1)}{m.group(2)}{m.group(3) or ''}{m.group(1)}{META}{m.group(3) or ''}",
-            texto, count=1,
-        )
-        if not cambios:
+        texto = insertar_csp(quitar_csp(pagina.read_text(encoding="utf-8")))
+        if texto is None:
             sys.exit(f"{pagina}: no tiene <meta charset=\"UTF-8\">")
         pagina.write_text(texto, encoding="utf-8")
     print(f"CSP aplicada en {len(paginas())} paginas.")

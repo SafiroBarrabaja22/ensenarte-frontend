@@ -48,7 +48,7 @@ let resultadoFinal = null;
     });
   }
   document.getElementById("btnIniciarEvaluacion").disabled = false;
-})();
+})().catch(errorInesperado);
 
 async function iniciarIntento() {
   const boton = document.getElementById("btnIniciarEvaluacion");
@@ -171,7 +171,7 @@ function gestionarTeclado(evento) {
     const boton = document.querySelectorAll(".opcionEvaluacion")[indice];
     if (boton) seleccionarRespuesta(boton);
   }
-  if (evento.key === "Enter" && document.activeElement?.classList.contains("opcionEvaluacion")) comprobarRespuesta();
+  if (evento.key === "Enter" && document.activeElement?.classList.contains("opcionEvaluacion")) comprobarRespuesta().catch(errorInesperado);
 }
 
 function irAResultado() {

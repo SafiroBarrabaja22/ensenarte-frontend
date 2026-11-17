@@ -35,7 +35,7 @@
     const linea = puntos.length > 1
       ? `<path class="attemptChartLine" d="${d}"/>`
       : "";
-    return `<div class="attemptChart"><svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Progreso de los últimos ${items.length} intentos"><line class="attemptChartGuide" x1="0" y1="${height / 2}" x2="${width}" y2="${height / 2}"/>${linea}${puntos.map((p, i) => `<circle class="attemptChartPoint ${i === puntos.length - 1 ? "isLatest" : ""}" cx="${p.x}" cy="${p.y}" r="${i === puntos.length - 1 ? 7 : 5.5}"/>`).join("")}</svg></div><div class="attemptChartLabels" style="--point-count:${items.length}">${etiquetas}</div>`;
+    return `<div class="attemptChart"><svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Progreso de los últimos ${items.length} intentos"><line class="attemptChartGuide" x1="0" y1="${height / 2}" x2="${width}" y2="${height / 2}"/>${linea}${puntos.map((p, i) => `<circle class="attemptChartPoint ${i === puntos.length - 1 ? "isLatest" : ""}" cx="${p.x}" cy="${p.y}" r="${i === puntos.length - 1 ? 7 : 5.5}"/>`).join("")}</svg></div><div class="attemptChartLabels" data-css="--point-count:${items.length}">${etiquetas}</div>`;
   }
 
   function animar(root, puntaje, cantidad) {
@@ -134,7 +134,8 @@
       ? `<span class="attemptHistoryBadge ${diferencia > 0 ? "isPositive" : ""}">${diferencia === 0 ? "= Sin cambios" : `${diferencia > 0 ? "↗" : "↘"} ${diferencia > 0 ? "+" : ""}${diferencia} puntos`} frente a tu sesión anterior (${anterior.puntos}%)</span>`
       : "";
     const tarjetas = sesiones.map((item, i) => `<article class="attemptSessionCard" role="listitem"><span>Sesión ${i + 1}</span><strong>${item.puntos}%</strong><time>${escapeHtml(fechaCorta(item.fecha))}</time></article>`).join("");
-    root.innerHTML = `<section class="attemptHistoryCard"><header><div><h2>${escapeHtml(encabezado)}</h2><p>${subtitulo}</p></div>${botonExportar(exportar, camara)}</header><div class="attemptHistorySummary"><div class="attemptDonut" role="img" aria-label="Última sesión: ${ultima.puntos}%"><svg viewBox="0 0 160 160" aria-hidden="true"><circle class="attemptDonutTrack" cx="80" cy="80" r="72"/><circle class="attemptDonutProgress" cx="80" cy="80" r="72" pathLength="100" style="stroke-dashoffset:${100 - ultima.puntos}"/></svg><div><strong data-score-count>${ultima.puntos}%</strong><small>Última sesión</small></div></div>${comparacion ? `<div class="attemptHistoryCompare">${comparacion}</div>` : ""}</div><h3>Tus últimos intentos</h3>${grafica(sesiones)}<div class="attemptSessionCards" role="list">${tarjetas}</div></section>`;
+    root.innerHTML = `<section class="attemptHistoryCard"><header><div><h2>${escapeHtml(encabezado)}</h2><p>${subtitulo}</p></div>${botonExportar(exportar, camara)}</header><div class="attemptHistorySummary"><div class="attemptDonut" role="img" aria-label="Última sesión: ${ultima.puntos}%"><svg viewBox="0 0 160 160" aria-hidden="true"><circle class="attemptDonutTrack" cx="80" cy="80" r="72"/><circle class="attemptDonutProgress" cx="80" cy="80" r="72" pathLength="100" data-css="stroke-dashoffset:${100 - ultima.puntos}"/></svg><div><strong data-score-count>${ultima.puntos}%</strong><small>Última sesión</small></div></div>${comparacion ? `<div class="attemptHistoryCompare">${comparacion}</div>` : ""}</div><h3>Tus últimos intentos</h3>${grafica(sesiones)}<div class="attemptSessionCards" role="list">${tarjetas}</div></section>`;
+    global.aplicarVariablesCss(root);
     animar(root, ultima.puntos, sesiones.length);
   }
 

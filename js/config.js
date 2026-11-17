@@ -37,6 +37,36 @@ function escaparHtml(valor) {
   return String(valor ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 }
 
+/**
+ * Aplica los estilos de data-css="propiedad: valor; ..." con element.style.
+ * La CSP no permite atributos style="..." en el HTML (scripts/aplicar_csp.py),
+ * pero si cambiar estilos desde JavaScript. Las plantillas que necesitan un
+ * valor calculado (porcentajes, variables CSS) usan data-css y despues de
+ * pintar llaman a aplicarVariablesCss(contenedor).
+ */
+function aplicarVariablesCss(raiz) {
+  raiz.querySelectorAll("[data-css]").forEach((elemento) => {
+    elemento.dataset.css.split(";").forEach((declaracion) => {
+      const separador = declaracion.indexOf(":");
+      if (separador > 0) {
+        elemento.style.setProperty(declaracion.slice(0, separador).trim(), declaracion.slice(separador + 1).trim());
+      }
+    });
+    elemento.removeAttribute("data-css");
+  });
+}
+
+/**
+ * Manejador comun para promesas que nadie espera (el arranque de cada pagina,
+ * recargas en segundo plano): registra el error y avisa en #mensaje si existe.
+ */
+function errorInesperado(error) {
+  console.error(error);
+  if (typeof mostrarMensaje === "function" && document.getElementById("mensaje")) {
+    mostrarMensaje("mensaje", error?.message || "Ocurrió un error inesperado. Recarga la página.");
+  }
+}
+
 function cursoTieneEvaluacionCamara(slug) {
   return CONFIG.CURSOS_CON_EVALUACION_CAMARA.includes(slug);
 }

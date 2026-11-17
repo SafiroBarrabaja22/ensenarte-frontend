@@ -1,4 +1,4 @@
-import { renderResultados } from "../lib/resultados.js?v=5";
+import { renderResultados } from "../lib/resultados.js?v=6";
 
 const esc = valor => String(valor ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -32,4 +32,4 @@ const esc = valor => String(valor ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;",
     const terms=items.filter(x=>x.acierto===false).map(x=>x.etiqueta);
     renderResultados({ curso: { nombre: nombreCursoParaEvaluacion(curso, slug), icono: iconoCurso }, modo: "preguntas", total, correctas, porcentaje, umbral: 70, items, estadistica2: { valor: `${mejor}%`, etiqueta: "Tu mejor puntaje" }, repasar: terms, insignia: { nueva: Boolean(datosResultado.insignia_100_nueva), id: "curso-completado", curso100: datosResultado.insignia_100 || null }, slug, cursoUrl, repetirUrl, iconoCurso }, document.getElementById("tarjetaResultado"), { onClose: () => { window.location.href = cursoUrl; } });
   } catch (error) { document.getElementById("tarjetaResultado").innerHTML = `<p class="vacio">${esc(error.message)}</p>`; }
-})();
+})().catch(errorInesperado);

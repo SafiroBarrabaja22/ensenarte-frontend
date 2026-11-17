@@ -435,6 +435,11 @@ body.bodyEvaluationView .barraCategorias, body.bodyEvaluationView .pestanasCurso
 .accionesResultado>.botonResultadoSecundario { background:var(--color-blanco) !important;color:var(--color-teal-oscuro) !important; }.accionesResultado>.botonResultadoSecundario:hover { background:var(--color-menta) !important; }
 .botonSalirEvaluacion { background:var(--color-blanco) !important;color:var(--color-teal-oscuro) !important;opacity:1 !important; }
 .estadoGuardado { display:flex;align-items:center;justify-content:center;gap:8px;min-height:20px;color:var(--color-teal-oscuro);font-size:13px;text-align:center;opacity:1 !important; }
+/* Utilidades. La CSP no admite atributos style="..." (scripts/aplicar_csp.py):
+   lo que antes iba en linea va en estas clases. */
+.oculto { display:none; }
+.alDerecha { float:right; }
+.campoTrampa { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 .soloLectores { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
 @keyframes popChip { 0%{opacity:0;transform:scale(.2)} 75%{opacity:1;transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }
 @keyframes flotarPunto { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(0,-8px) rotate(25deg)} }

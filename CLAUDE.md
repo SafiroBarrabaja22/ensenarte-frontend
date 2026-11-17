@@ -174,6 +174,13 @@ Otro estado del cliente: `sessionStorage` (`evaluacion-items-<slug>`,
 - **Escapar todo dato de la API antes de `innerHTML`:** `escaparHtml()` (global, en
   `config.js`) o el `esc()` local de cada página. Incluye las rutas de `rutaImagen()` /
   `rutaVideo()` dentro de `src="..."`. Si no hace falta HTML, usa `textContent`.
+- **Sin estilos en línea:** la CSP no lleva `'unsafe-inline'`, así que ningún HTML ni plantilla
+  de JS puede usar `style="..."`. Para valores calculados (porcentajes, variables CSS) usa
+  `data-css="--var: valor"` y, después de pintar, `aplicarVariablesCss(contenedor)` (config.js).
+  Para mostrar u ocultar, la clase `.oculto` o `element.style.display` desde JS.
+- **Toda promesa se espera o termina en `.catch(errorInesperado)`** (config.js), incluido el
+  `(async function iniciar() {...})().catch(errorInesperado);` de cada página.
+- Cada campo de formulario tiene su `<label for>` (si no se ve, con la clase `soloLectores`).
 - Cada página carga `layout.js` **una sola vez**, después de `config.js` y `api.js`.
 - Formatos de imagen permitidos (`recursos.js`, `selector-recursos.js`): los mismos que
   `apps/cursos/archivos.py` del backend.

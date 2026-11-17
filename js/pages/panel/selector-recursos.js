@@ -54,7 +54,7 @@ const SelectorRecursos = (() => {
     dialog.querySelector("#archivoLocalRecurso").accept = extensionForzada ? `.${extensionForzada}` : "image/*";
     dialog.querySelector("#estadoSubidaLocal").textContent = "";
     dialog.showModal();
-    buscar();
+    buscar().catch(errorInesperado);
   }
 
   async function buscar() {

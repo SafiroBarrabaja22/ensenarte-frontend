@@ -18,7 +18,7 @@ const campos = {
   mostrarReportesPlataforma();
   await cargarResumen();
   await cargarCursos();
-})();
+})().catch(errorInesperado);
 
 /** Solo el Administrador ve (y puede pedir) las estadisticas de la plataforma. */
 function mostrarReportesPlataforma() {

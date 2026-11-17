@@ -28,7 +28,7 @@ let fotoPerfilUrl = "";
   } catch (error) {
     mostrarMensaje("mensaje", error.message);
   }
-})();
+})().catch(errorInesperado);
 
 document.querySelectorAll("[data-password]").forEach((boton) => {
   boton.addEventListener("click", () => {

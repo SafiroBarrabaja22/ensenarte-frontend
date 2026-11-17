@@ -42,4 +42,4 @@
   } catch (error) {
     contenedor.innerHTML = `<p class="vacio">No se pudo cargar el diccionario: ${escaparHtml(error.message)}</p>`;
   }
-})();
+})().catch(errorInesperado);

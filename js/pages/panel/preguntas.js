@@ -20,7 +20,7 @@ const cursoId = new URLSearchParams(window.location.search).get("curso");
 
   document.getElementById("btnGuardarLimite").addEventListener("click", guardarLimitePreguntas);
   await cargarPreguntas();
-})();
+})().catch(errorInesperado);
 
 async function guardarLimitePreguntas() {
   const campo = document.getElementById("limitePreguntas");
@@ -95,8 +95,8 @@ function bloquePregunta(pregunta) {
           <tr>
             <th colspan="3">
               <span>${esc(pregunta.texto)}</span>
-              <button class="panelBtn" style="float:right" data-editar-pregunta="${pregunta.id}">Editar pregunta</button>
-              <button class="panelBtn peligro" style="float:right" data-borrar-pregunta="${pregunta.id}">Eliminar pregunta</button>
+              <button class="panelBtn alDerecha" data-editar-pregunta="${pregunta.id}">Editar pregunta</button>
+              <button class="panelBtn peligro alDerecha" data-borrar-pregunta="${pregunta.id}">Eliminar pregunta</button>
             </th>
           </tr>
         </thead>

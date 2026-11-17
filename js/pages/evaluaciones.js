@@ -25,6 +25,6 @@
     if (disponible) { try { disponible = (await navigator.mediaDevices.enumerateDevices()).some(d => d.kind === "videoinput"); } catch { disponible = false; } }
     if (!disponible) { enlaceCamara.removeAttribute("href"); enlaceCamara.setAttribute("aria-disabled", "true"); document.getElementById("avisoSinCamara").hidden = false; }
   }
-})();
+})().catch(errorInesperado);
 
 function iconoCurso(titulo, slug) { return /abecedario|letra|abc/i.test(`${titulo || ""} ${slug || ""}`) ? "abc" : "books"; }

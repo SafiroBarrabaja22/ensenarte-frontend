@@ -39,7 +39,7 @@ let paginaRecursos = 1;
   document.getElementById("paginacionRecursos").addEventListener("click", (evento) => {
     const boton = evento.target.closest("[data-pagina]");
     if (!boton || boton.disabled) return;
-    cargarRecursos(Number(boton.dataset.pagina));
+    cargarRecursos(Number(boton.dataset.pagina)).catch(errorInesperado);
     document.getElementById("listaRecursos").scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
@@ -50,7 +50,7 @@ let paginaRecursos = 1;
   });
 
   await cargarRecursos();
-})();
+})().catch(errorInesperado);
 
 async function cargarRecursos(pagina = paginaRecursos) {
   const contenedor = document.getElementById("listaRecursos");

@@ -24,7 +24,7 @@ let busquedaActual = "";
     document.getElementById("listaCursos").innerHTML = "";
     mostrarMensaje("mensaje", `No se pudieron cargar los cursos: ${error.message}`);
   }
-})();
+})().catch(errorInesperado);
 
 function conectarFiltrosCursos() {
   const buscador = document.getElementById("buscarCurso");
@@ -60,6 +60,7 @@ function renderizarCursos() {
     return;
   }
   contenedor.innerHTML = filtrados.map(tarjetaCurso).join("");
+  aplicarVariablesCss(contenedor);
   requestAnimationFrame(() => contenedor.querySelectorAll(".barraCurso span").forEach((barra) => barra.classList.add("visible")));
 }
 
@@ -90,7 +91,7 @@ function tarjetaCurso(curso) {
       <h2>${esc(curso.titulo)}</h2>
       <p class="descripcionCurso">${esc(descripcion)}</p>
       <div class="metadatosCurso"><span>${iconoSvg("books", "icon icon16")}${lecciones} lecciones</span><span>${iconoSvg("clock", "icon icon16")}40 min</span></div>
-      <div class="barraCurso" role="progressbar" aria-label="Progreso de ${esc(curso.titulo)}" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" style="--progreso-curso: ${porcentaje}%"><span></span></div>
+      <div class="barraCurso" role="progressbar" aria-label="Progreso de ${esc(curso.titulo)}" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" data-css="--progreso-curso: ${porcentaje}%"><span></span></div>
       <span class="botonCurso ${estado === "completados" ? "botonCursoSecundario" : ""}">${iconoAccion}${accion}</span>
     </div>
   </a>`;

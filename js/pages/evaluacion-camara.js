@@ -9,7 +9,7 @@
  */
 
 import { ClasificadorKNN, ControlSostener, landmarksAPixeles, normalizarLandmarks } from "../lib/lsc-reconocedor.js";
-import { renderResultados } from "../lib/resultados.js?v=5";
+import { renderResultados } from "../lib/resultados.js?v=6";
 
 // ---------------------------------------------------------------- configuracion
 // Para cambiar el modelo basta con reemplazar este archivo (o esta ruta).
@@ -107,12 +107,12 @@ let sesion = null;
     return;
   }
 
-  cargarHistorialCamara();
+  cargarHistorialCamara().catch(errorInesperado);
 
   api(`/cursos/${slugCurso}/`, { autenticado: false })
     .then((curso) => { const nombreCurso = nombreCursoParaEvaluacion(curso, slugCurso); datosCursoResultado = { nombre: nombreCurso, icono: /abecedario|letra|abc/i.test(`${nombreCurso} ${slugCurso}`) ? "abc" : "books" }; $("tituloEvaluacion").textContent = `${nombreCurso} · Evaluación con cámara`; $("iconoCursoEvaluacion").innerHTML = `<svg class="icon icon20" aria-hidden="true"><use href="#i-${datosCursoResultado.icono}"></use></svg>`; })
     .catch(() => {});
-})();
+})().catch(errorInesperado);
 
 function volverAPreparacionCamara() {
   limpiarAnimacionResultado();
@@ -122,7 +122,7 @@ function volverAPreparacionCamara() {
   $("btnComenzar").hidden = false;
   $("btnReintentar").hidden = true;
   mostrarPantalla("pantallaInicio");
-  cargarHistorialCamara();
+  cargarHistorialCamara().catch(errorInesperado);
 }
 
 async function cargarHistorialCamara() {
@@ -347,7 +347,7 @@ function terminarSesion() {
   detenerCamara();
   pintarResumen(sesion.intentos);
   mostrarPantalla("pantallaResumen");
-  enviarResultado(sesion.intentos);
+  enviarResultado(sesion.intentos).catch(errorInesperado);
 }
 
 /** Descarta la sesion a medias: no se envia nada. */

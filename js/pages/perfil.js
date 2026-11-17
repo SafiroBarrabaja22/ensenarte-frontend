@@ -48,24 +48,25 @@
             <span class="etiquetaInsignia ${p.curso_insignia ? "tieneInsignia" : ""} ${insignia100 ? "esCurso100" : ""}" title="${insignia100 ? "Curso 100%" : "Curso completado"}">${insignia}</span>
           </div>
           <h3>${esc(p.curso_titulo)}</h3>
-          <div class="barraProgreso" role="progressbar" aria-label="Progreso de ${esc(p.curso_titulo)}" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" style="--progreso: ${porcentaje}%"><span></span></div>
+          <div class="barraProgreso" role="progressbar" aria-label="Progreso de ${esc(p.curso_titulo)}" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" data-css="--progreso: ${porcentaje}%"><span></span></div>
           <div class="detalleProgreso"><span>Completado</span><strong>${porcentaje}%</strong></div>
         </a>`;
       })
       .join("")}</div>`;
+    aplicarVariablesCss(contenedor);
     requestAnimationFrame(() => {
       contenedor.querySelectorAll(".barraProgreso").forEach((barra) => barra.classList.add("isVisible"));
     });
   } catch (error) {
     console.error(error);
   }
-})();
+})().catch(errorInesperado);
 
 function calcularRacha(progresos) {
   const fechas = [...new Set(progresos
     .map((progreso) => progreso.fecha_ultima_actividad?.slice(0, 10))
     .filter(Boolean))]
-    .sort()
+    .sort((a, b) => a.localeCompare(b))
     .reverse();
   if (!fechas.length) return 0;
 

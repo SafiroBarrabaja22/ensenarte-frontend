@@ -67,8 +67,6 @@
         font-weight: bold;
     }    
     .menuUsuario img{
-        width: 150px; /* Ajusta el tamaño */
-        height: 150px; /* Asegúrate de que el ancho y la altura sean iguales */
         border-radius: var(--radio-circulo); /* Esto hace que la imagen sea redonda */
         object-fit: cover; 
         width: 65px; /* Ajusta el tamaño de la imagen */
@@ -191,7 +189,6 @@
     /* Estilos de la sección de bienvenida */
     
     .heroSection {
-        background-color: none;
         color: var(--color-tinta);
         height: 100vh;
         display: flex;
@@ -343,7 +340,6 @@
     .bodyAboutUs {
         font-family: var(--fuente-base);
         margin: 0;
-        padding: 0;
         background-color: var(--color-fondo);
         text-align: center;
         margin-top: 100px;
@@ -551,7 +547,6 @@
         align-content: center;
         margin: 0;
         padding: 0;
-        font-size: arial;
         color: var(--color-blanco);
     }
     ::-webkit-input-placeholder{
@@ -772,9 +767,6 @@
         padding: 15px 30px;
     }
     
-    .infoCurso{
-        padding: 30px px;
-    }
     
     .itemCursos img{
         width: 100%;
@@ -981,7 +973,6 @@
         overflow: auto;
     }
     .avatarOption {
-        background: transparent;
         border: 2px solid transparent;
         border-radius: var(--radio-circulo);
         padding: 0;
@@ -1274,7 +1265,6 @@
     }
     .buttonContainer {
         text-align: center;
-        margin-top: 20px;
         width: 100%; /* Ocupa el 100% del ancho de la fila */
         display: flex;
         justify-content: center; /* Centra el botÃ³n horizontalmente */
@@ -1331,7 +1321,6 @@
         padding: 50px 0 189px 0;
     }
     .cardClient {
-        margin-top: 20px;
         background: var(--color-teal-claro);
         width: 700px;
         padding-top: 25px;

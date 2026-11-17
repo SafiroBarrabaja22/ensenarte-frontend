@@ -22,7 +22,7 @@
   } catch (error) {
     console.error(error);
   }
-})();
+})().catch(errorInesperado);
 
 function mostrarContinuacion(progreso) {
   const tarjeta = document.getElementById("tarjetaContinuacion");
@@ -32,8 +32,9 @@ function mostrarContinuacion(progreso) {
     <p class="etiquetaContinuacion">Continúa donde lo dejaste</p>
     <h2>${escInicio(progreso.curso_titulo)}</h2>
     <p>Lección ${Number(progreso.aciertos || 0) + 1} de 10</p>
-    <div class="barraHome" role="progressbar" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100"><span style="--progreso-home: ${porcentaje}%"></span></div>
+    <div class="barraHome" role="progressbar" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100"><span data-css="--progreso-home: ${porcentaje}%"></span></div>
     <a href="curso.html?curso=${encodeURIComponent(progreso.curso)}" class="botonContinuar">Continuar curso</a>`;
+  aplicarVariablesCss(tarjeta);
   requestAnimationFrame(() => tarjeta.querySelector(".barraHome span").classList.add("visible"));
 }
 

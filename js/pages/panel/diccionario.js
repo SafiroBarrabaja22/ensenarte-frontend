@@ -18,7 +18,7 @@ const cursoIdDiccionario = new URLSearchParams(window.location.search).get("curs
   }
 
   await cargarPalabras();
-})();
+})().catch(errorInesperado);
 
 async function cargarPalabras() {
   const tabla = document.getElementById("tablaPalabras");
