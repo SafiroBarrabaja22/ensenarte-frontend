@@ -84,7 +84,8 @@ absoluta. Usa siempre `rutaImagen()` / `rutaVideo()` de `config.js`.
 ## Endpoints que consume
 
 Todos con `api()` (o `apiPanel()`, que añade un timeout de 12 s) y rutas
-relativas a `CONFIG.API_BASE_URL` (`http://127.0.0.1:8000/api`):
+relativas a `CONFIG.API_BASE_URL` (en local `http://127.0.0.1:8000/api`; en GitHub Pages
+`https://cachyos-x8664.tailb93c3e.ts.net/api`):
 
 - Auth: `/auth/registro/`, `/auth/login/`, `/auth/refresh/`, `/auth/perfil/`
   (GET/PATCH, FormData para foto), `/auth/cambiar-password/`,
@@ -163,7 +164,12 @@ Otro estado del cliente: `sessionStorage` (`evaluacion-items-<slug>`,
 
 ## Configuración
 
-Todo en [js/config.js](js/config.js): `API_BASE_URL`, `RUTA_IMAGENES`,
+Todo en [js/config.js](js/config.js). La URL del backend se cambia SOLO en
+`BACKEND_PRODUCCION` / `BACKEND_LOCAL`; `API_BASE_URL` se calcula según
+`location.hostname` (localhost/127.0.0.1 → local; otro → producción). Al tocar
+config.js, sube `config.js?v=` en todos los HTML. Despliegue en GitHub Pages bajo
+`/ensenarte-frontend/`: ninguna ruta puede empezar por `/` y las mayúsculas deben
+coincidir exactamente (ver docs/DESPLIEGUE.md del backend). Además: `RUTA_IMAGENES`,
 `RUTA_VIDEOS`, `AVATAR_POR_DEFECTO`, `CURSOS_CON_EVALUACION_CAMARA`
 (hoy `["abecedario"]`). `js/config.local.js` está en `.gitignore`.
 Si cambia el puerto u origen del frontend, debe agregarse a

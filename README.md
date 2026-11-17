@@ -42,14 +42,18 @@ Toda la configuración está en `js/config.js`:
 
 ```js
 const CONFIG = {
-  API_BASE_URL: "http://127.0.0.1:8000/api",
+  BACKEND_PRODUCCION: "https://cachyos-x8664.tailb93c3e.ts.net",
+  BACKEND_LOCAL: "http://127.0.0.1:8000",
   RUTA_IMAGENES: "assets/imagenes/",
   RUTA_VIDEOS: "assets/videos/",
   AVATAR_POR_DEFECTO: "imgPredeterminadaUsuario.png",
 };
 ```
 
-Al desplegar, cambia `API_BASE_URL` por la URL pública del backend.
+`API_BASE_URL` se calcula solo: abierto en `localhost`/`127.0.0.1` usa
+`BACKEND_LOCAL`; en GitHub Pages (`https://safirobarrabaja22.github.io/ensenarte-frontend/`)
+usa `BACKEND_PRODUCCION`. Si cambia el dominio del backend, se cambia solo ahí.
+Despliegue completo: `docs/DESPLIEGUE.md` del backend.
 
 ---
 

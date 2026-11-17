@@ -1,9 +1,15 @@
 /**
  * Configuracion del cliente.
- * Cambia API_BASE_URL por la URL del backend desplegado cuando publiques.
+ *
+ * URL DEL BACKEND: se cambia SOLO aqui (BACKEND_PRODUCCION / BACKEND_LOCAL).
+ * - Abierto en localhost o 127.0.0.1 (Live Server, http.server) usa el backend local.
+ * - En cualquier otro dominio (GitHub Pages) usa el de produccion: la miniPC
+ *   expuesta con Tailscale Funnel. Ver docs/DESPLIEGUE.md del backend.
+ * Va sin barra final y sin /api: API_BASE_URL se arma abajo.
  */
 const CONFIG = {
-  API_BASE_URL: "http://127.0.0.1:8000/api",
+  BACKEND_PRODUCCION: "https://cachyos-x8664.tailb93c3e.ts.net",
+  BACKEND_LOCAL: "http://127.0.0.1:8000",
   // Carpetas locales donde viven las imagenes y gifs de los cursos.
   // La base de datos guarda solo el nombre del archivo.
   RUTA_IMAGENES: "assets/imagenes/",
@@ -13,6 +19,11 @@ const CONFIG = {
   // reconoce letras). El backend debe rechazar los demas cursos.
   CURSOS_CON_EVALUACION_CAMARA: ["abecedario"],
 };
+
+CONFIG.API_BASE_URL =
+  (["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname)
+    ? CONFIG.BACKEND_LOCAL
+    : CONFIG.BACKEND_PRODUCCION) + "/api";
 
 function cursoTieneEvaluacionCamara(slug) {
   return CONFIG.CURSOS_CON_EVALUACION_CAMARA.includes(slug);
