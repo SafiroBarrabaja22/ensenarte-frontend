@@ -98,7 +98,22 @@
     );
   }
 
-  function render(root, { tipo = "normal", intentos = [], titulo, error = "" } = {}) {
+  /**
+   * Boton "Exportar PDF" (solo si hay intentos). `exportar` = { curso, mensaje }:
+   * el PDF lo genera el backend con el mismo diseno de esta tarjeta. Lo descarga
+   * el listener global de data-descargar (api.js), que manda el token.
+   */
+  function botonExportar(exportar, camara) {
+    if (!exportar || !exportar.curso) return "";
+    const tipo = camara ? "camara" : "preguntas";
+    const ruta = `/reportes/historial/${encodeURIComponent(exportar.curso)}/?tipo=${tipo}`;
+    const icono = typeof global.iconoSvg === "function" ? global.iconoSvg("download", "icon icon16") : "";
+    return `<button type="button" class="boton boton--secundario boton--compacto attemptHistoryExport"
+      data-descargar="${escapeHtml(ruta)}" data-nombre="historial-${escapeHtml(exportar.curso)}-${tipo}.pdf"
+      data-mensaje="${escapeHtml(exportar.mensaje || "mensaje")}">${icono}Exportar PDF</button>`;
+  }
+
+  function render(root, { tipo = "normal", intentos = [], titulo, error = "", exportar = null } = {}) {
     if (typeof root === "string") root = document.querySelector(root);
     if (!root) throw new Error("AttemptHistory requiere un contenedor en la página de evaluación.");
     const wrapper = root.closest(".evaluationPreparation");
@@ -119,7 +134,7 @@
       ? `<span class="attemptHistoryBadge ${diferencia > 0 ? "isPositive" : ""}">${diferencia === 0 ? "= Sin cambios" : `${diferencia > 0 ? "↗" : "↘"} ${diferencia > 0 ? "+" : ""}${diferencia} puntos`} frente a tu sesión anterior (${anterior.puntos}%)</span>`
       : "";
     const tarjetas = sesiones.map((item, i) => `<article class="attemptSessionCard" role="listitem"><span>Sesión ${i + 1}</span><strong>${item.puntos}%</strong><time>${escapeHtml(fechaCorta(item.fecha))}</time></article>`).join("");
-    root.innerHTML = `<section class="attemptHistoryCard"><header><h2>${escapeHtml(encabezado)}</h2><p>${subtitulo}</p></header><div class="attemptHistorySummary"><div class="attemptDonut" role="img" aria-label="Última sesión: ${ultima.puntos}%"><svg viewBox="0 0 160 160" aria-hidden="true"><circle class="attemptDonutTrack" cx="80" cy="80" r="72"/><circle class="attemptDonutProgress" cx="80" cy="80" r="72" pathLength="100" style="stroke-dashoffset:${100 - ultima.puntos}"/></svg><div><strong data-score-count>${ultima.puntos}%</strong><small>Última sesión</small></div></div>${comparacion ? `<div class="attemptHistoryCompare">${comparacion}</div>` : ""}</div><h3>Tus últimos intentos</h3>${grafica(sesiones)}<div class="attemptSessionCards" role="list">${tarjetas}</div></section>`;
+    root.innerHTML = `<section class="attemptHistoryCard"><header><div><h2>${escapeHtml(encabezado)}</h2><p>${subtitulo}</p></div>${botonExportar(exportar, camara)}</header><div class="attemptHistorySummary"><div class="attemptDonut" role="img" aria-label="Última sesión: ${ultima.puntos}%"><svg viewBox="0 0 160 160" aria-hidden="true"><circle class="attemptDonutTrack" cx="80" cy="80" r="72"/><circle class="attemptDonutProgress" cx="80" cy="80" r="72" pathLength="100" style="stroke-dashoffset:${100 - ultima.puntos}"/></svg><div><strong data-score-count>${ultima.puntos}%</strong><small>Última sesión</small></div></div>${comparacion ? `<div class="attemptHistoryCompare">${comparacion}</div>` : ""}</div><h3>Tus últimos intentos</h3>${grafica(sesiones)}<div class="attemptSessionCards" role="list">${tarjetas}</div></section>`;
     animar(root, ultima.puntos, sesiones.length);
   }
 

@@ -142,7 +142,11 @@ async function cargarHistorialCamara() {
 
 function pintarHistorialCamara(historial) {
   const seccion = $("historialCamara");
-  if (seccion) AttemptHistory.render(seccion, { tipo: "camara", intentos: historial });
+  if (seccion) AttemptHistory.render(seccion, {
+    tipo: "camara",
+    intentos: historial,
+    exportar: { curso: slugCurso, mensaje: "mensaje" },
+  });
 }
 
 // ---------------------------------------------------------------- carga de recursos

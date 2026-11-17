@@ -516,6 +516,8 @@ body.bodyEvaluationView .pestanas,body.bodyEvaluationView .tabs,body.bodyEvaluat
 .evaluacionHistorialPagina .tarjetaEvaluacionNueva { width:100%; box-sizing:border-box; }
 .evaluationPreparation { width:100%; }
 .attemptHistoryCard { width:100%; max-width:800px; box-sizing:border-box; margin:0 auto 24px; padding:28px; border:1px solid var(--color-linea); border-radius:var(--radio-xl); background:var(--color-blanco); box-shadow:var(--sombra-md); }
+.attemptHistoryCard header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.attemptHistoryExport { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; }
 .attemptHistoryCard header h2 { margin:0; color:var(--color-tinta); font-size:22px; }
 .attemptHistoryCard header p { margin:5px 0 0; color:var(--color-texto-tenue); font-size:14px; }
 .attemptHistorySummary { display:flex; align-items:center; justify-content:center; gap:24px; margin:24px 0; min-height:160px; }

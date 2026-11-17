@@ -34,7 +34,11 @@ let resultadoFinal = null;
 
   try {
     const historial = await ServicioHistorialIntentos.cargar({ curso: slugCurso, tipo: "normal" });
-    AttemptHistory.render("#historialIntentos", { tipo: "normal", intentos: historial });
+    AttemptHistory.render("#historialIntentos", {
+      tipo: "normal",
+      intentos: historial,
+      exportar: { curso: slugCurso, mensaje: "mensajeInicio" },
+    });
   } catch (error) {
     console.warn("No se pudo cargar el historial de preguntas:", error);
     AttemptHistory.render("#historialIntentos", {

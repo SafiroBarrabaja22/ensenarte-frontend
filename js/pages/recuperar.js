@@ -43,22 +43,16 @@ document.getElementById("formSolicitar").addEventListener("submit", async (event
   mostrarMensaje("mensaje", "");
 
   try {
-    const respuesta = await Auth.solicitarRecuperacion(
+    await Auth.solicitarRecuperacion(
       document.getElementById("correo").value.trim()
     );
 
-    // Solo en desarrollo (DEBUG=True) el backend devuelve el enlace: se abre
-    // como si el usuario hubiera pulsado el boton del correo.
-    if (respuesta.debug) {
-      window.location.hash = `uid=${encodeURIComponent(respuesta.debug.uid)}&token=${encodeURIComponent(respuesta.debug.token)}`;
-      if (leerEnlaceDelCorreo()) mostrarPasoConfirmar();
-      return;
-    }
-
+    // El enlace para restablecer SOLO llega por correo, nunca en la respuesta.
     mostrarMensaje(
       "mensaje",
-      "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña. " +
-        "Revisa tu bandeja de entrada y la carpeta de spam. El enlace vence en 1 hora.",
+      "Te enviamos un correo. Si la dirección está registrada, trae el botón " +
+        "\"Sí, fui yo: restablecer contraseña\" (vence en 1 hora). " +
+        "Si no lo ves en unos minutos, revisa la carpeta de spam.",
       "ok"
     );
   } catch (error) {
