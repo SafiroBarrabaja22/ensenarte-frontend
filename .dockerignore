@@ -1,0 +1,9 @@
+# Fuera del contexto de construccion (el Dockerfile copia solo index.html,
+# css/, js/, pages/, assets/ y docker/nginx.conf).
+.git
+.github
+scripts
+docs
+*.md
+.nojekyll
+js/config.local.js

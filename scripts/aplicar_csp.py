@@ -1,9 +1,10 @@
 """
 Politica de seguridad de contenido (CSP) del frontend: UNICA fuente.
 
-GitHub Pages no deja configurar cabeceras HTTP, asi que la politica va en una
-etiqueta <meta http-equiv="Content-Security-Policy"> en cada pagina. Este
-script la escribe (o la actualiza) en todos los .html:
+La politica va en una etiqueta <meta http-equiv="Content-Security-Policy"> en
+cada pagina, asi funciona igual con nginx (Docker) y con Live Server. Lo unico
+que no admite <meta>, frame-ancestors, lo envia nginx como cabecera
+(docker/nginx.conf). Este script escribe (o actualiza) la etiqueta en todos los .html:
 
     python scripts/aplicar_csp.py
 
@@ -21,8 +22,9 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 
-# Debe coincidir con BACKEND_PRODUCCION y BACKEND_LOCAL de js/config.js.
-BACKEND_PRODUCCION = "https://cachyos-x8664.tailb93c3e.ts.net"
+# En produccion la API esta en el mismo dominio que las paginas (proxy de nginx,
+# docker/nginx.conf): la cubre 'self'. BACKEND_LOCAL es el runserver de
+# desarrollo (Live Server en el 5500); debe coincidir con js/config.js.
 BACKEND_LOCAL = "http://127.0.0.1:8000 http://localhost:8000"
 
 POLITICA = {
@@ -38,10 +40,10 @@ POLITICA = {
     "style-src": "'self' https://fonts.googleapis.com",
     "font-src": "'self' https://fonts.gstatic.com",
     # Imagenes: assets propios, subidas del backend (/media/) y vistas previas.
-    "img-src": f"'self' data: blob: {BACKEND_PRODUCCION} {BACKEND_LOCAL}",
-    "media-src": f"'self' blob: {BACKEND_PRODUCCION} {BACKEND_LOCAL}",
+    "img-src": f"'self' data: blob: {BACKEND_LOCAL}",
+    "media-src": f"'self' blob: {BACKEND_LOCAL}",
     # fetch(): la API, el wasm de MediaPipe y el modelo de la mano.
-    "connect-src": f"'self' {BACKEND_PRODUCCION} {BACKEND_LOCAL} https://cdn.jsdelivr.net https://storage.googleapis.com",
+    "connect-src": f"'self' {BACKEND_LOCAL} https://cdn.jsdelivr.net https://storage.googleapis.com",
     "worker-src": "'self' blob:",
     # Formulario de contacto.
     "form-action": "'self' https://formsubmit.co",

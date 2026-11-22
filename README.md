@@ -42,18 +42,22 @@ Toda la configuración está en `js/config.js`:
 
 ```js
 const CONFIG = {
-  BACKEND_PRODUCCION: "https://cachyos-x8664.tailb93c3e.ts.net",
   BACKEND_LOCAL: "http://127.0.0.1:8000",
+  PUERTO_DESARROLLO: "5500",
   RUTA_IMAGENES: "assets/imagenes/",
   RUTA_VIDEOS: "assets/videos/",
   AVATAR_POR_DEFECTO: "imgPredeterminadaUsuario.png",
 };
 ```
 
-`API_BASE_URL` se calcula solo: abierto en `localhost`/`127.0.0.1` usa
-`BACKEND_LOCAL`; en GitHub Pages (`https://safirobarrabaja22.github.io/ensenarte-frontend/`)
-usa `BACKEND_PRODUCCION`. Si cambia el dominio del backend, se cambia solo ahí.
-Despliegue completo: `docs/DESPLIEGUE.md` del backend.
+`API_BASE_URL` se calcula solo:
+
+- **Puerto 5500** (Live Server / `http.server`): usa `BACKEND_LOCAL`, el `runserver` de
+  desarrollo.
+- **Cualquier otro caso** (Docker en la miniPC): usa el mismo dominio de la página, porque
+  el nginx reenvía `/api/` al backend.
+
+No hay que poner el dominio de producción en ningún archivo.
 
 ---
 
@@ -161,15 +165,46 @@ JavaScript. Las clases CSS se conservaron idénticas para no tocar `style.css`.
 
 - [ ] Copiar `imagenes/` y `videos/` dentro de `assets/`, todo en minúsculas.
 - [ ] Cambiar el correo de destino en el formulario de `pages/contacto.html`.
-- [ ] Ajustar `API_BASE_URL` si el backend no corre en el puerto 8000.
+- [ ] Ajustar `BACKEND_LOCAL` en `js/config.js` si el backend local no corre en el puerto 8000.
 - [ ] Revisar que el puerto del frontend esté en `CORS_ALLOWED_ORIGINS`.
 
 ---
 
-## Despliegue
+## Despliegue con Docker
 
-Es un sitio estático: sirve en GitHub Pages, Netlify, Vercel o cualquier CDN.
+En producción el frontend corre en la miniPC dentro de un contenedor **nginx**
+([Dockerfile](Dockerfile), [docker/nginx.conf](docker/nginx.conf)):
 
-Para GitHub Pages: *Settings → Pages → Source: rama `main`, carpeta `/ (root)`*.
-Luego agrega la URL resultante a `CORS_ALLOWED_ORIGINS` del backend y actualiza
-`API_BASE_URL` en `js/config.js`.
+- **Contenido:** sirve las páginas, CSS, JS y assets.
+- **Proxy:** reenvía `/api/`, `/admin/`, `/media/` y `/static/` al contenedor del
+  backend. La API queda en el mismo dominio que las páginas.
+- **Cabeceras:** agrega las de seguridad que el `<meta>` de la CSP no puede poner
+  (`frame-ancestors`, `X-Frame-Options`, `Permissions-Policy` para la cámara).
+- **HTTPS:** se publica en `127.0.0.1:8080` y Tailscale Funnel lo expone con HTTPS.
+  La evaluación con cámara (MediaPipe) solo funciona por HTTPS.
+
+Se levanta junto con el backend desde un único `docker-compose.yml`. **La guía completa
+está en el README del backend, sección "Despliegue con Docker"**; en resumen:
+
+```bash
+cd /srv/ensenarte                                    # carpeta que contiene los dos repos
+# -b docker mientras Docker no esté mezclado en main; después, sin -b
+git clone -b docker https://github.com/SafiroBarrabaja22/ensenarte-backend.git
+git clone -b docker https://github.com/SafiroBarrabaja22/ensenarte-frontend.git
+cp ensenarte-backend/despliegue/docker-compose.yml .
+cp ensenarte-backend/despliegue/docker.env.example .env && chmod 600 .env && nano .env
+docker compose up -d --build
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py createsuperuser
+sudo tailscale funnel --bg 8080
+```
+
+**MySQL en la miniPC (no en Docker):**
+- su `bind-address` no puede ser solo `127.0.0.1`;
+- el usuario de la base tiene que poder entrar desde la red de Docker (`'<usuario>'@'172.%'`).
+
+Detalle en el README del backend, paso 3.
+
+**Para actualizar el frontend:** `git -C ensenarte-frontend pull && docker compose up -d --build frontend`.
+
+Ya no se publica en GitHub Pages.

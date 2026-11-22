@@ -1,16 +1,17 @@
 /**
  * Configuracion del cliente.
  *
- * URL DEL BACKEND: se cambia aqui (BACKEND_PRODUCCION / BACKEND_LOCAL) y en
- * scripts/aplicar_csp.py, que la autoriza en la CSP de todas las paginas.
- * - Abierto en localhost o 127.0.0.1 (Live Server, http.server) usa el backend local.
- * - En cualquier otro dominio (GitHub Pages) usa el de produccion: la miniPC
- *   expuesta con Tailscale Funnel. Ver docs/DESPLIEGUE.md del backend.
+ * URL DEL BACKEND: se decide SOLO aqui.
+ * - Live Server / http.server en el puerto 5500 (desarrollo): el backend de
+ *   runserver en BACKEND_LOCAL.
+ * - En cualquier otro caso (Docker en la miniPC, detras de Tailscale Funnel):
+ *   el mismo dominio de la pagina. El nginx del frontend reenvia /api/,
+ *   /admin/, /media/ y /static/ al backend (docker/nginx.conf).
  * Va sin barra final y sin /api: API_BASE_URL se arma abajo.
  */
 const CONFIG = {
-  BACKEND_PRODUCCION: "https://cachyos-x8664.tailb93c3e.ts.net",
   BACKEND_LOCAL: "http://127.0.0.1:8000",
+  PUERTO_DESARROLLO: "5500",
   // Carpetas locales donde viven las imagenes y gifs de los cursos.
   // La base de datos guarda solo el nombre del archivo.
   RUTA_IMAGENES: "assets/imagenes/",
@@ -22,9 +23,7 @@ const CONFIG = {
 };
 
 CONFIG.API_BASE_URL =
-  (["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname)
-    ? CONFIG.BACKEND_LOCAL
-    : CONFIG.BACKEND_PRODUCCION) + "/api";
+  (window.location.port === CONFIG.PUERTO_DESARROLLO ? CONFIG.BACKEND_LOCAL : window.location.origin) + "/api";
 
 /**
  * Escapa texto para meterlo en HTML (contenido o atributo entre comillas).

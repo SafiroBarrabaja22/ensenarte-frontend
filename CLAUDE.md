@@ -84,8 +84,8 @@ absoluta. Usa siempre `rutaImagen()` / `rutaVideo()` de `config.js`.
 ## Endpoints que consume
 
 Todos con `api()` (o `apiPanel()`, que añade un timeout de 12 s) y rutas
-relativas a `CONFIG.API_BASE_URL` (en local `http://127.0.0.1:8000/api`; en GitHub Pages
-`https://cachyos-x8664.tailb93c3e.ts.net/api`):
+relativas a `CONFIG.API_BASE_URL` (en local, puerto 5500: `http://127.0.0.1:8000/api`; en
+Docker: `<mismo dominio>/api`, que el nginx reenvía al backend):
 
 - Auth: `/auth/registro/`, `/auth/login/`, `/auth/refresh/`, `/auth/perfil/`
   (GET/PATCH, FormData para foto), `/auth/cambiar-password/`,
@@ -155,8 +155,8 @@ Implementada en [js/api.js](js/api.js) y [js/auth.js](js/auth.js):
 6. Un 403 se muestra como "Permiso denegado", no como error genérico.
 
 Sin cookies ni CSRF. Backend: access 15 min y refresh 7 días con rotación.
-CORS solo admite los orígenes de `CORS_ALLOWED_ORIGINS`; producción es
-`https://safirobarrabaja22.github.io`. Errores de la API se convierten en `ApiError` con el mensaje
+En producción (Docker) la API está en el mismo dominio que las páginas, así que no hay CORS;
+en desarrollo, el backend autoriza los orígenes de `:5500`. Errores de la API se convierten en `ApiError` con el mensaje
 de `detail` o del primer error de validación de DRF.
 
 Otro estado del cliente: `sessionStorage` (`evaluacion-items-<slug>`,
@@ -187,12 +187,13 @@ Otro estado del cliente: `sessionStorage` (`evaluacion-items-<slug>`,
 
 ## Configuración
 
-Todo en [js/config.js](js/config.js). La URL del backend se cambia en
-`BACKEND_PRODUCCION` / `BACKEND_LOCAL` (y en `scripts/aplicar_csp.py`, que la autoriza en la CSP); `API_BASE_URL` se calcula según
-`location.hostname` (localhost/127.0.0.1 → local; otro → producción). Al tocar
-config.js, sube `config.js?v=` en todos los HTML. Despliegue en GitHub Pages bajo
-`/ensenarte-frontend/`: ninguna ruta puede empezar por `/` y las mayúsculas deben
-coincidir exactamente (ver docs/DESPLIEGUE.md del backend). Además: `RUTA_IMAGENES`,
+Todo en [js/config.js](js/config.js). `API_BASE_URL`: en el puerto 5500 (Live Server)
+usa `BACKEND_LOCAL`; en cualquier otro caso, el mismo dominio de la página. En Docker,
+[docker/nginx.conf](docker/nginx.conf) reenvía `/api/`, `/admin/`, `/media/` y `/static/`
+al backend. Si cambias `BACKEND_LOCAL`, cámbialo también en `scripts/aplicar_csp.py`. Al tocar
+config.js, sube `config.js?v=` en todos los HTML. Las rutas siguen siendo relativas y las
+mayúsculas deben coincidir exactamente (Linux las distingue). Ya no se usa GitHub Pages.
+Además: `RUTA_IMAGENES`,
 `RUTA_VIDEOS`, `AVATAR_POR_DEFECTO`, `CURSOS_CON_EVALUACION_CAMARA`
 (hoy `["abecedario"]`). `js/config.local.js` está en `.gitignore`.
 Si cambia el puerto u origen del frontend, debe agregarse a
