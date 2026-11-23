@@ -281,6 +281,7 @@ const ROLES = Object.freeze({
   INTERPRETE: "Interprete",
   CREADOR: "CreadorDeCursos",
   ADMINISTRADOR: "Administrador",
+  VALIDADOR: "Validador",
 });
 
 /** Quien entra a cada tipo de pagina. Refleja apps/cursos/permissions.py. */
@@ -291,6 +292,8 @@ const ACCESO = Object.freeze({
   PANEL_CONTENIDO: [ROLES.PROFESOR, ROLES.CREADOR, ROLES.ADMINISTRADOR],
   // Biblioteca visual (recursos, avatares e insignias).
   BIBLIOTECA: [ROLES.INTERPRETE, ROLES.ADMINISTRADOR],
+  // Aprobar o rechazar las senas. Solo el Validador (ni el Administrador).
+  VALIDACION: [ROLES.VALIDADOR],
   // Reporte de estadisticas de la plataforma.
   REPORTE_PLATAFORMA: [ROLES.ADMINISTRADOR],
 });
@@ -304,6 +307,7 @@ function tieneRol(usuario, roles) {
 /** Pagina de inicio segun el rol (ruta desde la raiz del sitio), o null si no tiene rol. */
 function paginaInicioDe(usuario) {
   if (tieneRol(usuario, ACCESO.PANEL_CONTENIDO)) return "pages/panel/index.html";
+  if (tieneRol(usuario, ACCESO.VALIDACION)) return "pages/panel/validacion.html";
   if (tieneRol(usuario, ACCESO.BIBLIOTECA)) return "pages/panel/recursos.html";
   if (tieneRol(usuario, ACCESO.APRENDIZAJE)) return "pages/inicio-usuario.html";
   return null;

@@ -116,18 +116,51 @@ function pintarPaginacion(pagina, totalPaginas, totalRecursos) {
 }
 
 function tarjetaRecurso(recurso) {
+  // Las señas (gifs de "Recurso de curso") pasan por el Validador: se muestra su
+  // estado, el comentario de la última decisión y la opción de subir el archivo corregido.
+  const comentario = recurso.es_sena && recurso.comentario_validacion
+    ? `<p class="comentarioSena"><strong>Validador:</strong> ${escaparHtml(recurso.comentario_validacion)}</p>`
+    : "";
+  const accionesSena = recurso.es_sena
+    ? `<button class="panelBtn secundario botonIcono" type="button" data-reemplazar="${recurso.id}" aria-label="Subir archivo corregido" title="Subir archivo corregido (vuelve a revisión)">&#8635;</button>`
+    : "";
   return `
     <article class="recursoVisual">
       <img src="${escaparHtml(rutaImagen(recurso.archivo_url))}" alt="${escaparHtml(recurso.nombre)}" loading="lazy">
       <div class="recursoVisualInfo">
         <strong>${escaparHtml(recurso.nombre)}</strong>
         <span>${escaparHtml(nombreCategoria(recurso.categoria))} · .${escaparHtml(recurso.extension.toUpperCase())}</span>
+        ${recurso.es_sena ? etiquetaEstadoSena(recurso.estado_validacion, true) : ""}
+        ${comentario}
       </div>
       <div class="panelAcciones">
+        ${accionesSena}
         <button class="panelBtn secundario botonIcono" type="button" data-renombrar="${recurso.id}" aria-label="Renombrar" title="Renombrar">&#9998;</button>
         <button class="panelBtn peligro botonIcono" type="button" data-eliminar-recurso="${recurso.id}" aria-label="Eliminar" title="Eliminar">&#128465;</button>
       </div>
     </article>`;
+}
+
+/** Sube el gif corregido de una seña: la API la deja otra vez "En revisión". */
+function reemplazarSena(id) {
+  const entrada = document.createElement("input");
+  entrada.type = "file";
+  entrada.accept = ".gif,image/gif";
+  entrada.addEventListener("change", async () => {
+    const archivo = entrada.files[0];
+    if (!archivo) return;
+    const datos = new FormData();
+    datos.append("archivo", archivo);
+    mostrarMensaje("mensaje", "Subiendo el archivo corregido...", "ok");
+    try {
+      await api(`/panel/recursos/${id}/`, { metodo: "PATCH", cuerpo: datos, esFormData: true });
+      mostrarMensaje("mensaje", "Archivo reemplazado. La seña volvió a revisión del Validador.", "ok");
+      await cargarRecursos();
+    } catch (error) {
+      mostrarMensaje("mensaje", error.message);
+    }
+  });
+  entrada.click();
 }
 
 function nombreCategoria(categoria) {
@@ -135,6 +168,10 @@ function nombreCategoria(categoria) {
 }
 
 function conectarAccionesRecurso() {
+  document.querySelectorAll("[data-reemplazar]").forEach((boton) => {
+    boton.addEventListener("click", () => reemplazarSena(boton.dataset.reemplazar));
+  });
+
   document.querySelectorAll("[data-renombrar]").forEach((boton) => {
     boton.addEventListener("click", async () => {
       const recurso = await obtenerRecurso(boton.dataset.renombrar);
@@ -226,9 +263,12 @@ async function subirRecurso(evento) {
       `Se subieron ${subidos} de ${total}. No se pudieron subir: ${fallidos.join(" · ")}`
     );
   } else {
+    const nota = categoria === "recurso"
+      ? " Los GIF de señas quedan en revisión hasta que el Validador los apruebe."
+      : "";
     mostrarMensaje(
       "mensaje",
-      total === 1 ? "Imagen cargada en la biblioteca." : `${total} imágenes cargadas en la biblioteca.`,
+      (total === 1 ? "Imagen cargada en la biblioteca." : `${total} imágenes cargadas en la biblioteca.`) + nota,
       "ok"
     );
   }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar señas</title>
+    <link rel="stylesheet" href="../../css/tokens.css?v=20261116">
+    <link rel="stylesheet" href="../../css/panel.css?v=20261116">
+    <link rel="stylesheet" href="../../css/extra.css?v=20261117b">
+    <link rel="stylesheet" href="../../css/componentes.css?v=20261123">
+</head>
+<body class="panelBody paginaProtegida">
+    <header class="panelHeader">
+        <h1>Validar señas</h1>
+        <nav>
+            <a href="../inicio-usuario.html">Volver al sitio</a>
+            <a href="#" id="salirValidacion">Cerrar sesión</a>
+        </nav>
+    </header>
+
+    <main class="panelMain">
+        <div id="mensaje" aria-live="polite"></div>
+
+        <section class="panelSeccion">
+            <h2>Señas por revisar</h2>
+            <p>Revisa que cada seña esté bien hecha. Si la apruebas, los profesores ya pueden usarla
+               y los estudiantes la ven en el diccionario. Si la rechazas, escribe qué hay que corregir:
+               el intérprete verá tu comentario y, cuando suba el archivo corregido, volverá a esta lista.</p>
+            <div class="filtrosValidacion" role="group" aria-label="Filtrar por estado">
+                <button class="panelBtn" type="button" data-estado="pendiente" aria-pressed="true">En revisión</button>
+                <button class="panelBtn secundario" type="button" data-estado="rechazada" aria-pressed="false">Rechazadas</button>
+                <button class="panelBtn secundario" type="button" data-estado="aprobada" aria-pressed="false">Aprobadas</button>
+            </div>
+            <div class="listaValidacion" id="listaValidacion" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <script src="../../js/config.js?v=8"></script>
+    <script src="../../js/api.js?v=6"></script>
+    <script src="../../js/layout.js?v=12"></script>
+    <script src="../../js/pages/panel/validacion.js?v=1"></script>
+</body>
+</html>

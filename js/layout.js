@@ -24,11 +24,13 @@ function montarLayout(tipo) {
   const puedeAprender = tieneRol(usuario, ACCESO.APRENDIZAJE);
   const puedePanel = tieneRol(usuario, ACCESO.PANEL_CONTENIDO);
   const puedeBiblioteca = tieneRol(usuario, ACCESO.BIBLIOTECA);
+  const puedeValidar = tieneRol(usuario, ACCESO.VALIDACION);
   const enlacesUsuario = `
     ${puedeAprender ? `<a href="${raiz}pages/inicio-usuario.html">Inicio</a>` : ""}
     ${puedeAprender ? `<a href="${raiz}pages/cursos-usuario.html">Cursos</a>` : ""}
     ${puedePanel ? `<a href="${raiz}pages/panel/index.html">Panel</a>` : ""}
     ${puedeBiblioteca ? `<a href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
+    ${puedeValidar ? `<a href="${raiz}pages/panel/validacion.html">Validar señas</a>` : ""}
     <a href="${raiz}pages/contacto.html">Soporte</a>
     <a href="#" id="linkCerrarSesion">Cerrar sesion</a>`;
 
@@ -40,6 +42,7 @@ function montarLayout(tipo) {
            <span class="nombreHeader">${escaparHtml(usuario ? usuario.nombre : "")}</span>
          </a>
          ${puedeBiblioteca ? `<a class="perfilHeader" href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
+         ${puedeValidar ? `<a class="perfilHeader" href="${raiz}pages/panel/validacion.html">Validar señas</a>` : ""}
          </div>`
       : `<nav class="menu">
            <a href="${raiz}pages/login.html">Iniciar sesión</a>
@@ -140,6 +143,16 @@ function avatarDe(usuario) {
   if (!usuario) return rutaImagen(CONFIG.AVATAR_POR_DEFECTO);
   if (usuario.foto_perfil_url) return usuario.foto_perfil_url;
   return rutaImagen(usuario.avatar || CONFIG.AVATAR_POR_DEFECTO);
+}
+
+/**
+ * Etiqueta del estado de validacion de una sena ("pendiente", "aprobada",
+ * "rechazada"). Devuelve "" para "aprobada" salvo que se pida mostrarla.
+ */
+function etiquetaEstadoSena(estado, mostrarAprobada = false) {
+  const textos = { pendiente: "En revisión", rechazada: "Rechazada", aprobada: "Aprobada" };
+  if (!textos[estado] || (estado === "aprobada" && !mostrarAprobada)) return "";
+  return `<span class="estadoSena estadoSena--${estado}">${textos[estado]}</span>`;
 }
 
 /** Pie de pagina opcional. */

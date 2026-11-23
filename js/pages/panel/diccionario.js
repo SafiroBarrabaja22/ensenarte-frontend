@@ -40,7 +40,7 @@ async function cargarPalabras() {
           <td class="asaArrastre" title="Arrastra para reordenar" aria-hidden="true">&#10303;</td>
           <td>${esc(palabra.titulo)}</td>
           <td>${esc(palabra.imagen_frontal)}</td>
-          <td>${esc(palabra.video_gif)}</td>
+          <td>${esc(palabra.video_gif)} ${etiquetaEstadoSena(palabra.estado_sena)}</td>
           <td class="panelAcciones">
             <button class="panelBtn" data-editar="${palabra.id}">Editar</button>
             <button class="panelBtn peligro" data-borrar="${palabra.id}">Eliminar</button>

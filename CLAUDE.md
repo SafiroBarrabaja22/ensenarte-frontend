@@ -108,8 +108,17 @@ El backend devuelve `usuario.roles`, un arreglo con valores de `Estudiante`,
 - `ROLES`: los nombres, que deben coincidir con `ensenarte-backend/apps/usuarios/roles.py`.
   No escribas esos strings en otro archivo.
 - `ACCESO`: quién entra a cada tipo de página. `APRENDIZAJE` admite cualquier rol,
-  `PANEL_CONTENIDO` a Profesor, Creador y Admin, y `BIBLIOTECA` a Intérprete y Admin.
-  Debe reflejar `apps/cursos/permissions.py`.
+  `PANEL_CONTENIDO` a Profesor, Creador y Admin, `BIBLIOTECA` a Intérprete y Admin, y
+  `VALIDACION` solo al Validador. Debe reflejar `apps/cursos/permissions.py`.
+- **Validación de señas:**
+  - [pages/panel/validacion.html](pages/panel/validacion.html) es la página del Validador:
+    aprueba o rechaza con comentario e incluye el historial.
+  - En la biblioteca, el Intérprete ve el estado y el comentario de cada seña, y el botón ↻ para
+    subir el archivo corregido.
+  - El buscador de gifs (`selector-recursos.js`) pide `estado=aprobada` y oculta la subida local.
+  - `etiquetaEstadoSena()` (layout.js) pinta la etiqueta "En revisión", "Rechazada" o
+    "Aprobada".
+  - Reglas completas: README del backend, "Validación de señas".
 - `tieneRol(usuario, ACCESO.X)` y `paginaInicioDe(usuario)`, que da el inicio
   según el rol: panel, biblioteca o inicio de usuario.
 - `exigirRol(ACCESO.X)`: **toda página protegida empieza con

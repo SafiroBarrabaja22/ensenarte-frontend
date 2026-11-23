@@ -286,3 +286,97 @@
 .modalRecursosEstado:empty {
     display: none;
 }
+
+
+/* ---------- Validacion de senas (rol Validador) ---------- */
+
+.estadoSena {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: var(--radio-pill);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.estadoSena--pendiente {
+    background: var(--color-ambar-palido);
+    color: var(--color-ambar-texto);
+}
+
+.estadoSena--rechazada {
+    background: var(--color-coral-palido);
+    color: var(--color-error-texto);
+}
+
+.estadoSena--aprobada {
+    background: var(--color-menta);
+    color: var(--color-teal-profundo);
+}
+
+.comentarioSena {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    border-left: 3px solid var(--color-coral-borde);
+    background: var(--color-crema);
+    color: var(--color-tinta);
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.filtrosValidacion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.listaValidacion {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.tarjetaValidacion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border: 1px solid var(--color-linea);
+    border-radius: var(--radio-md);
+    background: var(--color-blanco);
+}
+
+.tarjetaValidacion img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+    border-radius: var(--radio-sm);
+    background: var(--color-fondo);
+}
+
+.tarjetaValidacion textarea {
+    width: 100%;
+    min-height: 70px;
+    resize: vertical;
+}
+
+.datosValidacion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    color: var(--color-texto-suave);
+    font-size: 13px;
+}
+
+.historialSena {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--color-texto-suave);
+    font-size: 13px;
+}
+
+.historialSena li + li {
+    margin-top: 4px;
+}

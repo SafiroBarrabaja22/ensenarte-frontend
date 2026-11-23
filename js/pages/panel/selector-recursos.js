@@ -49,8 +49,10 @@ const SelectorRecursos = (() => {
     categoriaForzada = boton.dataset.categoria || "recurso";
     dialog.dataset.categoria = categoriaForzada;
     dialog.querySelector("#buscarEnBiblioteca").value = "";
-    // Los campos que guardan el id de un recurso necesitan uno de la biblioteca.
-    dialog.querySelector("#subidaLocalRecurso").hidden = campoDestino.dataset.valorRecurso === "id";
+    // Los campos que guardan el id de un recurso necesitan uno de la biblioteca. Los
+    // gifs de señas también: solo se usan señas que aprobó el Validador.
+    dialog.querySelector("#subidaLocalRecurso").hidden =
+      campoDestino.dataset.valorRecurso === "id" || esSena();
     dialog.querySelector("#archivoLocalRecurso").accept = extensionForzada ? `.${extensionForzada}` : "image/*";
     dialog.querySelector("#estadoSubidaLocal").textContent = "";
     dialog.showModal();
@@ -65,6 +67,9 @@ const SelectorRecursos = (() => {
     if (texto) parametros.set("q", texto);
     if (extensionForzada) parametros.set("extension", extensionForzada);
     parametros.set("categoria", categoriaActiva);
+    // Al Profesor la API ya no le muestra señas sin aprobar; el filtro lo aplica
+    // también al Administrador, que sí las ve en la biblioteca.
+    if (esSena()) parametros.set("estado", "aprobada");
     resultados.innerHTML = '<p class="cargando">Buscando...</p>';
 
     try {
@@ -81,6 +86,11 @@ const SelectorRecursos = (() => {
     } catch (error) {
       resultados.innerHTML = `<p class="vacio">${escaparRecurso(error.message)}</p>`;
     }
+  }
+
+  /** Se está eligiendo el gif de una seña (diccionario o pregunta). */
+  function esSena() {
+    return extensionForzada === "gif" && (dialog.dataset.categoria || categoriaForzada) === "recurso";
   }
 
   function opcionRecurso(recurso) {

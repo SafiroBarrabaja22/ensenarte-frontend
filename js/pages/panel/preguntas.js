@@ -106,7 +106,7 @@ function bloquePregunta(pregunta) {
               <div class="panelForm">
                 <div><label>Enunciado</label><input maxlength="200" type="text" data-texto-pregunta value="${esc(pregunta.texto)}"></div>
                 <div>
-                  <label for="videoPregunta-${pregunta.id}">GIF de la seña</label>
+                  <label for="videoPregunta-${pregunta.id}">GIF de la seña ${etiquetaEstadoSena(pregunta.estado_sena)}</label>
                   <div class="campoSeleccionRecurso">
                     <input maxlength="255" type="text" id="videoPregunta-${pregunta.id}" data-video-pregunta value="${esc(pregunta.video || "")}" placeholder="abecedario/a.gif">
                     <button class="panelBtn secundario" type="button" data-selector-recurso="videoPregunta-${pregunta.id}" data-extension="gif">Buscar GIF</button>
