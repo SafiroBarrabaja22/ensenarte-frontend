@@ -2,6 +2,8 @@
  * Portada (index.html). Antes era un <script> en linea; la politica de
  * seguridad (CSP) solo permite scripts en archivos del propio sitio.
  */
+// La portada es del visitante y del estudiante: un rol de trabajo va a su seccion.
+enviarRolDeTrabajoASuSeccion();
 const esVisitante = !Sesion.activa();
 document.body.classList.toggle("homePublico", esVisitante);
 montarLayout(esVisitante ? "publico" : "usuario");

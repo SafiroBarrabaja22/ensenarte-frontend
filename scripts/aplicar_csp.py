@@ -77,6 +77,7 @@ PAGINAS = (
     "pages/panel/preguntas.html",
     "pages/panel/recursos.html",
     "pages/panel/validacion.html",
+    "pages/panel/vista-previa.html",
     "pages/perfil.html",
     "pages/recuperar.html",
     "pages/retroalimentacion.html",

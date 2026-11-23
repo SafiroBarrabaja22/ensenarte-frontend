@@ -17,9 +17,9 @@ let paginaRecursos = 1;
   // Interprete o Administrador. Si no, exigirRol redirige.
   const usuario = await exigirRol(ACCESO.BIBLIOTECA);
   if (!usuario) return;
-  document.getElementById("volverSitioRecursos").href = tieneRol(usuario, ACCESO.PANEL_CONTENIDO)
-    ? "index.html"
-    : "../inicio-usuario.html";
+  // El Interprete solo ve la biblioteca (nada de cursos); el Administrador
+  // tambien tiene el panel de cursos.
+  document.getElementById("volverPanelRecursos").hidden = !tieneRol(usuario, ACCESO.PANEL_CONTENIDO);
 
   document.getElementById("salirRecursos").addEventListener("click", (evento) => {
     evento.preventDefault();

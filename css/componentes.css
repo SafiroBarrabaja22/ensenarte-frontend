@@ -380,3 +380,80 @@
 .historialSena li + li {
     margin-top: 4px;
 }
+
+/* ---------- Vista previa del curso (panel del Profesor) ----------
+   Las mismas tarjetas del diccionario del estudiante (style.css, .card), con
+   nombres propios para no chocar con los estilos del panel. */
+
+.avisoVistaPrevia {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border-left: 4px solid var(--color-ambar);
+    border-radius: var(--radio-sm);
+    background: var(--color-ambar-palido);
+    color: var(--color-ambar-texto);
+}
+
+.vistaPreviaDiccionario {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    padding: 8px 0 24px;
+}
+
+.tarjetaPrevia {
+    position: relative;
+    width: 260px;
+    height: 300px;
+}
+
+.tarjetaPrevia .caraPrevia {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-md);
+    backface-visibility: hidden;
+    transition: transform .5s;
+}
+
+.tarjetaPrevia .caraPrevia img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tarjetaPrevia .caraPrevia h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 30px 0 12px;
+    background: linear-gradient(transparent, color-mix(in srgb, var(--color-sombra) 70%, transparent));
+    color: var(--color-blanco);
+    font-size: 20px;
+    text-align: center;
+}
+
+.tarjetaPrevia .frentePrevia {
+    transform: perspective(600px) rotateY(0deg);
+}
+
+.tarjetaPrevia .dorsoPrevia {
+    transform: perspective(600px) rotateY(180deg);
+    background: var(--color-sombra);
+}
+
+.tarjetaPrevia:hover .frentePrevia,
+.tarjetaPrevia:focus-within .frentePrevia {
+    transform: perspective(600px) rotateY(180deg);
+}
+
+.tarjetaPrevia:hover .dorsoPrevia,
+.tarjetaPrevia:focus-within .dorsoPrevia {
+    transform: perspective(600px) rotateY(360deg);
+}

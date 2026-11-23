@@ -284,10 +284,21 @@ const ROLES = Object.freeze({
   VALIDADOR: "Validador",
 });
 
+/**
+ * Roles de trabajo: cada uno ve solo su seccion y ninguno hace cursos. Si la
+ * cuenta tiene alguno, su rol Estudiante no cuenta (igual que roles_de() en
+ * ensenarte-backend/apps/usuarios/roles.py, ROLES_DE_TRABAJO).
+ */
+const ROLES_DE_TRABAJO = Object.freeze([
+  ROLES.ADMINISTRADOR, ROLES.CREADOR, ROLES.PROFESOR, ROLES.VALIDADOR, ROLES.INTERPRETE,
+]);
+
 /** Quien entra a cada tipo de pagina. Refleja apps/cursos/permissions.py. */
 const ACCESO = Object.freeze({
-  // Cursos, diccionario, evaluaciones, perfil: cualquier rol.
-  APRENDIZAJE: Object.values(ROLES),
+  // Cursos, diccionario, evaluaciones y perfil con progreso: SOLO el Estudiante.
+  APRENDIZAJE: [ROLES.ESTUDIANTE],
+  // Datos de la cuenta (nombre, correo, avatar y contrasena): cualquier rol.
+  CUENTA: Object.values(ROLES),
   // Panel de cursos, preguntas y diccionario.
   PANEL_CONTENIDO: [ROLES.PROFESOR, ROLES.CREADOR, ROLES.ADMINISTRADOR],
   // Biblioteca visual (recursos, avatares e insignias).
@@ -298,10 +309,39 @@ const ACCESO = Object.freeze({
   REPORTE_PLATAFORMA: [ROLES.ADMINISTRADOR],
 });
 
+/** Roles que cuentan: con un rol de trabajo, el de Estudiante se descarta. */
+function rolesDe(usuario) {
+  const propios = (usuario && Array.isArray(usuario.roles)) ? usuario.roles : [];
+  return propios.some((rol) => ROLES_DE_TRABAJO.includes(rol))
+    ? propios.filter((rol) => rol !== ROLES.ESTUDIANTE)
+    : propios;
+}
+
 /** True si el usuario tiene al menos uno de los roles indicados. */
 function tieneRol(usuario, roles) {
-  const propios = (usuario && Array.isArray(usuario.roles)) ? usuario.roles : [];
+  const propios = rolesDe(usuario);
   return roles.some((rol) => propios.includes(rol));
+}
+
+/** True si la cuenta tiene un rol de trabajo (Profesor, Interprete, ...). */
+function esRolDeTrabajo(usuario) {
+  return tieneRol(usuario, ROLES_DE_TRABAJO);
+}
+
+/**
+ * La portada y el catalogo son del visitante y del estudiante: un rol de
+ * trabajo con sesion va directo a su seccion. Devuelve true si redirige.
+ */
+function enviarRolDeTrabajoASuSeccion() {
+  const usuario = Sesion.activa() ? Sesion.usuario() : null;
+  if (!usuario || !esRolDeTrabajo(usuario)) return false;
+  window.location.replace(`${prefijoRaiz()}${paginaInicioDe(usuario)}`);
+  return true;
+}
+
+/** Pagina "Mi cuenta" (nombre, correo, avatar y contrasena) del rol. */
+function paginaCuentaDe(usuario) {
+  return esRolDeTrabajo(usuario) ? "pages/editar-perfil.html" : "pages/perfil.html";
 }
 
 /** Pagina de inicio segun el rol (ruta desde la raiz del sitio), o null si no tiene rol. */

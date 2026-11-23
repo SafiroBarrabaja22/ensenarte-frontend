@@ -107,9 +107,25 @@ El backend devuelve `usuario.roles`, un arreglo con valores de `Estudiante`,
 
 - `ROLES`: los nombres, que deben coincidir con `ensenarte-backend/apps/usuarios/roles.py`.
   No escribas esos strings en otro archivo.
-- `ACCESO`: quién entra a cada tipo de página. `APRENDIZAJE` admite cualquier rol,
-  `PANEL_CONTENIDO` a Profesor, Creador y Admin, `BIBLIOTECA` a Intérprete y Admin, y
-  `VALIDACION` solo al Validador. Debe reflejar `apps/cursos/permissions.py`.
+- `ACCESO`: quién entra a cada tipo de página. Debe reflejar `apps/cursos/permissions.py`.
+
+  | Clave | Quién entra |
+  |---|---|
+  | `APRENDIZAJE` | **Solo el Estudiante** (cursos, diccionario, evaluaciones y perfil con progreso) |
+  | `CUENTA` | Cualquier rol (`editar-perfil.html`, "Mi cuenta") |
+  | `PANEL_CONTENIDO` | Profesor, Creador y Admin |
+  | `BIBLIOTECA` | Intérprete y Admin |
+  | `VALIDACION` | Solo el Validador |
+- **Cada rol ve solo lo suyo:**
+  - **Rol de trabajo:** `rolesDe()` descarta Estudiante si la cuenta tiene un rol de trabajo
+    (`ROLES_DE_TRABAJO`), igual que el backend.
+  - **Portada y catálogo:** `inicio.js` y `cursos.js` llaman a `enviarRolDeTrabajoASuSeccion()`,
+    que manda a cada rol a su sección.
+  - **Sin acceso a los cursos:** el panel no enlaza a los cursos del estudiante, y la biblioteca
+    y la página de validar no tienen "Volver al sitio"; todos tienen "Mi cuenta".
+  - **Vista previa:** el Profesor ve sus cursos en
+    [pages/panel/vista-previa.html](pages/panel/vista-previa.html). Lee de `/panel/...`, porque
+    las rutas del estudiante le responden 403.
 - **Validación de señas:**
   - [pages/panel/validacion.html](pages/panel/validacion.html) es la página del Validador:
     aprueba o rechaza con comentario e incluye el historial.

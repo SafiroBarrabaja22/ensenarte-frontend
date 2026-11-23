@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: http://127.0.0.1:8000 http://localhost:8000; media-src 'self' blob: http://127.0.0.1:8000 http://localhost:8000; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Vista previa</title>
+    <link rel="stylesheet" href="../../css/tokens.css?v=20261116">
+    <link rel="stylesheet" href="../../css/panel.css?v=20261116">
+    <link rel="stylesheet" href="../../css/extra.css?v=20261117b">
+    <link rel="stylesheet" href="../../css/componentes.css?v=20261124">
+</head>
+<body class="panelBody paginaProtegida">
+    <div id="panelLayout"></div>
+
+    <main class="panelMain">
+        <a class="panelBtn panelBtnPequeno" href="index.html">Volver</a>
+        <h2 id="tituloCurso">Vista previa</h2>
+        <div id="mensaje"></div>
+
+        <p class="avisoVistaPrevia">
+            <strong>Vista previa:</strong> así ven los estudiantes el diccionario de este curso.
+            Pasa el cursor (o toca) una tarjeta para ver la seña. Desde aquí no se presentan
+            evaluaciones ni se guarda progreso.
+        </p>
+        <p id="ocultasVistaPrevia" class="ayudaOrden" hidden></p>
+        <section class="vistaPreviaDiccionario" id="contenedorPalabras" aria-live="polite">
+            <p class="cargando">Cargando...</p>
+        </section>
+    </main>
+
+    <script src="../../js/config.js?v=8"></script>
+    <script src="../../js/api.js?v=7"></script>
+    <script src="../../js/layout.js?v=13"></script>
+    <script src="../../js/pages/panel/layout-panel.js?v=13"></script>
+    <script src="../../js/pages/panel/vista-previa.js?v=1"></script>
+</body>
+</html>

@@ -10,9 +10,18 @@ let vistaPreviaAvatarUrl = null;
 let fotoPerfilUrl = "";
 
 (async function iniciar() {
-  if (!(await exigirRol(ACCESO.APRENDIZAJE))) return;
+  // Cualquier rol edita su cuenta; solo el Estudiante tiene perfil con progreso.
+  const cuenta = await exigirRol(ACCESO.CUENTA);
+  if (!cuenta) return;
 
   montarLayout("usuario");
+  if (esRolDeTrabajo(cuenta)) {
+    const volver = `${prefijoRaiz()}${paginaInicioDe(cuenta)}`;
+    const enlaceVolver = document.querySelector(".volverPerfil");
+    enlaceVolver.href = volver;
+    enlaceVolver.textContent = "← Volver";
+    document.querySelector(".botonCancelarPerfil").href = volver;
+  }
 
   try {
     const usuario = await Auth.perfil();

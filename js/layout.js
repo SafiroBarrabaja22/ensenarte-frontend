@@ -10,8 +10,9 @@ function montarLayout(tipo) {
 
   const raiz = prefijoRaiz();
   const usuario = Sesion.usuario();
+  // Cada rol vuelve a su propia seccion (un Profesor nunca al inicio del estudiante).
   const enlaceInicio = tipo === "usuario"
-    ? `${raiz}pages/inicio-usuario.html`
+    ? `${raiz}${paginaInicioDe(usuario) || "pages/inicio-usuario.html"}`
     : `${raiz}index.html`;
 
   const enlacesPublicos = `
@@ -31,13 +32,14 @@ function montarLayout(tipo) {
     ${puedePanel ? `<a href="${raiz}pages/panel/index.html">Panel</a>` : ""}
     ${puedeBiblioteca ? `<a href="${raiz}pages/panel/recursos.html">Biblioteca visual</a>` : ""}
     ${puedeValidar ? `<a href="${raiz}pages/panel/validacion.html">Validar señas</a>` : ""}
+    ${puedeAprender ? "" : `<a href="${raiz}pages/editar-perfil.html">Mi cuenta</a>`}
     <a href="${raiz}pages/contacto.html">Soporte</a>
     <a href="#" id="linkCerrarSesion">Cerrar sesion</a>`;
 
   const bloqueDerecho =
     tipo === "usuario"
       ? `<div class="menuUsuario">
-         <a class="perfilUsuarioHeader" href="${raiz}pages/perfil.html" aria-label="Ver perfil de ${escaparHtml(usuario ? usuario.nombre : "usuario")}">
+         <a class="perfilUsuarioHeader" href="${raiz}${paginaCuentaDe(usuario)}" aria-label="Ver perfil de ${escaparHtml(usuario ? usuario.nombre : "usuario")}">
            <img class="avatarHeader" src="${escaparHtml(avatarDe(usuario))}" alt="" loading="lazy">
            <span class="nombreHeader">${escaparHtml(usuario ? usuario.nombre : "")}</span>
          </a>

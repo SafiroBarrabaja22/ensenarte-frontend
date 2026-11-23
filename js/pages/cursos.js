@@ -7,6 +7,8 @@ let filtroActual = "todos";
 let busquedaActual = "";
 
 (async function iniciar() {
+  // Los cursos son del visitante y del estudiante (cada rol ve solo lo suyo).
+  if (enviarRolDeTrabajoASuSeccion()) return;
   if (esVistaUsuario && !(await exigirRol(ACCESO.APRENDIZAJE))) return;
 
   montarLayout(Sesion.activa() ? "usuario" : "publico");
