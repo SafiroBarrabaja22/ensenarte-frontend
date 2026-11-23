@@ -8,6 +8,8 @@ Consume la API del repositorio
 [`ensenarte-backend`](../ensenarte-backend). Este repositorio no contiene lógica
 de negocio ni acceso a base de datos.
 
+**Documento del proyecto:** [abrir en SharePoint (Word)](https://mailunicundiedu-my.sharepoint.com/:w:/g/personal/jestebanbernal_ucundinamarca_edu_co/cQp-DpUHlZH2S4IOyJkQVvEkEgUCN6xCRNbXGdR2Lyb1BgURrw?rtime=qPDZ-VBI30g)
+
 ---
 
 ## Puesta en marcha
