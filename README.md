@@ -188,9 +188,8 @@ está en el README del backend, sección "Despliegue con Docker"**; en resumen:
 
 ```bash
 cd /srv/ensenarte                                    # carpeta que contiene los dos repos
-# -b docker mientras Docker no esté mezclado en main; después, sin -b
-git clone -b docker https://github.com/SafiroBarrabaja22/ensenarte-backend.git
-git clone -b docker https://github.com/SafiroBarrabaja22/ensenarte-frontend.git
+git clone https://github.com/SafiroBarrabaja22/ensenarte-backend.git
+git clone https://github.com/SafiroBarrabaja22/ensenarte-frontend.git
 cp ensenarte-backend/despliegue/docker-compose.yml .
 cp ensenarte-backend/despliegue/docker.env.example .env && chmod 600 .env && nano .env
 docker compose up -d --build
